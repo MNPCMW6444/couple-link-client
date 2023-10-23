@@ -1,17 +1,7 @@
-import WhiteForm from "./WhiteForm.tsx";
 import {createTheme, ThemeProvider} from "@mui/material";
+import ChatPage from "./components/chat/ChatPage.tsx";
 
 function App() {
-
-    const stepConfigurations = [
-        [
-            {name: "name", label: "Name", type: "text"}
-        ],
-        [
-            {name: "price", label: "Price", type: "number"},
-            {name: "quantity", label: "Quantity", type: "number"}
-        ]
-    ];
 
 
     const theme = createTheme({
@@ -61,7 +51,9 @@ function App() {
     return <ThemeProvider theme={theme}>
 
 
-        <WhiteForm fieldSteps={stepConfigurations} endpoint="/myApiEndpoint"/></ThemeProvider>
+        <ChatPage/>
+
+    </ThemeProvider>
 
 
 }
