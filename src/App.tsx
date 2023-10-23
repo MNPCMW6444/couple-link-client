@@ -1,5 +1,12 @@
 import {createTheme, ThemeProvider} from "@mui/material";
 import ChatPage from "./components/chat/ChatPage.tsx";
+import {Global, css} from "@emotion/react";
+
+const globalStyles = css`
+  * {
+    box-sizing: border-box;
+  }
+`;
 
 function App() {
 
@@ -49,6 +56,7 @@ function App() {
 
 
     return <ThemeProvider theme={theme}>
+        <Global styles={globalStyles}/>
 
 
         <ChatPage/>

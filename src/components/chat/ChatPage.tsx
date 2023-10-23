@@ -9,8 +9,9 @@ const ChatPage = () => {
 
 
     return <Paper sx={{overflow: "scroll"}}>
-        {triplets.map((triplet: any) => <ChatTriplet triplet={triplet}/>)}
-    </Paper>
+        {triplets.map((triplet, idx) => (
+            <ChatTriplet key={idx} triplet={triplet}/>
+        ))}    </Paper>
 };
 
 export default ChatPage
