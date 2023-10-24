@@ -1,6 +1,9 @@
 import {createTheme, ThemeProvider} from "@mui/material";
 import ChatPage from "./components/chat/ChatPage.tsx";
 import {Global, css} from "@emotion/react";
+import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+
+const serverURI = "http://localhost:6005/graphql";
 
 const globalStyles = css`
   * {
@@ -54,10 +57,18 @@ function App() {
         }
     });
 
+    const client = new ApolloClient({
+        uri: serverURI,
+        cache: new InMemoryCache(),
+    });
+
 
     return <ThemeProvider theme={theme}>
-        <Global styles={globalStyles}/>
+        <ApolloProvider client={client}>
 
+            <Global styles={globalStyles}/>
+
+        </ApolloProvider>
 
         <ChatPage/>
 
