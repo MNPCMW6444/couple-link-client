@@ -1,7 +1,9 @@
 import {createTheme, ThemeProvider} from "@mui/material";
-import ChatPage from "./components/chat/ChatPage.tsx";
 import {Global, css} from "@emotion/react";
 import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import WhiteRouter from "./components/WhiteRouter.tsx";
+import {UserContextProvider} from "./context/UserContext.tsx";
+import {ToastContainer} from 'react-toastify';
 
 const serverURI = "http://localhost:6005/graphql";
 
@@ -59,18 +61,21 @@ function App() {
 
     const client = new ApolloClient({
         uri: serverURI,
+        credentials: 'include',
         cache: new InMemoryCache(),
     });
 
 
-    return <ThemeProvider theme={theme}>
-        <ApolloProvider client={client}>
-            <Global styles={globalStyles}/>
-            <ChatPage/>
-        </ApolloProvider>
-    </ThemeProvider>
+    return <>
+        <ToastContainer/>
+        <ThemeProvider theme={theme}>
+            <ApolloProvider client={client}>
+                <Global styles={globalStyles}/>
+                <UserContextProvider> <WhiteRouter/> </UserContextProvider>
 
-
+            </ApolloProvider>
+        </ThemeProvider>
+    </>
 }
 
 export default App
