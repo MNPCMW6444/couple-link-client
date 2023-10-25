@@ -65,13 +65,9 @@ function App() {
 
     return <ThemeProvider theme={theme}>
         <ApolloProvider client={client}>
-
             <Global styles={globalStyles}/>
-
+            <ChatPage/>
         </ApolloProvider>
-
-        <ChatPage/>
-
     </ThemeProvider>
 
 
