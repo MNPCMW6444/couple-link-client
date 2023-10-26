@@ -15,9 +15,7 @@ import {
 import {
     Menu as MenuIcon,
     MenuOpen,
-    EditNote,
-    TipsAndUpdates,
-    Close, Check, Book, ArrowDownward,
+    Close, Book, ArrowDownward, Contacts,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext.tsx";
@@ -26,17 +24,10 @@ const DRAWER_WIDTH_OPEN = "200px"; // Adjust as needed
 const DRAWER_WIDTH_CLOSED = "56px"; // Adjust as needed
 
 const WhiteSideBar = () => {
-    const [open, setOpen] = useState<boolean>(false);
     const isMobile = useMediaQuery('(max-width: 600px)');
-    const {user} = useContext(UserContext);
+    const [open, setOpen] = useState<boolean>(!isMobile);
+    const {user, signout} = useContext(UserContext);
 
-    const handleMouseEnter = () => {
-        if (!isMobile) setOpen(true);
-    };
-
-    const handleMouseLeave = () => {
-        if (!isMobile) setOpen(false);
-    };
 
     const navigateX = useNavigate();
     const navigate = (x: string) => {
@@ -67,8 +58,6 @@ const WhiteSideBar = () => {
             <Drawer
                 variant={isMobile ? "temporary" : "permanent"}
                 open={isMobile ? open : true}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
                 sx={{
                     width: open ? DRAWER_WIDTH_OPEN : DRAWER_WIDTH_CLOSED,
                     flexShrink: 0,
@@ -101,30 +90,16 @@ const WhiteSideBar = () => {
                         onClose={handleClose}
                     >
                         <MenuItem onClick={() => {
-                            /*
-                                                        axiosInstance?.post("analytics/sidebar", {route: "my-account"});
-                            */
                             navigate("/my-account")
                         }}>
                             Settings
                         </MenuItem>
                         <MenuItem onClick={() => {
-                            /*
-                                                        axiosInstance?.post("analytics/sidebar", {route: "about"});
-                            */
                             navigate("/about")
                         }}>
-                            About Failean
+                            About Braikup
                         </MenuItem>
-                        <MenuItem
-                            /* onClick={() =>
-                                 axiosInstance &&
-                                 axiosInstance
-                                     .get("auth/signout")
-                                     .then(() => refreshUserData())
-                                     .catch(() => refreshUserData())
-                             }*/
-                        >
+                        <MenuItem onClick={() => signout()}>
                             Logout
                         </MenuItem>
                     </Menu>
@@ -137,50 +112,12 @@ const WhiteSideBar = () => {
                                   navigate("/backlog")
                               }}>
                         <ListItemIcon>
-                            <EditNote/>
+                            <Contacts/>
                         </ListItemIcon>
-                        {open && <ListItemText primary="Idea Backlog"/>}
+                        {open && <ListItemText primary="Contacts"/>}
                     </ListItem>
                     <Divider/>
 
-
-                    <ListItem>
-                        <ListItemIcon>
-                            <ArrowDownward sx={{paddingLeft: open ? "70px" : 0}}/>
-                        </ListItemIcon>
-                    </ListItem>
-
-                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
-                              onClick={() => {
-                                  /*
-                                                                    axiosInstance?.post("analytics/sidebar", {route: "aideator"});
-                                  */
-                                  navigate("/aideator")
-                              }}>
-                        <ListItemIcon>
-                            <TipsAndUpdates/>
-                        </ListItemIcon>
-                        {open && <ListItemText primary="AIdeator"/>}
-                    </ListItem>
-
-                    <ListItem>
-                        <ListItemIcon>
-                            <ArrowDownward sx={{paddingLeft: open ? "70px" : 0}}/>
-                        </ListItemIcon>
-                    </ListItem>
-
-                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
-                              onClick={() => {
-                                  /*
-                                                                    axiosInstance?.post("analytics/sidebar", {route: "validator"});
-                                  */
-                                  navigate("/validator")
-                              }}>
-                        <ListItemIcon>
-                            <Check/>
-                        </ListItemIcon>
-                        {open && <ListItemText primary="Validator"/>}
-                    </ListItem>
 
                     <ListItem>
                         <ListItemIcon>

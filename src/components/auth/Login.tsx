@@ -14,7 +14,6 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import UserContext from "../../context/UserContext";
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
 import {gql, useMutation} from "@apollo/client";
 
 export interface LablesConstants {
@@ -44,10 +43,17 @@ const Login = () => {
     const [password, setPassword] = useState<string>("");
     const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
     const {refreshUserData} = useContext(UserContext);
+    const [asked, setAsked] = useState<boolean>(false);
     const [signin, {data, loading, error}] = useMutation(gql`
         mutation Mutation($code: Int!, $phone: String!) {
             signin(code: $code, phone: $phone)
         }
+    `);
+
+    const [signreq] = useMutation(gql`
+        mutation Mutation($phone: String!) {
+        signreq(phone: $phone)
+    }
     `);
 
     useEffect(() => {
@@ -79,11 +85,17 @@ const Login = () => {
     };
 
     const handleSubmit = (e: FormEvent) => {
-        e.preventDefault();
-        signin({variables: {phone: email, code: parseInt(password, 10)}});
-        if (validatePhone(email) && password) {
+            e.preventDefault();
+            if (asked && password) {
+                signin({variables: {phone: email, code: parseInt(password, 10)}});
+            } else {
+                if (validatePhone(email)) {
+                    signreq({variables: {phone: email}})
+                    setAsked(true)
+                }
+            }
         }
-    };
+    ;
 
     return (
         <Box width="100%" height="100%" bgcolor="black">
@@ -94,37 +106,39 @@ const Login = () => {
                         autoFocus
                         data-testid="email"
                         margin="dense"
-                        label="Email Address"
+                        label="Phone number"
                         type="email"
                         fullWidth
                         variant="outlined"
                         value={email}
                         error={!validatePhone(email)}
-                        helperText={!validatePhone(email) ? "Invalid email" : ""}
+                        helperText={!validatePhone(email) ? "Invalid Phone Number" : ""}
                         onChange={(e) => setEmail(e.target.value)}
+                        onKeyPress={handleKeyPress}
                     />
-                    <TextField
+                    {asked && <TextField
                         margin="dense"
                         data-testid="password"
-                        label="Password"
+                        label="6 digit OTP sent by SMS"
                         type="password"
                         fullWidth
                         variant="outlined"
                         value={password}
                         onChange={handlePasswordChange}
+                        onKeyPress={handleKeyPress}
                     />
-                    <Box mt={2}>
-                        <Button
-                            color="secondary"
-                            type="submit"
-                            data-testid="login-button"
-                            variant="contained"
-                            fullWidth
-                            onClick={handleSubmit}
-                        >
-                            {LABELS[buttonLabel].LOGIN}
-                        </Button>
-                    </Box>
+                    } <Box mt={2}>
+                    <Button
+                        color="secondary"
+                        type="submit"
+                        data-testid="login-button"
+                        variant="contained"
+                        fullWidth
+                        onClick={handleSubmit}
+                    >
+                        {LABELS[buttonLabel].LOGIN}
+                    </Button>
+                </Box>
 
                 </DialogContent>
             </Dialog>

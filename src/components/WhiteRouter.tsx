@@ -34,7 +34,7 @@ const Router = () => {
 
 
                             <Route
-                                path="/chat"
+                                path="/*"
                                 element={
                                     <ChatPage/>
                                 }

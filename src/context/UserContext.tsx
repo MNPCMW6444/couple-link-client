@@ -5,7 +5,7 @@ import {
 
 import {Typography, Grid} from "@mui/material";
 import {styled} from "@mui/system";
-import {gql, useQuery} from "@apollo/client";
+import {gql, useMutation, useQuery} from "@apollo/client";
 
 
 const WhiteTypography = styled(Typography)(({theme}) => ({
@@ -30,9 +30,12 @@ const loadingMessage = (
 const UserContext = createContext<{
     user?: any;
     refreshUserData: Function
+    signout: Function
 }>({
     user: undefined,
     refreshUserData: () => {
+    },
+    signout: () => {
     }
 });
 
@@ -45,6 +48,12 @@ export const UserContextProvider = ({children}: { children: ReactNode }) => {
   }
 }`);
 
+    const [signout] = useMutation(gql`
+        mutation Mutation {
+          signout
+        }
+    `);
+
 
     const user = data?.getme;
 
@@ -53,7 +62,8 @@ export const UserContextProvider = ({children}: { children: ReactNode }) => {
         <UserContext.Provider
             value={{
                 user,
-                refreshUserData: refetch
+                refreshUserData: refetch,
+                signout: () => signout().then(() => refetch())
             }}
         >
             {loading ? loadingMessage : children}
