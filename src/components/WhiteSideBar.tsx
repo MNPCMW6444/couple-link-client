@@ -15,7 +15,7 @@ import {
 import {
     Menu as MenuIcon,
     MenuOpen,
-    Close, Book, ArrowDownward, Contacts,
+    Close, ArrowDownward, Contacts, Chat,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext.tsx";
@@ -82,7 +82,7 @@ const WhiteSideBar = () => {
                                 {user?.number}
                             </Avatar>
                         </ListItemIcon>
-                        {open && <ListItemText primary="Account"/>}
+                        {open && <ListItemText primary="Menu"/>}
                     </ListItem>
                     <Menu
                         anchorEl={anchorEl}
@@ -109,7 +109,7 @@ const WhiteSideBar = () => {
                                   /*
                                                                     axiosInstance?.post("analytics/sidebar", {route: "backlog"});
                                   */
-                                  navigate("/backlog")
+                                  navigate("/contacts")
                               }}>
                         <ListItemIcon>
                             <Contacts/>
@@ -131,12 +131,12 @@ const WhiteSideBar = () => {
                                   /*
                                                                     axiosInstance?.post("analytics/sidebar", {route: "deck"});
                                   */
-                                  navigate("/deck")
+                                  navigate("/chat")
                               }}>
                         <ListItemIcon>
-                            <Book/>
+                            <Chat/>
                         </ListItemIcon>
-                        {open && <ListItemText primary="Deckifier"/>}
+                        {open && <ListItemText primary="Chats"/>}
                     </ListItem>
 
                 </List>

@@ -3,8 +3,10 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Box, useMediaQuery} from "@mui/material";
 import WhiteSideBar from "./WhiteSideBar.tsx";
 import UserContext from "../context/UserContext.tsx";
-import ChatPage from "./chat/ChatPage.tsx";
+import ChatPage from "./pages/chat/ChatPage.tsx";
 import Login from "./auth/Login.tsx";
+import ContactsPage from "./pages/contacts/ContactsPage.tsx";
+import HomePage from "./pages/home/HomePage.tsx";
 
 const Router = () => {
 
@@ -31,16 +33,9 @@ const Router = () => {
                         }}
                     >
                         <Routes>
-
-
-                            <Route
-                                path="/*"
-                                element={
-                                    <ChatPage/>
-                                }
-                            />
-
-
+                            <Route path="/*" element={<HomePage/>}/>
+                            <Route path="/contacts" element={<ContactsPage/>}/>
+                            <Route path="/chat" element={<ChatPage/>}/>
                         </Routes>
                     </Box>
                 </Box>
