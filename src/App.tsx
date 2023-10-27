@@ -4,6 +4,7 @@ import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
 import WhiteRouter from "./components/WhiteRouter.tsx";
 import {UserContextProvider} from "./context/UserContext.tsx";
 import {ToastContainer} from 'react-toastify';
+import {ContactsContextProvider} from "./context/ContactsContext.tsx";
 
 const serverURI = "http://localhost:6005/graphql";
 
@@ -71,8 +72,11 @@ function App() {
         <ThemeProvider theme={theme}>
             <ApolloProvider client={client}>
                 <Global styles={globalStyles}/>
-                <UserContextProvider> <WhiteRouter/> </UserContextProvider>
-
+                <UserContextProvider>
+                    <ContactsContextProvider>
+                        <WhiteRouter/>
+                    </ContactsContextProvider>
+                </UserContextProvider>
             </ApolloProvider>
         </ThemeProvider>
     </>
