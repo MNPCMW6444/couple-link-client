@@ -6,7 +6,7 @@ import {UserContextProvider} from "./context/UserContext.tsx";
 import {ToastContainer} from 'react-toastify';
 import {ContactsContextProvider} from "./context/ContactsContext.tsx";
 
-const serverURI = process.env.NODE_EMV === "development" ? "http://localhost:6005/graphql" : "https://server.scailean.com/graphql";
+const serverURI = process.env.NODE_ENV === "development" ? "http://localhost:6005/graphql" : "https://server.scailean.com/graphql";
 
 const globalStyles = css`
   * {
