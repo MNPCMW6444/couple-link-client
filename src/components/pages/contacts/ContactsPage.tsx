@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 
 const HomePage = () => {
 
-    const {contacts, invitations, sentInvitations} = useContext(ContactsContext);
+    const {contacts, invitations, sentInvitations, acceptInvitation} = useContext(ContactsContext);
 
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
@@ -68,8 +68,14 @@ const HomePage = () => {
         </Grid>
 
         {invitations.map((invitation) =>
-            <Grid item key={invitation}>
-                <Typography variant="h5">{invitation}</Typography>
+            <Grid item container key={invitation} justifyContent="center" alignItems="center" columnSpacing={2}>
+                <Grid item>
+                    <Typography variant="h5">{invitation}</Typography>
+                </Grid>
+                <Grid item>
+                    <Button variant="contained"
+                            onClick={() => acceptInvitation && acceptInvitation({variables: {phone: invitation}})}>Accept</Button>
+                </Grid>
             </Grid>
         )
         }
