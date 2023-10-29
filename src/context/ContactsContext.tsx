@@ -1,51 +1,62 @@
 import {Typography, Grid} from "@mui/material";
-import {createContext, ReactNode, useContext} from "react";
+import {createContext, ReactNode} from "react";
 import {gql, useQuery} from "@apollo/client";
-import UserContext from "./UserContext.tsx";
 
-
-const loadingMessage = (
+const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
         <Grid item>
-            <Typography>
-                Loading contacts...
-            </Typography>
+            <Typography>Loading contacts...</Typography>
         </Grid>
     </Grid>
 );
 
-const ContactsContext = createContext<{
-    contacts: string [];
-}>({
-    contacts: []
-});
+const CONTACTS_QUERY = gql`
+    query {
+        getcontacts
+    }
+`;
+
+const INVITATIONS_QUERY = gql`
+    query InvitationsQuery($sent: Boolean!) {
+        getinvitations(sent: $sent)
+    }
+`;
+
+interface ContactsContextType {
+    contacts: string[];
+    invitations: string[];
+    sentInvitations: string[];
+}
+
+const defaultValue: ContactsContextType = {
+    contacts: [],
+    invitations: [],
+    sentInvitations: []
+};
+
+const ContactsContext = createContext<ContactsContextType>(defaultValue);
 
 export const ContactsContextProvider = ({children}: { children: ReactNode }) => {
+    const contactsQuery = useQuery(CONTACTS_QUERY);
+    const invitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: false}});
+    const sentInvitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: true}});
 
-    const {data, loading, error} = useQuery(gql`
-        query Getcontacts {
-          getcontacts {
-            acceptor
-            initiator
-          }
+    const extractData = (query: typeof contactsQuery, key: string) => {
+        if (!query.loading && !query.error && query.data?.[key]) {
+            return query.data[key];
         }
-    `);
+        return [];
+    };
 
-    const {user} = useContext(UserContext);
+    const contacts = extractData(contactsQuery, "getcontacts");
+    const invitations = extractData(invitationsQuery, "getinvitations");
+    const sentInvitations = extractData(sentInvitationsQuery, "getinvitations");
 
-    const res = data?.getcontacts;
+    const isLoading = contactsQuery.loading || invitationsQuery.loading || sentInvitationsQuery.loading;
 
-    let contacts = [];
-    if (!loading && !error && data?.getcontacts) {
-        contacts = res.map((contact: { acceptor: string; initiator: string; }) => {
-            return contact.acceptor === user._id ? contact.initiator : contact.acceptor;
-        });
-    }
-    return (<ContactsContext.Provider
-            value={{
-                contacts: !loading && contacts
-            }}>
-            {loading ? loadingMessage : children}
+    return (
+        <ContactsContext.Provider value={{contacts, invitations, sentInvitations}}>
+            {isLoading ? LOADING_MESSAGE : children}
         </ContactsContext.Provider>
     );
 };

@@ -8,7 +8,7 @@ import TextField from "@mui/material/TextField";
 
 const HomePage = () => {
 
-    const {contacts} = useContext(ContactsContext);
+    const {contacts, invitations, sentInvitations} = useContext(ContactsContext);
 
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
@@ -43,9 +43,48 @@ const HomePage = () => {
                 </Grid>
             </>
         }
+
+        <Grid item>
+            <br/>
+            <br/>
+            <Typography variant="h4">contacts:</Typography>
+            <br/>
+        </Grid>
+
+
         {contacts.map((contact) =>
             <Grid item key={contact}>
                 <Typography variant="h5">{contact}</Typography>
+            </Grid>
+        )
+        }
+
+
+        <Grid item>
+            <br/>
+            <br/>
+            <Typography variant="h4">invitations:</Typography>
+            <br/>
+        </Grid>
+
+        {invitations.map((invitation) =>
+            <Grid item key={invitation}>
+                <Typography variant="h5">{invitation}</Typography>
+            </Grid>
+        )
+        }
+
+
+        <Grid item>
+            <br/>
+            <br/>
+            <Typography variant="h4">sentInvitations:</Typography>
+            <br/>
+        </Grid>
+
+        {sentInvitations.map((sentInvitation) =>
+            <Grid item key={sentInvitation}>
+                <Typography variant="h5">{sentInvitation}</Typography>
             </Grid>
         )
         }
