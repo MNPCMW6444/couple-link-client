@@ -8,7 +8,7 @@ import {styled} from "@mui/system";
 import {gql, useMutation, useQuery} from "@apollo/client";
 
 
-const WhiteTypography = styled(Typography)(({theme}) => ({
+export const WhiteTypography = styled(Typography)(({theme}) => ({
     fontFamily: "Monospace",
     fontWeight: "bold",
     fontSize: 32,
@@ -21,7 +21,7 @@ const loadingMessage = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
         <Grid item>
             <WhiteTypography>
-                Loading user account details...
+                Signing you in...
             </WhiteTypography>
         </Grid>
     </Grid>

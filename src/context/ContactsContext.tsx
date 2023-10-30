@@ -1,4 +1,4 @@
-import {Typography, Grid} from "@mui/material";
+import {Grid} from "@mui/material";
 import {createContext, ReactNode} from "react";
 import {
     ApolloCache,
@@ -9,11 +9,12 @@ import {
     useMutation,
     useQuery
 } from "@apollo/client";
+import {WhiteTypography} from "./UserContext.tsx";
 
 const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
         <Grid item>
-            <Typography>Loading contacts...</Typography>
+            <WhiteTypography>Loading contacts...</WhiteTypography>
         </Grid>
     </Grid>
 );
@@ -32,6 +33,7 @@ const INVITATIONS_QUERY = gql`
 
 interface ContactsContextType {
     contacts: string[];
+    contactsIds: string[];
     invitations: string[];
     sentInvitations: string[];
     acceptInvitation?: (options?: MutationFunctionOptions<any, OperationVariables, DefaultContext, ApolloCache<any>> | undefined) => Promise<FetchResult<any>>;
@@ -39,6 +41,7 @@ interface ContactsContextType {
 
 const defaultValue: ContactsContextType = {
     contacts: [],
+    contactsIds: [],
     invitations: [],
     sentInvitations: [],
 };
@@ -66,14 +69,16 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
         return [];
     };
 
-    const contacts = extractData(contactsQuery, "getcontacts");
+    const contactsJSON: string[] = extractData(contactsQuery, "getcontacts");
+    const contacts = contactsJSON.map((json) => JSON.parse(json).phone);
+    const contactsIds = contactsJSON.map((json) => JSON.parse(json).pairId);
     const invitations = extractData(invitationsQuery, "getinvitations");
     const sentInvitations = extractData(sentInvitationsQuery, "getinvitations");
 
     const isLoading = contactsQuery.loading || invitationsQuery.loading || sentInvitationsQuery.loading;
 
     return (
-        <ContactsContext.Provider value={{contacts, invitations, sentInvitations, acceptInvitation}}>
+        <ContactsContext.Provider value={{contacts, contactsIds, invitations, sentInvitations, acceptInvitation}}>
             {isLoading ? LOADING_MESSAGE : children}
         </ContactsContext.Provider>
     );

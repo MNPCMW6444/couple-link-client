@@ -76,9 +76,7 @@ function App() {
             <ApolloProvider client={client}>
                 <Global styles={globalStyles}/>
                 <UserContextProvider>
-                    <ContactsContextProvider>
-                        <WhiteRouter/>
-                    </ContactsContextProvider>
+                    <ContactsContextProvider><WhiteRouter/></ContactsContextProvider>
                 </UserContextProvider>
             </ApolloProvider>
         </ThemeProvider>

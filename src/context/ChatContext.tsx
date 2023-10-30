@@ -1,88 +1,85 @@
-import {Typography, Grid} from "@mui/material";
-import {createContext, ReactNode} from "react";
+import {createContext, Dispatch, ReactNode, SetStateAction, useState} from "react";
+import {gql, useMutation, useQuery} from "@apollo/client";
 
-const example = [
+const GET_SESSIONS = gql`
+    query Query($pairId: String!) {
+        getsessions(pairId: $pairId)
+    }
+`;
 
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"},
-    {
-        me: "sdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergregEdgfe3333333rgergreg"
-    },
-    {
-        me: "sdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgfWefew2222fewf12222ewgewgfWefew2222fewf12222ewgewgfWefew2222fewf12222ewgewgfWefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"}, {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"}, {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"}, {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"}, {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"}, {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"}, {
-        me: "sdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewfsdfsdfd11111esfewf",
-        him: "Wefew2222fewf12222ewgewgf",
-        ai: "Edgfe3333333rgergreg"
-    },
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"},
-    {me: "sdfsdfd11111esfewf", him: "Wefew2222fewf12222ewgewgf", ai: "Edgfe3333333rgergreg"},
+const GET_TRIPLETS = gql`
+    query Query($sessionId: String!) {
+        gettriplets(sessionId: $sessionId)
+    }
+`;
 
+const CREATE_SESSION = gql`
+    mutation CreateSession($pairId: String!) {
+        createsession(pairId: $pairId)
+    }
+`;
 
-]
+const SEND_MESSAGE = gql`
+    mutation SendMessage($sessionId: String!, $message: String!) {
+        sendmessage(sessionId: $sessionId, message: $message)
+    }
+`;
 
+type ChatContextType = {
+    pairId: string,
+    setPairId: Dispatch<SetStateAction<string>>,
+    sessions: string[],
+    selectedSession: string,
+    setSelectedSession: Dispatch<SetStateAction<string>>,
+    triplets: { me: string, him: string, ai: string } [],
+    createSession: (pairId: string) => void,
+    sendMessage: (sessionId: string, message: string) => void,
+};
 
-const loadingMessage = (
-    <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
-        <Grid item>
-            <Typography>
-                Loading chat...
-            </Typography>
-        </Grid>
-    </Grid>
-);
+const defaultValues: ChatContextType = {
+    pairId: "",
+    setPairId: () => {
+    },
+    sessions: [],
+    selectedSession: "",
+    setSelectedSession: () => {
+    },
+    triplets: [],
+    createSession: () => {
+    },
+    sendMessage: () => {
+    },
+};
 
-const ChatContext = createContext<{
-    triplets: { me: string, him: string, ai: string } [];
-}>({
-    triplets: example
-});
+export const ChatContext = createContext<ChatContextType>(defaultValues);
 
-export const ChatContextProvider = ({children}: { children: ReactNode }) => {
+export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
+    const [pairId, setPairId] = useState<string>("");
+    const {data: dataSessions} = useQuery(GET_SESSIONS, {variables: {pairId}});
+    const [selectedSession, setSelectedSession] = useState<string>("");
+    const {data: dataTriplets} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
+    const sessions = dataSessions?.getsessions || [];
+    const triplets = dataTriplets?.gettriplets || [];
 
-    const triplets = example
+    const [createSessionMutation] = useMutation(CREATE_SESSION);
+    const [sendMessageMutation] = useMutation(SEND_MESSAGE);
+
+    const createSession = (pairId: string) => createSessionMutation({variables: {pairId}});
+    const sendMessage = (sessionId: string, message: string) => sendMessageMutation({variables: {sessionId, message}});
+
 
     return (
-        <ChatContext.Provider
-            value={{
-                triplets
-            }}
-        >
-            {true ? loadingMessage : children}
+        <ChatContext.Provider value={{
+            pairId,
+            setPairId,
+            sessions,
+            selectedSession,
+            setSelectedSession,
+            triplets,
+            createSession,
+            sendMessage
+        }}>
+            {children}
         </ChatContext.Provider>
     );
 };
