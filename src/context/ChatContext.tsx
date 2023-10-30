@@ -59,7 +59,11 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const [selectedSession, setSelectedSession] = useState<string>("");
     const {data: dataTriplets} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
     const sessions = dataSessions?.getsessions || [];
-    const triplets = dataTriplets?.gettriplets || [];
+    const triplets = dataTriplets?.gettriplets.map((array: string[]) => ({
+        me: array[0],
+        him: array[1],
+        ai: [array[2]]
+    })) || [];
 
     const [createSessionMutation] = useMutation(CREATE_SESSION);
     const [sendMessageMutation] = useMutation(SEND_MESSAGE);
