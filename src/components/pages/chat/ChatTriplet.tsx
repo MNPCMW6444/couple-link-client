@@ -56,12 +56,12 @@ const ChatTriplet: React.FC<ChatTripletProps> = ({triplet}) => {
                 </Column>
                 <Column>
                     <Message>
-                        <Balloon>{triplet.him}</Balloon>
+                        <Balloon>{triplet.ai}</Balloon>
                     </Message>
                 </Column>
                 <Column>
                     <Message>
-                        <Balloon>{triplet.ai}</Balloon>
+                        <Balloon>{triplet.him}</Balloon>
                     </Message>
                 </Column>
             </div>
