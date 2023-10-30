@@ -11,28 +11,28 @@ app.use('/', express.static(path.join(__dirname, 'website')));
 
 
 // Production environment: serve the dist
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, 'dist')));
+//if (process.env.NODE_ENV === 'production') {
+app.use(express.static(path.join(__dirname, 'dist')));
 
-    /*
+/*
 
-        app.get('/tos', (_, res) => {
-            res.sendFile(path.join(__dirname, 'dist', 'tos.html'));
-        });
-
-        app.get('/sub', (_, res) => {
-            res.sendFile(path.join(__dirname, 'dist', 'sub.html'));
-        });
-
-        app.get('/tok', (_, res) => {
-            res.sendFile(path.join(__dirname, 'dist', 'tok.html'));
-        });
-    */
-
-    app.get('*', (_, res) => {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+    app.get('/tos', (_, res) => {
+        res.sendFile(path.join(__dirname, 'dist', 'tos.html'));
     });
-}
+
+    app.get('/sub', (_, res) => {
+        res.sendFile(path.join(__dirname, 'dist', 'sub.html'));
+    });
+
+    app.get('/tok', (_, res) => {
+        res.sendFile(path.join(__dirname, 'dist', 'tok.html'));
+    });
+*/
+
+app.get('*', (_, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+//}
 // Development environment: forward the requests to localhost:5992
 /*else if (process.env.NODE_ENV === 'development') {
     const {createProxyMiddleware} = require('http-proxy-middleware');
