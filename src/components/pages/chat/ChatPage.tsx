@@ -40,7 +40,7 @@ const ChatPage: React.FC = () => {
                     sx={{margin: '1em 0'}}>
                 {sessions.map((session, idx) => <MenuItem key={idx} value={session}>{session}</MenuItem>)}
             </Select>
-            {sessions.length === 0 && pairId ? (
+            {pairId ? (
                 <Button variant="contained" color="secondary" onClick={handleCreateSession}>
                     Create Session
                 </Button>
