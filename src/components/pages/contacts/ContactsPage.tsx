@@ -4,7 +4,8 @@ import ContactsContext from "../../../context/ContactsContext.tsx";
 import Button from "@mui/material/Button";
 import {Add} from "@mui/icons-material";
 import {gql, useMutation} from "@apollo/client";
-import TextField from "@mui/material/TextField";
+import PhoneInput from "react-phone-input-2";
+import 'react-phone-input-2/lib/style.css'
 
 const HomePage = () => {
 
@@ -33,8 +34,15 @@ const HomePage = () => {
             </Grid> :
             <>
                 <Grid item>
-                    <TextField value={phone} onChange={(e) => setPhone(e.target.value)}></TextField>
-                </Grid>
+                    <PhoneInput
+                        country={'il'}
+                        value={phone}
+                        onChange={setPhone}
+                        containerStyle={{width: '100%'}}
+                        inputStyle={{width: '100%'}}
+                        placeholder="Enter phone number"
+                        enableSearch={true}
+                    /> </Grid>
                 <Grid item>
                     <Button onClick={handleInvite}>Send</Button>
                 </Grid>

@@ -15,8 +15,8 @@ import Button from "@mui/material/Button";
 import UserContext from "../../context/UserContext";
 import {toast} from "react-toastify";
 import {gql, useMutation} from "@apollo/client";
-import 'react-phone-input-2/lib/style.css'
 import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css'
 
 export interface LablesConstants {
     IDLE: {
