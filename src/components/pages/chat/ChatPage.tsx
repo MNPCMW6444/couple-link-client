@@ -14,12 +14,10 @@ const ChatPage: React.FC = () => {
         triplets,
         sendMessage, createSession
     } = useContext(ChatContext);
-    const {contactsIds} = useContext(ContactsContext);
+    const {contacts} = useContext(ContactsContext);
     const [message, setMessage] = useState<string>("");
 
     const myTurn = !(triplets[triplets.length - 1]?.me !== "" || (triplets[triplets.length - 1]?.me !== "" && triplets[triplets.length - 1]?.him !== "" && triplets[triplets.length - 1]?.ai !== ""));
-
-    const {} = useContext(ChatContext);
 
     const handleCreateSession = () => {
         if (pairId) {
@@ -33,9 +31,14 @@ const ChatPage: React.FC = () => {
         <Paper sx={{overflow: "scroll", display: "flex", flexDirection: "column", height: "100%"}}>
             <Typography variant="h5">Chat Page</Typography>
             <Typography variant="subtitle1">Pair ID: {pairId}</Typography>
-            <Select value={pairId} onChange={(e) => setPairId(e.target.value as string)} sx={{margin: '1em 0'}}>
-                {contactsIds?.map((id, idx) => <MenuItem key={idx} value={id}>{id}</MenuItem>)}
+            <Select value={pairId} onChange={(e) => setPairId(e.target.value)} sx={{margin: '1em 0'}}>
+                {contacts?.map((contact, idx) => (
+                    <MenuItem key={idx} value={contact}>
+                        {contact}
+                    </MenuItem>
+                ))}
             </Select>
+
             <Select value={selectedSession} onChange={(e) => setSelectedSession(e.target.value as string)}
                     sx={{margin: '1em 0'}}>
                 {sessions.map((session, idx) => <MenuItem key={idx} value={session}>{session}</MenuItem>)}

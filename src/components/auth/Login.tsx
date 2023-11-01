@@ -15,6 +15,8 @@ import Button from "@mui/material/Button";
 import UserContext from "../../context/UserContext";
 import {toast} from "react-toastify";
 import {gql, useMutation} from "@apollo/client";
+import 'react-phone-input-2/lib/style.css'
+import PhoneInput from 'react-phone-input-2';
 
 export interface LablesConstants {
     IDLE: {
@@ -39,7 +41,7 @@ export const LABELS: LablesConstants = {
 };
 
 const Login = () => {
-    const [email, setEmail] = useState<string>("");
+    const [email, setPhoneNumber] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [buttonLabel, setButtonLabel] = useState<keyof LablesConstants>("IDLE");
     const {refreshUserData} = useContext(UserContext);
@@ -79,9 +81,10 @@ const Login = () => {
         }
     };
 
-    const validatePhone = (email: string) => {
-        const re = /^\+?[(]?[0-9]{3}[)]?[-\s.]?[0-9]{3}[-\s.]?[0-9]{4,6}$/
-        return re.test(email.toLowerCase());
+    const validatePhone = (number: string) => {
+        const parts = number.split(" ");
+        return !(parts.length === 2 && /^0+/.test(parts[1]));
+
     };
 
     const handleSubmit = (e: FormEvent) => {
@@ -102,20 +105,22 @@ const Login = () => {
             <Dialog open={true}>
                 <DialogTitle>Login</DialogTitle>
                 <DialogContent>
-                    <TextField
-                        autoFocus
-                        data-testid="email"
-                        margin="dense"
-                        label="Phone number"
-                        type="email"
-                        fullWidth
-                        variant="outlined"
+                    <PhoneInput
+                        country={'il'}
                         value={email}
-                        error={!validatePhone(email)}
-                        helperText={!validatePhone(email) ? "Invalid Phone Number" : ""}
-                        onChange={(e) => setEmail(e.target.value)}
-                        onKeyPress={handleKeyPress}
+                        onChange={setPhoneNumber}
+                        containerStyle={{width: '100%'}}
+                        inputStyle={{width: '100%'}}
+                        placeholder="Enter phone number"
+                        enableSearch={true}
                     />
+
+                    {/* Display error if validatePhone fails */}
+                    {!validatePhone(email) && (
+                        <span style={{color: 'red', fontSize: '0.8em'}}>
+                            Invalid phone number
+                        </span>
+                    )}
                     {asked && <TextField
                         margin="dense"
                         data-testid="password"

@@ -1,15 +1,18 @@
 import {createTheme, ThemeProvider} from "@mui/material";
 import {Global, css} from "@emotion/react";
-import {ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split} from '@apollo/client';
 import WhiteRouter from "./components/WhiteRouter.tsx";
 import {UserContextProvider} from "./context/UserContext.tsx";
 import {ToastContainer} from 'react-toastify';
 import {ContactsContextProvider} from "./context/ContactsContext.tsx";
+import {GraphQLWsLink} from '@apollo/client/link/subscriptions';
+import {createClient} from 'graphql-ws';
+import {getMainDefinition} from "@apollo/client/utilities";
 
 import.meta.env.VITE_NODE_ENV
 
 
-const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "http://localhost:6005/graphql" : "https://server.scailean.com/graphql";
+const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/" : "s://server.scailean.com/";
 
 const globalStyles = css`
   * {
@@ -63,9 +66,30 @@ function App() {
         }
     });
 
+    const httpLink = new HttpLink({
+        uri: "http" + serverURI,
+        credentials: 'include'
+    });
+
+    const wsLink = new GraphQLWsLink(createClient({
+        url: "ws" + serverURI
+    }));
+
+    const splitLink = split(
+        ({query}) => {
+            const definition = getMainDefinition(query);
+            return (
+                definition.kind === 'OperationDefinition' &&
+                definition.operation === 'subscription'
+            );
+        },
+        wsLink,
+        httpLink,
+    );
+
+
     const client = new ApolloClient({
-        uri: serverURI,
-        credentials: 'include',
+        link: splitLink,
         cache: new InMemoryCache(),
     });
 
