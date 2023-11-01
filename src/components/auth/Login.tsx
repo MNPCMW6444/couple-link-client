@@ -17,6 +17,7 @@ import {toast} from "react-toastify";
 import {gql, useMutation} from "@apollo/client";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
+import {useLocation} from "react-router-dom";
 
 export interface LablesConstants {
     IDLE: {
@@ -57,6 +58,17 @@ const Login = () => {
         signreq(phone: $phone)
     }
     `);
+
+    const useQuery = () => new URLSearchParams(useLocation().search);
+    let query = useQuery();
+
+    useEffect(() => {
+        setPassword(query.get("code") || "");
+    }, [query]);
+
+    useEffect(() => {
+        if (password) setAsked(true);
+    }, [password]);
 
     useEffect(() => {
         if (!loading && !error && data && data.signin) {
