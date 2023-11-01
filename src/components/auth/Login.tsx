@@ -63,11 +63,14 @@ const Login = () => {
     let query = useQuery();
 
     useEffect(() => {
-        setPassword(query.get("code") || "");
+        if (query.get("code") || "") setPassword(query.get("code") || "");
     }, [query]);
 
     useEffect(() => {
-        if (password) setAsked(true);
+        if (password && !asked) {
+            setAsked(true);
+            debugger;
+        }
     }, [password]);
 
     useEffect(() => {

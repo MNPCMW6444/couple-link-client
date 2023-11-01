@@ -1,5 +1,5 @@
 import {Grid} from "@mui/material";
-import {createContext, ReactNode} from "react";
+import {createContext, ReactNode, useContext, useEffect} from "react";
 import {
     ApolloCache,
     DefaultContext, FetchResult,
@@ -9,7 +9,7 @@ import {
     useMutation,
     useQuery
 } from "@apollo/client";
-import {WhiteTypography} from "./UserContext.tsx";
+import UserContext, {WhiteTypography} from "./UserContext.tsx";
 
 const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
@@ -49,6 +49,17 @@ const defaultValue: ContactsContextType = {
 const ContactsContext = createContext<ContactsContextType>(defaultValue);
 
 export const ContactsContextProvider = ({children}: { children: ReactNode }) => {
+
+    const {user} = useContext(UserContext);
+
+    useEffect(() => {
+        if (user) {
+            contactsQuery.refetch();
+            invitationsQuery.refetch();
+            sentInvitationsQuery.refetch();
+        }
+    }, [user]);
+
     const contactsQuery = useQuery(CONTACTS_QUERY);
     const invitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: false}});
     const sentInvitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: true}});
