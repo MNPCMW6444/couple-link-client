@@ -3,7 +3,6 @@ import {Global, css} from "@emotion/react";
 import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split} from '@apollo/client';
 import WhiteRouter from "./components/WhiteRouter.tsx";
 import {UserContextProvider} from "./context/UserContext.tsx";
-import {ToastContainer} from 'react-toastify';
 import {ContactsContextProvider} from "./context/ContactsContext.tsx";
 import {GraphQLWsLink} from '@apollo/client/link/subscriptions';
 import {createClient} from 'graphql-ws';
@@ -95,7 +94,6 @@ function App() {
 
 
     return <>
-        <ToastContainer/>
         <ThemeProvider theme={theme}>
             <ApolloProvider client={client}>
                 <Global styles={globalStyles}/>

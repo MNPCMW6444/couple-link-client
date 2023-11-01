@@ -42,9 +42,7 @@ const Router = () => {
                     </Box>
                 </Box>
             ) : (
-
                 <Login/>
-
             )}
         </BrowserRouter>
     );

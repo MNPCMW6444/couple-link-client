@@ -13,11 +13,11 @@ import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import UserContext from "../../context/UserContext";
-import {toast} from "react-toastify";
 import {gql, useMutation} from "@apollo/client";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 import {useLocation} from "react-router-dom";
+import toast, {Toaster} from 'react-hot-toast';
 
 export interface LablesConstants {
     IDLE: {
@@ -117,6 +117,7 @@ const Login = () => {
 
     return (
         <Box width="100%" height="100%" bgcolor="black">
+            <Toaster/>
             <Dialog open={true}>
                 <DialogTitle>Login</DialogTitle>
                 <DialogContent>
