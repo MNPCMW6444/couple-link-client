@@ -4,14 +4,13 @@ import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split} from '@apo
 import WhiteRouter from "./components/WhiteRouter.tsx";
 import {UserContextProvider} from "./context/UserContext.tsx";
 import {ContactsContextProvider} from "./context/ContactsContext.tsx";
-import {GraphQLWsLink} from '@apollo/client/link/subscriptions';
-import {createClient} from 'graphql-ws';
 import {getMainDefinition} from "@apollo/client/utilities";
+import {WebSocketLink} from "@apollo/client/link/ws";
 
 import.meta.env.VITE_NODE_ENV
 
 
-const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/" : "s://server.scailean.com/";
+const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.scailean.com/graphql";
 
 const globalStyles = css`
   * {
@@ -70,9 +69,12 @@ function App() {
         credentials: 'include'
     });
 
-    const wsLink = new GraphQLWsLink(createClient({
-        url: "ws" + serverURI
-    }));
+    const wsLink = new WebSocketLink({
+        uri: "ws" + serverURI,
+        options: {
+            reconnect: true,
+        },
+    });
 
     const splitLink = split(
         ({query}) => {

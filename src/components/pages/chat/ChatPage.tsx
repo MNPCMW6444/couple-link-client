@@ -4,7 +4,7 @@ import {useContext, useState} from "react";
 import ChatContext from "../../../context/ChatContext.tsx";
 import ContactsContext from "../../../context/ContactsContext.tsx";
 
-const ChatPage: React.FC = () => {
+const ChatPage = () => {
     const {
         pairId,
         setPairId,
@@ -20,10 +20,7 @@ const ChatPage: React.FC = () => {
     const myTurn = !(triplets[triplets.length - 1]?.me !== "" || (triplets[triplets.length - 1]?.me !== "" && triplets[triplets.length - 1]?.him !== "" && triplets[triplets.length - 1]?.ai !== ""));
 
     const handleCreateSession = () => {
-        debugger;
-        if (pairId) {
-            createSession(pairId);
-        }
+        pairId && createSession(pairId);
     };
 
 

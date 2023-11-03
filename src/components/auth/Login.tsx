@@ -67,10 +67,8 @@ const Login = () => {
     }, [query]);
 
     useEffect(() => {
-        if (password && !asked) {
-            setAsked(true);
-            debugger;
-        }
+        password && !asked &&
+        setAsked(true)
     }, [password]);
 
     useEffect(() => {
