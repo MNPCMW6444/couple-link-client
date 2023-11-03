@@ -1,6 +1,7 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react';
 import {gql, useMutation, useQuery, useSubscription} from '@apollo/client';
 import UserContext from "./UserContext.tsx";
+import ContactsContext from "./ContactsContext.tsx";
 
 const GET_SESSIONS = gql`
   query Query($pairId: String!) {
@@ -108,6 +109,8 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const sendMessage = (sessionId: string, message: string) =>
         sendMessageMutation({variables: {sessionId, message}});
 
+    const {contacts, contactsIds} = useContext(ContactsContext);
+
     const {data: subscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION);
 
     useEffect(() => {
@@ -119,12 +122,11 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
 
     const addMessageToTriplets = (message: Message) => {
         setTriplets(prevTriplets => {
-            debugger;
             // If there are no triplets or the last triplet is complete, add a new triplet
             if (prevTriplets.length === 0 || Object.values(prevTriplets[prevTriplets.length - 1]).every(m => m !== '')) {
                 const newTriplet = {
                     me: message.ownerid === user.phone ? message.message : '',
-                    him: message.ownerid === pairId ? message.message : '',
+                    him: message.owner === contacts[contactsIds.findIndex((id) => id === pairId)] ? message.message : '',
                     ai: message.ownerid === 'ai' ? message.message : '',
                 };
                 return [...prevTriplets, newTriplet];
@@ -136,7 +138,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                         const updatedTriplet = {...triplet};
                         if (message.ownerid === user._id && triplet.me === '') {
                             updatedTriplet.me = message.message;
-                        } else if (message.ownerid === pairId && triplet.him === '') {
+                        } else if (message.owner === contacts[contactsIds.findIndex((id) => id === pairId)] && triplet.him === '') {
                             updatedTriplet.him = message.message;
                         } else if (message.ownerid === 'ai' && triplet.ai === '') {
                             updatedTriplet.ai = message.message;
