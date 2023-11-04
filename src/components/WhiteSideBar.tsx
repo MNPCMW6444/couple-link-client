@@ -14,14 +14,16 @@ import {
     useMediaQuery,
     Select,
     Button,
+    Typography,
 } from "@mui/material";
 import {
     Menu as MenuIcon,
     MenuOpen,
     Close,
-    ArrowDownward,
-    Contacts,
-    Chat,
+    ContactsOutlined,
+    ChatOutlined,
+    Logout,
+    ArrowDropDownCircleOutlined,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext.tsx";
@@ -32,20 +34,33 @@ const DRAWER_WIDTH_OPEN = "255px";
 const DRAWER_WIDTH_CLOSED = "56px";
 
 const WhiteSideBar = () => {
-    const isMobile = useMediaQuery('(max-width: 600px)');
+    const isMobile = useMediaQuery('(max-width:600px)');
     const [open, setOpen] = useState(!isMobile);
     const {user, signout} = useContext(UserContext);
     const {contacts, contactsIds} = useContext(ContactsContext);
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession, createSession} = useContext(ChatContext);
-    const navigateX = useNavigate();
-    const navigate = (x: any) => {
-        navigateX(x);
-        if (isMobile) setOpen(false);
-    };
+    const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const handleMenu = (event: any) => setAnchorEl(event.currentTarget);
+    const handleMenu = (event) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
+
+    const routingItemStyle = {
+        cursor: 'pointer',
+        backgroundColor: '#e0e0e0',
+        margin: '5px 0',
+        borderRadius: 2,
+        '&:hover': {
+            backgroundColor: '#bdbdbd',
+        },
+    };
+
+    const menuItemStyle = {
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: '#f5f5f5',
+        },
+    };
 
     return (
         <Box>
@@ -65,55 +80,53 @@ const WhiteSideBar = () => {
                     flexShrink: 0,
                     "& .MuiDrawer-paper": {
                         width: open ? DRAWER_WIDTH_OPEN : DRAWER_WIDTH_CLOSED,
-                        transition: ".3s width",
+                        transition: "width 0.3s",
                     },
                 }}
             >
                 <List>
                     {isMobile && (
                         <ListItem
-                            sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
                             onClick={() => setOpen(!open)}
+                            sx={{...routingItemStyle}}
                         >
                             <ListItemIcon>{open ? <Close/> : <MenuIcon/>}</ListItemIcon>
                         </ListItem>
                     )}
                     <ListItem
-                        sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
                         onClick={handleMenu}
+                        sx={{...menuItemStyle}}
                     >
                         <ListItemIcon>
                             <Avatar sx={{width: 24, height: 24}}>{user?.number}</Avatar>
                         </ListItemIcon>
                         {open && <ListItemText primary="Menu"/>}
+                        {!open && <ArrowDropDownCircleOutlined/>}
                     </ListItem>
                     <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                        <MenuItem onClick={() => signout()}>Logout</MenuItem>
+                        <MenuItem onClick={() => signout()}>
+                            <Logout/> Logout
+                        </MenuItem>
                     </Menu>
                     <Divider/>
 
-                    <ListItem>
-                        <ListItemIcon>
-                            <ArrowDownward sx={{paddingLeft: open ? "70px" : 0}}/>
-                        </ListItemIcon>
-                    </ListItem>
                     <ListItem
-                        sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
                         onClick={() => navigate("/contacts")}
+                        sx={{...routingItemStyle}}
                     >
-                        <ListItemIcon><Contacts/></ListItemIcon>
+                        <ListItemIcon><ContactsOutlined/></ListItemIcon>
                         {open && <ListItemText primary="Manage Contacts"/>}
                     </ListItem>
                     <Divider/>
 
-                    <ListItem>
-                        {open && <ListItemText primary="Switch Contact:"/>}
-                    </ListItem>
+                    <Typography variant="caption" display="block" gutterBottom sx={{marginLeft: 2}}>
+                        {open ? "Switch Contact:" : <ArrowDropDownCircleOutlined/>}
+                    </Typography>
                     <ListItem>
                         <Select
-                            value={contacts[contactsIds.findIndex(id => id === pairId)]}
-                            onChange={e => setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)])}
-                            sx={{margin: '1em 0'}}
+                            value={contacts[contactsIds.findIndex(id => id === pairId)] || ''}
+                            onChange={(e) => setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)])}
+                            sx={{width: '100%', margin: '1em 0'}}
                         >
                             {contacts?.map((contact, idx) => (
                                 <MenuItem key={idx} value={contact}>{contact}</MenuItem>
@@ -124,22 +137,22 @@ const WhiteSideBar = () => {
                     {pairId && (
                         <>
                             <ListItem
-                                sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
                                 onClick={() => navigate("/chat")}
+                                sx={{...routingItemStyle}}
                             >
-                                <ListItemIcon><Chat/></ListItemIcon>
+                                <ListItemIcon><ChatOutlined/></ListItemIcon>
                                 {open && <ListItemText primary="Chats"/>}
                             </ListItem>
 
-                            <ListItem>
-                                {open && <ListItemText primary="Switch Session:"/>}
-                            </ListItem>
+                            <Typography variant="caption" display="block" gutterBottom sx={{marginLeft: 2}}>
+                                {open ? "Switch Session:" : <ArrowDropDownCircleOutlined/>}
+                            </Typography>
 
                             <ListItem>
                                 <Select
-                                    value={selectedSession}
-                                    onChange={e => setSelectedSession(e.target.value)}
-                                    sx={{margin: '1em 0'}}
+                                    value={selectedSession || ''}
+                                    onChange={(e) => setSelectedSession(e.target.value)}
+                                    sx={{width: '100%', margin: '1em 0'}}
                                 >
                                     {sessions.map((session, idx) => (
                                         <MenuItem key={idx} value={session}>{session}</MenuItem>
@@ -147,12 +160,14 @@ const WhiteSideBar = () => {
                                 </Select>
                             </ListItem>
                             <ListItem>
-                                {pairId && (
-                                    <Button variant="contained" color="secondary"
-                                            onClick={() => pairId && createSession(pairId)}>
-                                        Create a New Session
-                                    </Button>
-                                )}
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    fullWidth
+                                    onClick={() => pairId && createSession(pairId)}
+                                >
+                                    Create Session
+                                </Button>
                             </ListItem>
                         </>
                     )}
