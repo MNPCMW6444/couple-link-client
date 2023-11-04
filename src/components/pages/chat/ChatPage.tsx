@@ -12,6 +12,7 @@ const ChatPage = () => {
 
     const myTurn = !(triplets[triplets.length - 1]?.me !== "" || (triplets[triplets.length - 1]?.me !== "" && triplets[triplets.length - 1]?.him !== "" && triplets[triplets.length - 1]?.ai !== ""));
 
+    const {sendMessage} = useContext(ChatContext);
 
     return (
         <Paper sx={{overflow: "scroll", display: "flex", flexDirection: "column", height: "100%"}}>
