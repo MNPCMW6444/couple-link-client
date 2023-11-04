@@ -42,7 +42,7 @@ const WhiteSideBar = () => {
     const navigate = useNavigate();
 
     const [anchorEl, setAnchorEl] = useState(null);
-    const handleMenu = (event) => setAnchorEl(event.currentTarget);
+    const handleMenu = (event: any) => setAnchorEl(event.currentTarget);
     const handleClose = () => setAnchorEl(null);
 
     const routingItemStyle = {
