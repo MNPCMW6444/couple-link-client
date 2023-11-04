@@ -28,7 +28,7 @@ import UserContext from "../context/UserContext.tsx";
 import ContactsContext from "../context/ContactsContext.tsx";
 import ChatContext from "../context/ChatContext.tsx";
 
-const DRAWER_WIDTH_OPEN = "200px";
+const DRAWER_WIDTH_OPEN = "255px";
 const DRAWER_WIDTH_CLOSED = "56px";
 
 const WhiteSideBar = () => {
@@ -121,12 +121,6 @@ const WhiteSideBar = () => {
                         </Select>
                     </ListItem>
 
-                    <ListItem>
-                        <ListItemIcon>
-                            <ArrowDownward sx={{paddingLeft: open ? "70px" : 0}}/>
-                        </ListItemIcon>
-                    </ListItem>
-
                     {pairId && (
                         <>
                             <ListItem
@@ -156,7 +150,7 @@ const WhiteSideBar = () => {
                                 {pairId && (
                                     <Button variant="contained" color="secondary"
                                             onClick={() => pairId && createSession(pairId)}>
-                                        Create Session
+                                        Create a New Session
                                     </Button>
                                 )}
                             </ListItem>
