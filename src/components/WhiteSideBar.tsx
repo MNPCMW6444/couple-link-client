@@ -93,16 +93,16 @@ const WhiteSideBar = () => {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={() => {
+                        {/* <MenuItem onClick={() => {
                             navigate("/my-account")
                         }}>
                             Settings
-                        </MenuItem>
-                        <MenuItem onClick={() => {
+                        </MenuItem>*/}
+                        {/*   <MenuItem onClick={() => {
                             navigate("/about")
                         }}>
                             About Braikup
-                        </MenuItem>
+                        </MenuItem>*/}
                         <MenuItem onClick={() => signout()}>
                             Logout
                         </MenuItem>
@@ -154,38 +154,42 @@ const WhiteSideBar = () => {
                         </ListItemIcon>
                     </ListItem>
 
+                    {pairId && <>
+                        <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
+                                  onClick={() => {
+                                      /*
+                                                                        axiosInstance?.post("analytics/sidebar", {route: "deck"});
+                                      */
+                                      navigate("/chat")
+                                  }}>
+                            <ListItemIcon>
+                                <Chat/>
+                            </ListItemIcon>
+                            {open && <ListItemText primary="Chats"/>}
+                        </ListItem>
 
-                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
-                              onClick={() => {
-                                  /*
-                                                                    axiosInstance?.post("analytics/sidebar", {route: "deck"});
-                                  */
-                                  navigate("/chat")
-                              }}>
-                        <ListItemIcon>
-                            <Chat/>
-                        </ListItemIcon>
-                        {open && <ListItemText primary="Chats"/>}
-                    </ListItem>
 
+                        <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                            {open && <ListItemText primary="Switch Session:"/>}
+                        </ListItem>
 
-                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
-                        {open && <ListItemText primary="Switch Session:"/>}
-                    </ListItem>
-
-                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
-                        <Select value={selectedSession} onChange={(e) => setSelectedSession(e.target.value as string)}
-                                sx={{margin: '1em 0'}}>
-                            {sessions.map((session, idx) => <MenuItem key={idx} value={session}>{session}</MenuItem>)}
-                        </Select>
-                        {pairId ? (
-                            <Button variant="contained" color="secondary"
-                                    onClick={() => pairId && createSession(pairId)}>
-                                Create Session
-                            </Button>
-                        ) : null}
-                    </ListItem>
-
+                        <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                            <Select value={selectedSession}
+                                    onChange={(e) => setSelectedSession(e.target.value as string)}
+                                    sx={{margin: '1em 0'}}>
+                                {sessions.map((session, idx) => <MenuItem key={idx}
+                                                                          value={session}>{session}</MenuItem>)}
+                            </Select>
+                        </ListItem>
+                        <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                            {pairId ? (
+                                <Button variant="contained" color="secondary"
+                                        onClick={() => pairId && createSession(pairId)}>
+                                    Create Session
+                                </Button>
+                            ) : null}
+                        </ListItem>
+                    </>}
                 </List>
             </Drawer>
         </Box>

@@ -1,4 +1,4 @@
-import {Paper, Typography, Button, TextField} from "@mui/material";
+import {Paper, Button, TextField} from "@mui/material";
 import ChatTriplet from "./ChatTriplet.tsx";
 import {useContext, useState} from "react";
 import ChatContext from "../../../context/ChatContext.tsx";
@@ -15,8 +15,8 @@ const ChatPage = () => {
     const {sendMessage} = useContext(ChatContext);
 
     return (
-        <Paper sx={{overflow: "scroll", display: "flex", flexDirection: "column", height: "100%"}}>
-            <Typography variant="h5">Chat Page</Typography>
+        <Paper
+            sx={{overflow: "scroll", display: "flex", flexDirection: "column", height: "100%", minHeight: "90vh", justifyContent: "space-between"}}>
             {triplets.map((triplet, idx) => <ChatTriplet key={idx} triplet={triplet}/>)}
             <div style={{display: 'flex', alignItems: 'center', padding: '1em'}}>
                 <TextField

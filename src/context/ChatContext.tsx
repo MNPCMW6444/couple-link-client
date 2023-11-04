@@ -129,7 +129,6 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
             const newMessage = messageSubscriptionData.newMessage;
             addMessageToTriplets(newMessage);
         }
-        debugger;
         if (sessionSubscriptionData) {
             addSession();
         }

@@ -6,6 +6,7 @@ import {UserContextProvider} from "./context/UserContext.tsx";
 import {ContactsContextProvider} from "./context/ContactsContext.tsx";
 import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
+import {ChatContextProvider} from "./context/ChatContext.tsx";
 
 import.meta.env.VITE_NODE_ENV
 
@@ -100,7 +101,11 @@ function App() {
             <ApolloProvider client={client}>
                 <Global styles={globalStyles}/>
                 <UserContextProvider>
-                    <ContactsContextProvider><WhiteRouter/></ContactsContextProvider>
+                    <ContactsContextProvider>
+                        <ChatContextProvider>
+                            <WhiteRouter/>
+                        </ChatContextProvider>
+                    </ContactsContextProvider>
                 </UserContextProvider>
             </ApolloProvider>
         </ThemeProvider>

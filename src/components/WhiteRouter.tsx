@@ -7,7 +7,6 @@ import ChatPage from "./pages/chat/ChatPage.tsx";
 import Login from "./auth/Login.tsx";
 import ContactsPage from "./pages/contacts/ContactsPage.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
-import {ChatContextProvider} from "../context/ChatContext.tsx";
 
 const Router = () => {
 
@@ -37,7 +36,7 @@ const Router = () => {
                             <Route path="/*" element={<HomePage/>}/>
                             <Route path="/contacts"
                                    element={<ContactsPage/>}/>
-                            <Route path="/chat" element={<ChatContextProvider><ChatPage/></ChatContextProvider>}/>
+                            <Route path="/chat" element={<ChatPage/>}/>
                         </Routes>
                     </Box>
                 </Box>
