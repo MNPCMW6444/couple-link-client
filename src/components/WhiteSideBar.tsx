@@ -55,13 +55,6 @@ const WhiteSideBar = () => {
         },
     };
 
-    const menuItemStyle = {
-        cursor: 'pointer',
-        '&:hover': {
-            backgroundColor: '#f5f5f5',
-        },
-    };
-
     return (
         <Box>
             {isMobile && !open && (
@@ -95,7 +88,7 @@ const WhiteSideBar = () => {
                     )}
                     <ListItem
                         onClick={handleMenu}
-                        sx={{...menuItemStyle}}
+                        sx={{...routingItemStyle}}
                     >
                         <ListItemIcon>
                             <Avatar sx={{width: 24, height: 24}}>{user?.number}</Avatar>
@@ -119,7 +112,7 @@ const WhiteSideBar = () => {
                     </ListItem>
                     <Divider/>
 
-                    <Typography variant="caption" display="block" gutterBottom sx={{marginLeft: 2}}>
+                    <Typography variant="h6" display="block" gutterBottom sx={{marginLeft: 2}}>
                         {open ? "Switch Contact:" : <ArrowDropDownCircleOutlined/>}
                     </Typography>
                     <ListItem>
@@ -144,7 +137,7 @@ const WhiteSideBar = () => {
                                 {open && <ListItemText primary="Chats"/>}
                             </ListItem>
 
-                            <Typography variant="caption" display="block" gutterBottom sx={{marginLeft: 2}}>
+                            <Typography variant="h6" display="block" gutterBottom sx={{marginLeft: 2}}>
                                 {open ? "Switch Session:" : <ArrowDropDownCircleOutlined/>}
                             </Typography>
 
