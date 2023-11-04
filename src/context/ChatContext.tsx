@@ -41,6 +41,16 @@ const NEW_MESSAGE_SUBSCRIPTION = gql`
   }
 `;
 
+
+const NEW_SESSION_SUBSCRIPTION = gql`
+  subscription NewSession {
+    newSession {
+        _id
+    }
+  }
+`;
+
+
 type Message = {
     owner: string;
     ownerid: string;
@@ -84,7 +94,7 @@ export const ChatContext = createContext<ChatContextType>(defaultValues);
 
 export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [pairId, setPairId] = useState<string>('');
-    const {data: dataSessions} = useQuery(GET_SESSIONS, {variables: {pairId}});
+    const {data: dataSessions, refetch} = useQuery(GET_SESSIONS, {variables: {pairId}});
     const [selectedSession, setSelectedSession] = useState<string>('');
     const {data: dataTriplets} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
     const [triplets, setTriplets] = useState<{ me: string; him: string; ai: string }[]>([]);
@@ -111,14 +121,19 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
 
     const {contacts, contactsIds} = useContext(ContactsContext);
 
-    const {data: subscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION);
+    const {data: messageSubscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION);
+    const {data: sessionSubscriptionData} = useSubscription(NEW_SESSION_SUBSCRIPTION);
 
     useEffect(() => {
-        if (subscriptionData) {
-            const newMessage = subscriptionData.newMessage;
+        if (messageSubscriptionData) {
+            const newMessage = messageSubscriptionData.newMessage;
             addMessageToTriplets(newMessage);
         }
-    }, [subscriptionData]);
+        debugger;
+        if (sessionSubscriptionData) {
+            addSession();
+        }
+    }, [messageSubscriptionData, sessionSubscriptionData]);
 
     const addMessageToTriplets = (message: Message) => {
         setTriplets(prevTriplets => {
@@ -149,6 +164,11 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                 });
             }
         });
+    };
+
+
+    const addSession = () => {
+        refetch();
     };
 
 
