@@ -10,7 +10,7 @@ import {
     Avatar,
     MenuItem,
     Menu,
-    Divider, useMediaQuery,
+    Divider, useMediaQuery, Select, Button,
 } from "@mui/material";
 import {
     Menu as MenuIcon,
@@ -19,6 +19,8 @@ import {
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext.tsx";
+import ContactsContext from "../context/ContactsContext.tsx";
+import ChatContext from "../context/ChatContext.tsx";
 
 const DRAWER_WIDTH_OPEN = "200px"; // Adjust as needed
 const DRAWER_WIDTH_CLOSED = "56px"; // Adjust as needed
@@ -28,6 +30,8 @@ const WhiteSideBar = () => {
     const [open, setOpen] = useState<boolean>(!isMobile);
     const {user, signout} = useContext(UserContext);
 
+    const {contacts, contactsIds} = useContext(ContactsContext);
+    const {pairId, setPairId, sessions, selectedSession, setSelectedSession, createSession} = useContext(ChatContext);
 
     const navigateX = useNavigate();
     const navigate = (x: string) => {
@@ -104,6 +108,13 @@ const WhiteSideBar = () => {
                         </MenuItem>
                     </Menu>
                     <Divider/>
+
+
+                    <ListItem>
+                        <ListItemIcon>
+                            <ArrowDownward sx={{paddingLeft: open ? "70px" : 0}}/>
+                        </ListItemIcon>
+                    </ListItem>
                     <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}
                               onClick={() => {
                                   /*
@@ -114,9 +125,27 @@ const WhiteSideBar = () => {
                         <ListItemIcon>
                             <Contacts/>
                         </ListItemIcon>
-                        {open && <ListItemText primary="Contacts"/>}
+                        {open && <ListItemText primary="Manage Contacts"/>}
                     </ListItem>
                     <Divider/>
+
+
+                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                        {open && <ListItemText primary="Switch Contact:"/>}
+
+                    </ListItem>
+
+                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                        <Select value={contacts[contactsIds.findIndex((id) => id === pairId)]}
+                                onChange={(e) => setPairId(contactsIds[contacts.findIndex((number) => number === e.target.value)])}
+                                sx={{margin: '1em 0'}}>
+                            {contacts?.map((contact, idx) => (
+                                <MenuItem key={idx} value={contact}>
+                                    {contact}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </ListItem>
 
 
                     <ListItem>
@@ -137,6 +166,24 @@ const WhiteSideBar = () => {
                             <Chat/>
                         </ListItemIcon>
                         {open && <ListItemText primary="Chats"/>}
+                    </ListItem>
+
+
+                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                        {open && <ListItemText primary="Switch Session:"/>}
+                    </ListItem>
+
+                    <ListItem sx={{cursor: "pointer", backgroundColor: "#8A307F50", borderRadius: "5px"}}>
+                        <Select value={selectedSession} onChange={(e) => setSelectedSession(e.target.value as string)}
+                                sx={{margin: '1em 0'}}>
+                            {sessions.map((session, idx) => <MenuItem key={idx} value={session}>{session}</MenuItem>)}
+                        </Select>
+                        {pairId ? (
+                            <Button variant="contained" color="secondary"
+                                    onClick={() => pairId && createSession(pairId)}>
+                                Create Session
+                            </Button>
+                        ) : null}
                     </ListItem>
 
                 </List>
