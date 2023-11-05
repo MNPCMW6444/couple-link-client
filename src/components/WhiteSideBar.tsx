@@ -11,7 +11,7 @@ import {
     Divider,
     useMediaQuery,
     Select,
-    Typography, ListItemButton,
+    Typography, ListItemButton, Button,
 } from "@mui/material";
 import {
     Menu as MenuIcon,
@@ -116,24 +116,17 @@ const WhiteSideBar = () => {
                         <ListItemIcon><ChatOutlined/></ListItemIcon>
                         {open && <ListItemText primary="Manage Chats"/>}
                     </ListItemButton>
-
                     <Typography variant="h6" display="block" gutterBottom sx={{marginLeft: 2}}
                                 color={!pairId ? "gray" : "black"}>
                         {open ? "Switch Chat:" : <ArrowDropDownCircleOutlined/>}
                     </Typography>
-
-                    <ListItem>
-                        <Select
-                            disabled={!pairId}
-                            value={selectedSession || ''}
-                            onChange={(e) => setSelectedSession(e.target.value)}
-                            sx={{width: '100%', margin: '1em 0'}}
-                        >
-                            {sessions.map(({_id, name}) => (
-                                <MenuItem key={_id} value={_id}>{name}</MenuItem>
-                            ))}
-                        </Select>
-                    </ListItem>
+                    {sessions.map(({_id, name}) => (
+                        <ListItem> <Button variant={_id === selectedSession ? "contained" : "outlined"} key={_id}
+                                           sx={{width: "100%"}} onClick={() => {
+                            setSelectedSession(_id)
+                            navigate("/chat")
+                        }}>{name}</Button> </ListItem>
+                    ))}
                     {/*  <ListItem>
                         <Button
                             variant="contained"
