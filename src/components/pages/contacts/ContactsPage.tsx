@@ -1,108 +1,133 @@
-import {Grid, Typography} from "@mui/material";
-import {useContext, useState} from "react";
-import ContactsContext from "../../../context/ContactsContext.tsx";
-import Button from "@mui/material/Button";
-import {Add} from "@mui/icons-material";
-import {gql, useMutation} from "@apollo/client";
-import PhoneInput from "react-phone-input-2";
-import 'react-phone-input-2/lib/style.css'
+import {useContext, useState} from 'react';
+import {Grid, Typography, Button, Tab, Tabs, Box} from '@mui/material';
+import {Add} from '@mui/icons-material';
+import {gql, useMutation} from '@apollo/client';
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
+import ContactsContext from '../../../context/ContactsContext.tsx';
+import PropTypes from 'prop-types';
+
+const TabPanel = (props: any) => {
+    const {children, value, index, ...other} = props;
+    return (
+        <div
+            role="tabpanel"
+            hidden={value !== index}
+            id={`simple-tabpanel-${index}`}
+            aria-labelledby={`simple-tab-${index}`}
+            {...other}
+        >
+            {value === index && (
+                <Box sx={{p: 3}}>
+                    <Typography>{children}</Typography>
+                </Box>
+            )}
+        </div>
+    );
+};
+
+TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+};
+
+const a11yProps = (index: number) => {
+    return {
+        id: `simple-tab-${index}`,
+        'aria-controls': `simple-tabpanel-${index}`,
+    };
+};
 
 const HomePage = () => {
-
     const {contacts, invitations, sentInvitations, acceptInvitation} = useContext(ContactsContext);
-
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
+    const [tabValue, setTabValue] = useState(0);
 
     const [doInvite] = useMutation(gql`
-        mutation Mutation($contactPhone: String!) {
-          newpair(contactPhone: $contactPhone)
-        }
-    `)
+    mutation Mutation($contactPhone: String!) {
+      newpair(contactPhone: $contactPhone)
+    }
+  `);
 
     const handleInvite = () => {
         doInvite({variables: {contactPhone: phone}});
         setInvite(false);
-    }
+    };
 
-    return <Grid container alignItems="center" direction="column">
-        <Grid item>
-            <Typography variant="h1">Contacts</Typography>
-        </Grid>
-        {!invite ? <Grid item>
-                <Button onClick={() => setInvite(true)}><Add/> Invite New</Button>
-            </Grid> :
-            <>
-                <Grid item>
-                    <PhoneInput
-                        country={'il'}
-                        value={phone}
-                        onChange={setPhone}
-                        containerStyle={{width: '100%'}}
-                        inputStyle={{width: '100%'}}
-                        placeholder="Enter phone number"
-                        enableSearch={true}
-                    /> </Grid>
-                <Grid item>
-                    <Button onClick={handleInvite}>Send</Button>
-                </Grid>
-                <Grid item>
-                    <Button onClick={() => setInvite(false)}>Cancel</Button>
-                </Grid>
-            </>
-        }
+    const handleChangeTab = (newValue: any) => {
+        setTabValue(newValue);
+    };
 
-        <Grid item>
-            <br/>
-            <br/>
-            <Typography variant="h4">contacts:</Typography>
-            <br/>
-        </Grid>
-
-
-        {contacts.map((contact) =>
-            <Grid item key={contact}>
-                <Typography variant="h5">{contact}</Typography>
+    return (
+        <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
+            <Grid item xs={12} sm={8} md={6} lg={4}>
+                <Typography variant="h1" align="center" gutterBottom>
+                    Contacts
+                </Typography>
+                <Tabs value={tabValue} onChange={handleChangeTab} centered>
+                    <Tab label="Contacts" {...a11yProps(0)} />
+                    <Tab label="Invitations" {...a11yProps(1)} />
+                    <Tab label="Sent Invitations" {...a11yProps(2)} />
+                </Tabs>
+                <TabPanel value={tabValue} index={0}>
+                    {!invite ? (
+                        <Button variant="contained" onClick={() => setInvite(true)} startIcon={<Add/>}>
+                            Invite New
+                        </Button>
+                    ) : (
+                        <>
+                            <PhoneInput
+                                country={'il'}
+                                value={phone}
+                                onChange={setPhone}
+                                containerStyle={{width: '100%'}}
+                                inputStyle={{width: '100%'}}
+                                placeholder="Enter phone number"
+                                enableSearch={true}
+                            />
+                            <Button variant="contained" onClick={handleInvite} sx={{mt: 2, mr: 1}}>
+                                Send
+                            </Button>
+                            <Button variant="outlined" onClick={() => setInvite(false)} sx={{mt: 2}}>
+                                Cancel
+                            </Button>
+                        </>
+                    )}
+                    {contacts.map((contact, index) => (
+                        <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
+                            {contact}
+                        </Typography>
+                    ))}
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
+                    {invitations.map((invitation, index) => (
+                        <Grid container spacing={2} alignItems="center" key={`invitation-${index}`}>
+                            <Grid item xs={8}>
+                                <Typography variant="h6">{invitation}</Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                                <Button
+                                    variant="contained"
+                                    onClick={() => acceptInvitation && acceptInvitation({variables: {phone: invitation}})}
+                                >
+                                    Accept
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    ))}
+                </TabPanel>
+                <TabPanel value={tabValue} index={2}>
+                    {sentInvitations.map((sentInvitation, index) => (
+                        <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
+                            {sentInvitation}
+                        </Typography>
+                    ))}
+                </TabPanel>
             </Grid>
-        )
-        }
-
-
-        <Grid item>
-            <br/>
-            <br/>
-            <Typography variant="h4">invitations:</Typography>
-            <br/>
         </Grid>
-
-        {invitations.map((invitation) =>
-            <Grid item container key={invitation} justifyContent="center" alignItems="center" columnSpacing={2}>
-                <Grid item>
-                    <Typography variant="h5">{invitation}</Typography>
-                </Grid>
-                <Grid item>
-                    <Button variant="contained"
-                            onClick={() => acceptInvitation && acceptInvitation({variables: {phone: invitation}})}>Accept</Button>
-                </Grid>
-            </Grid>
-        )
-        }
-
-
-        <Grid item>
-            <br/>
-            <br/>
-            <Typography variant="h4">sentInvitations:</Typography>
-            <br/>
-        </Grid>
-
-        {sentInvitations.map((sentInvitation) =>
-            <Grid item key={sentInvitation}>
-                <Typography variant="h5">{sentInvitation}</Typography>
-            </Grid>
-        )
-        }
-    </Grid>
+    );
 };
 
-export default HomePage
+export default HomePage;
