@@ -3,11 +3,20 @@ import {gql, useMutation, useQuery, useSubscription} from '@apollo/client';
 import UserContext from "./UserContext.tsx";
 import ContactsContext from "./ContactsContext.tsx";
 
+
 const GET_SESSIONS = gql`
-  query Query($pairId: String!) {
-    getsessions(pairId: $pairId)
-  }
+  query Getsessions($pairId: String!) {
+      getsessions(pairId: $pairId) {
+        name
+        _id
+      }
+}
 `;
+
+type Session = {
+    name: string;
+    _id: string;
+}
 
 const GET_TRIPLETS = gql`
   query Query($sessionId: String!) {
@@ -16,9 +25,15 @@ const GET_TRIPLETS = gql`
 `;
 
 const CREATE_SESSION = gql`
-  mutation CreateSession($pairId: String!) {
-    createsession(pairId: $pairId)
-  }
+  mutation Createsession($pairId: String!, $sessionName: String!) {
+      createsession(pairId: $pairId, sessionName: $sessionName) {
+        pairId
+        name
+        _id
+        createdAt
+        updatedAt
+      }
+}
 `;
 
 const SEND_MESSAGE = gql`
@@ -64,11 +79,11 @@ type Message = {
 type ChatContextType = {
     pairId: string;
     setPairId: Dispatch<SetStateAction<string>>;
-    sessions: string[];
+    sessions: Session[];
     selectedSession: string;
     setSelectedSession: Dispatch<SetStateAction<string>>;
     triplets: { me: string; him: string; ai: string }[];
-    createSession: (pairId: string) => void;
+    createSession: (pairId: string, name: string) => void;
     sendMessage: (sessionId: string, message: string) => void;
     addMessageToTriplets: (message: Message) => void;
 };
@@ -115,7 +130,12 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const [createSessionMutation] = useMutation(CREATE_SESSION);
     const [sendMessageMutation] = useMutation(SEND_MESSAGE);
 
-    const createSession = (pairId: string) => createSessionMutation({variables: {pairId}});
+    const createSession = (pairId: string, name: string) => createSessionMutation({
+        variables: {
+            pairId,
+            sessionName: name
+        }
+    });
     const sendMessage = (sessionId: string, message: string) =>
         sendMessageMutation({variables: {sessionId, message}});
 
@@ -167,11 +187,12 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
 
 
     const addSession = () => {
-        refetch();
+        refetch().then(() => {
+        });
     };
 
 
-    const sessions = dataSessions?.getsessions || [];
+    const sessions: Session [] = dataSessions?.getsessions || [];
 
     return (
         <ChatContext.Provider

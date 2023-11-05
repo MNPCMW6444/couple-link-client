@@ -6,7 +6,7 @@ const HomePage = () => {
     const nav = useNavigate()
 
     useEffect(() => {
-        nav("/contacts")
+        nav("/chat")
     }, [nav])
 
     return "home"

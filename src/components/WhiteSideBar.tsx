@@ -7,14 +7,11 @@ import {
     ListItemText,
     IconButton,
     Box,
-    Avatar,
     MenuItem,
-    Menu,
     Divider,
     useMediaQuery,
     Select,
-    Button,
-    Typography,
+    Typography, ListItemButton,
 } from "@mui/material";
 import {
     Menu as MenuIcon,
@@ -36,14 +33,11 @@ const DRAWER_WIDTH_CLOSED = "56px";
 const WhiteSideBar = () => {
     const isMobile = useMediaQuery('(max-width:600px)');
     const [open, setOpen] = useState(!isMobile);
-    const {user, signout} = useContext(UserContext);
+    const {signout} = useContext(UserContext);
     const {contacts, contactsIds} = useContext(ContactsContext);
-    const {pairId, setPairId, sessions, selectedSession, setSelectedSession, createSession} = useContext(ChatContext);
+    const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
     const navigate = useNavigate();
 
-    const [anchorEl, setAnchorEl] = useState(null);
-    const handleMenu = (event: any) => setAnchorEl(event.currentTarget);
-    const handleClose = () => setAnchorEl(null);
 
     const routingItemStyle = {
         cursor: 'pointer',
@@ -86,21 +80,7 @@ const WhiteSideBar = () => {
                             <ListItemIcon>{open ? <Close/> : <MenuIcon/>}</ListItemIcon>
                         </ListItem>
                     )}
-                    <ListItem
-                        onClick={handleMenu}
-                        sx={{...routingItemStyle}}
-                    >
-                        <ListItemIcon>
-                            <Avatar sx={{width: 24, height: 24}}>{user?.number}</Avatar>
-                        </ListItemIcon>
-                        {open && <ListItemText primary="Menu"/>}
-                        {!open && <ArrowDropDownCircleOutlined/>}
-                    </ListItem>
-                    <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-                        <MenuItem onClick={() => signout()}>
-                            <Logout/> Logout
-                        </MenuItem>
-                    </Menu>
+
                     <Divider/>
 
                     <ListItem
@@ -127,43 +107,55 @@ const WhiteSideBar = () => {
                         </Select>
                     </ListItem>
 
-                    {pairId && (
-                        <>
-                            <ListItem
-                                onClick={() => navigate("/chat")}
-                                sx={{...routingItemStyle}}
-                            >
-                                <ListItemIcon><ChatOutlined/></ListItemIcon>
-                                {open && <ListItemText primary="Chats"/>}
-                            </ListItem>
 
-                            <Typography variant="h6" display="block" gutterBottom sx={{marginLeft: 2}}>
-                                {open ? "Switch Session:" : <ArrowDropDownCircleOutlined/>}
-                            </Typography>
+                    <ListItemButton
+                        onClick={() => navigate("/sessions")}
+                        sx={{...routingItemStyle}}
+                        disabled={!pairId}
+                    >
+                        <ListItemIcon><ChatOutlined/></ListItemIcon>
+                        {open && <ListItemText primary="Manage Chats"/>}
+                    </ListItemButton>
 
-                            <ListItem>
-                                <Select
-                                    value={selectedSession || ''}
-                                    onChange={(e) => setSelectedSession(e.target.value)}
-                                    sx={{width: '100%', margin: '1em 0'}}
-                                >
-                                    {sessions.map((session, idx) => (
-                                        <MenuItem key={idx} value={session}>{session}</MenuItem>
-                                    ))}
-                                </Select>
-                            </ListItem>
-                            <ListItem>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    fullWidth
-                                    onClick={() => pairId && createSession(pairId)}
-                                >
-                                    Create Session
-                                </Button>
-                            </ListItem>
-                        </>
-                    )}
+                    <Typography variant="h6" display="block" gutterBottom sx={{marginLeft: 2}}
+                                color={!pairId ? "gray" : "black"}>
+                        {open ? "Switch Chat:" : <ArrowDropDownCircleOutlined/>}
+                    </Typography>
+
+                    <ListItem>
+                        <Select
+                            disabled={!pairId}
+                            value={selectedSession || ''}
+                            onChange={(e) => setSelectedSession(e.target.value)}
+                            sx={{width: '100%', margin: '1em 0'}}
+                        >
+                            {sessions.map(({_id, name}) => (
+                                <MenuItem key={_id} value={_id}>{name}</MenuItem>
+                            ))}
+                        </Select>
+                    </ListItem>
+                    {/*  <ListItem>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            fullWidth
+                            onClick={() => pairId && createSession(pairId)}
+                            disabled={!pairId}
+                        >
+                            <Add/> Create Session
+                        </Button>
+                    </ListItem>*/}
+                    <ListItem
+                        onClick={() => signout()}
+                        sx={{...routingItemStyle}}
+                    >
+
+                        <ListItemIcon><Logout/></ListItemIcon>
+                        {open && <ListItemText primary="Logout"/>}
+
+                    </ListItem>
+
+
                 </List>
             </Drawer>
         </Box>
