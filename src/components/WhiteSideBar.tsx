@@ -62,6 +62,7 @@ const WhiteSideBar = () => {
             <Drawer
                 variant={isMobile ? "temporary" : "permanent"}
                 open={isMobile ? open : true}
+                onClose={() => setOpen(false)}
                 sx={{
                     width: open ? DRAWER_WIDTH_OPEN : DRAWER_WIDTH_CLOSED,
                     flexShrink: 0,
@@ -84,7 +85,10 @@ const WhiteSideBar = () => {
                     <Divider/>
 
                     <ListItem
-                        onClick={() => navigate("/contacts")}
+                        onClick={() => {
+                            navigate("/contacts")
+                            if (isMobile) setOpen(false);
+                        }}
                         sx={{...routingItemStyle}}
                     >
                         <ListItemIcon><ContactsOutlined/></ListItemIcon>
@@ -109,7 +113,10 @@ const WhiteSideBar = () => {
 
 
                     <ListItemButton
-                        onClick={() => navigate("/sessions")}
+                        onClick={() => {
+                            navigate("/sessions")
+                            if (isMobile) setOpen(false);
+                        }}
                         sx={{...routingItemStyle}}
                         disabled={!pairId}
                     >
@@ -125,6 +132,7 @@ const WhiteSideBar = () => {
                                            sx={{width: "100%"}} onClick={() => {
                             setSelectedSession(_id)
                             navigate("/chat")
+                            if (isMobile) setOpen(false);
                         }}>{name}</Button> </ListItem>
                     ))}
                     {/*  <ListItem>

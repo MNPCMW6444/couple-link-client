@@ -4,11 +4,15 @@ import {Add} from '@mui/icons-material';
 import {gql, useMutation} from '@apollo/client';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
-import ContactsContext from '../../../context/ContactsContext.tsx';
+import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
 
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
+
+    // Add a console.log to see if the panel attempts to render
+    console.log(`TabPanel render attempt for index ${index}, value is ${value}`);
+
     return (
         <div
             role="tabpanel"
@@ -39,26 +43,32 @@ const a11yProps = (index: number) => {
     };
 };
 
-const HomePage = () => {
+const ContactsPage = () => {
     const {contacts, invitations, sentInvitations, acceptInvitation} = useContext(ContactsContext);
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
     const [tabValue, setTabValue] = useState(0);
 
     const [doInvite] = useMutation(gql`
-    mutation Mutation($contactPhone: String!) {
-      newpair(contactPhone: $contactPhone)
-    }
-  `);
+        mutation Mutation($contactPhone: String!) {
+            newpair(contactPhone: $contactPhone)
+        }
+    `);
 
-    const handleInvite = () => {
-        doInvite({variables: {contactPhone: phone}});
+    const handleInvite = async () => {
+        try {
+            await doInvite({variables: {contactPhone: phone}});
+        } catch (error) {
+            // Handle error, such as displaying a notification
+            console.error("Error sending invitation:", error);
+        }
         setInvite(false);
     };
 
-    const handleChangeTab = (newValue: any) => {
+    const handleChangeTab = (_: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
+
 
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
@@ -67,11 +77,11 @@ const HomePage = () => {
                     Contacts
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
-                    <Tab label="Contacts" {...a11yProps(0)} />
-                    <Tab label="Invitations" {...a11yProps(1)} />
-                    <Tab label="Sent Invitations" {...a11yProps(2)} />
+                    <Tab label="Contacts" {...a11yProps(0)} value={0}/>
+                    <Tab label="Invitations" {...a11yProps(1)} value={1}/>
+                    <Tab label="Sent Invitations" {...a11yProps(2)} value={2}/>
                 </Tabs>
-                <TabPanel value={tabValue} index={0}>
+                <TabPanel value={tabValue} index={0} key={0}>
                     {!invite ? (
                         <Button variant="contained" onClick={() => setInvite(true)} startIcon={<Add/>}>
                             Invite New
@@ -99,9 +109,8 @@ const HomePage = () => {
                         <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
                             {contact}
                         </Typography>
-                    ))}
-                </TabPanel>
-                <TabPanel value={tabValue} index={1}>
+                    ))}                </TabPanel>
+                <TabPanel value={tabValue} index={1} key={1}>
                     {invitations.map((invitation, index) => (
                         <Grid container spacing={2} alignItems="center" key={`invitation-${index}`}>
                             <Grid item xs={8}>
@@ -116,9 +125,8 @@ const HomePage = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                    ))}
-                </TabPanel>
-                <TabPanel value={tabValue} index={2}>
+                    ))}                </TabPanel>
+                <TabPanel value={tabValue} index={2} key={2}>
                     {sentInvitations.map((sentInvitation, index) => (
                         <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
                             {sentInvitation}
@@ -130,4 +138,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default ContactsPage;
