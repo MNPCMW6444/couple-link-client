@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Box, useMediaQuery} from "@mui/material";
+import {Box} from "@mui/material";
 import WhiteSideBar from "./WhiteSideBar.tsx";
 import UserContext from "../context/UserContext.tsx";
 import ChatPage from "./pages/chat/ChatPage.tsx";
@@ -8,12 +8,13 @@ import Login from "./auth/Login.tsx";
 import ContactsPage from "./pages/contacts/ContactsPage.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import SessionsPage from "./pages/chat/SessionsPage.tsx";
+import useMobile from "../hooks/responsiveness/useMobile.ts";
 
 const Router = () => {
 
     const {user} = useContext(UserContext);
 
-    const isMobile = useMediaQuery("(max-width: 600px)");
+    const {isMobile} = useMobile()
 
     return (
         <BrowserRouter>

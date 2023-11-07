@@ -9,7 +9,6 @@ import {
     Box,
     MenuItem,
     Divider,
-    useMediaQuery,
     Select,
     Typography, ListItemButton, Button,
 } from "@mui/material";
@@ -26,12 +25,13 @@ import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext.tsx";
 import ContactsContext from "../context/ContactsContext.tsx";
 import ChatContext from "../context/ChatContext.tsx";
+import useMobile from "../hooks/responsiveness/useMobile.ts";
 
 const DRAWER_WIDTH_OPEN = "255px";
 const DRAWER_WIDTH_CLOSED = "56px";
 
 const WhiteSideBar = () => {
-    const isMobile = useMediaQuery('(max-width:600px)');
+    const {isMobile} = useMobile();
     const [open, setOpen] = useState(!isMobile);
     const {signout} = useContext(UserContext);
     const {contacts, contactsIds} = useContext(ContactsContext);

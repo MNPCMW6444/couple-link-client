@@ -6,6 +6,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
+import useMobile from "../../../hooks/responsiveness/useMobile.ts";
 
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
@@ -68,12 +69,13 @@ const ContactsPage = () => {
     const handleChangeTab = (_: React.SyntheticEvent, newValue: number) => {
         setTabValue(newValue);
     };
+    const {isMobile} = useMobile();
 
 
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
-                <Typography variant="h1" align="center" gutterBottom>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
                     Contacts
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
