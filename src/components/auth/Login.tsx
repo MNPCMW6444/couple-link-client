@@ -64,6 +64,7 @@ const Login = () => {
 
     useEffect(() => {
         if (query.get("code") || "") setPassword(query.get("code") || "");
+        if (query.get("phone") || "") setPhoneNumber(query.get("phone") || "");
     }, [query]);
 
     useEffect(() => {
