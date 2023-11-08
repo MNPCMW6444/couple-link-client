@@ -9,9 +9,12 @@ interface ChatTripletProps {
     };
 }
 
+const Container = styled.div`
+  width: 100%;
+`;
+
 const FlexRow = styled.div`
   display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -41,7 +44,7 @@ const Balloon: any = styled.div`
   max-width: 80%;
   align-self: ${(props: any) => (props.isMe ? 'flex-end' : props.isAi ? 'center' : 'flex-start')};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  margin: 5px 10px;
+  margin: 5px 0;
   flex: 0 0 auto;
 `;
 
@@ -84,19 +87,18 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
     );
 
     const mobileView = (
-        <FlexRow>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
             <Balloon isMe>{triplet.me}</Balloon>
             <Balloon>{triplet.him}</Balloon>
             <Balloon isAi>{triplet.ai}</Balloon>
-            <TripletDivider/>
-        </FlexRow>
+        </div>
     );
 
     return (
-        <div>
+        <Container>
             {isDesktopView ? desktopView : mobileView}
             <TripletDivider/>
-        </div>
+        </Container>
     );
 };
 
