@@ -86,9 +86,11 @@ const WhiteSideBar = () => {
                     {isMobile && (
                         <ListItem
                             onClick={() => setOpen(!open)}
-                            sx={{...routingItemStyle}}
+                            sx={{display: "flex", justifyContent: "center"}}
                         >
-                            <ListItemIcon>{open ? <Close/> : <MenuIcon/>}</ListItemIcon>
+                            <ListItemIcon>{open ?
+                                <Close sx={{backgroundColor: "#BBBBBB", borderRadius: 20}}/> :
+                                <MenuIcon/>}</ListItemIcon>
                         </ListItem>
                     )}
                     <ListItem
