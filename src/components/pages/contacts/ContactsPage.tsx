@@ -8,46 +8,14 @@ import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
 import useMobile from "../../../hooks/responsiveness/useMobile.ts";
 
-
-const rfp = () => {
-    const urlBase64ToUint8Array = (base64String: string) => {
-        const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding)
-            .replace(/\-/g, '+')
-            .replace(/_/g, '/');
-
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-
-        for (let i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-    }
-
-    navigator.serviceWorker.ready.then(function (registration) {
-        registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: urlBase64ToUint8Array('BOX9mgkzgqKdn0j6vi-86nqWXoo24Ir4NAPwLe3M-lHgZpBLT153asOtuX1ocALmL3aRzBWgoRhjDAC80-llb6g')
-        })
-            .then(function (subscription) {
-                console.log(subscription);
-                debugger;
-                // Send the subscription object to your server
-            })
-            .catch(function (error) {
-                console.error('Error during getSubscription()', error);
-            });
-    });
-}
-
+const SUBSCRIBE_TO_PUSH = gql`
+  mutation SubscribeToPush($subscription: JSON!) {
+    subscribeToPush(subscription: $subscription)
+  }
+`;
 
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
-
-    // Add a console.log to see if the panel attempts to render
-    console.log(`TabPanel render attempt for index ${index}, value is ${value}`);
-
     return (
         <div
             role="tabpanel"
@@ -71,7 +39,7 @@ TabPanel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
-const a11yProps = (index: number) => {
+const a11yProps = (index: any) => {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
@@ -83,41 +51,68 @@ const ContactsPage = () => {
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
     const [tabValue, setTabValue] = useState(0);
+    const [subscribeToPush] = useMutation(SUBSCRIBE_TO_PUSH);
+    const {isMobile} = useMobile();
 
-    const [doInvite] = useMutation(gql`
-        mutation Mutation($contactPhone: String!) {
-            newpair(contactPhone: $contactPhone)
+    const urlBase64ToUint8Array = (base64String: string) => {
+        const padding = '='.repeat((4 - base64String.length % 4) % 4);
+        const base64 = (base64String + padding)
+            .replace(/\-/g, '+')
+            .replace(/_/g, '/');
+        const rawData = window.atob(base64);
+        const outputArray = new Uint8Array(rawData.length);
+        for (let i = 0; i < rawData.length; ++i) {
+            outputArray[i] = rawData.charCodeAt(i);
         }
-    `);
+        return outputArray;
+    }
+
+    const handleSubscribeClick = () => {
+        navigator.serviceWorker.ready.then((registration) => {
+            registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: urlBase64ToUint8Array('BOX9mgkzgqKdn0j6vi-86nqWXoo24Ir4NAPwLe3M-lHgZpBLT153asOtuX1ocALmL3aRzBWgoRhjDAC80-llb6g')
+            })
+                .then((subscription) => {
+                    subscribeToPush({variables: {subscription: JSON.stringify(subscription)}});
+                })
+                .catch((error) => {
+                    console.error('Error during getSubscription()', error);
+                });
+        });
+    };
 
     const handleInvite = async () => {
         try {
             await doInvite({variables: {contactPhone: phone}});
+            setInvite(false);
         } catch (error) {
-            // Handle error, such as displaying a notification
             console.error("Error sending invitation:", error);
         }
-        setInvite(false);
     };
 
-    const handleChangeTab = (_: React.SyntheticEvent, newValue: number) => {
+    const handleChangeTab = (_: any, newValue: any) => {
         setTabValue(newValue);
     };
-    const {isMobile} = useMobile();
 
+    const [doInvite] = useMutation(gql`
+    mutation Mutation($contactPhone: String!) {
+      newpair(contactPhone: $contactPhone)
+    }
+  `);
 
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
-                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom onClick={rfp}>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom onClick={handleSubscribeClick}>
                     Contacts and RfP
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
-                    <Tab label="Contacts" {...a11yProps(0)} value={0}/>
-                    <Tab label="Invitations" {...a11yProps(1)} value={1}/>
-                    <Tab label="Sent Invitations" {...a11yProps(2)} value={2}/>
+                    <Tab label="Contacts" {...a11yProps(0)} />
+                    <Tab label="Invitations" {...a11yProps(1)} />
+                    <Tab label="Sent Invitations" {...a11yProps(2)} />
                 </Tabs>
-                <TabPanel value={tabValue} index={0} key={0}>
+                <TabPanel value={tabValue} index={0}>
                     {!invite ? (
                         <Button variant="contained" onClick={() => setInvite(true)} startIcon={<Add/>}>
                             Invite New
@@ -145,8 +140,9 @@ const ContactsPage = () => {
                         <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
                             {contact}
                         </Typography>
-                    ))}                </TabPanel>
-                <TabPanel value={tabValue} index={1} key={1}>
+                    ))}
+                </TabPanel>
+                <TabPanel value={tabValue} index={1}>
                     {invitations.map((invitation, index) => (
                         <Grid container spacing={2} alignItems="center" key={`invitation-${index}`}>
                             <Grid item xs={8}>
@@ -161,8 +157,9 @@ const ContactsPage = () => {
                                 </Button>
                             </Grid>
                         </Grid>
-                    ))}                </TabPanel>
-                <TabPanel value={tabValue} index={2} key={2}>
+                    ))}
+                </TabPanel>
+                <TabPanel value={tabValue} index={2}>
                     {sentInvitations.map((sentInvitation, index) => (
                         <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
                             {sentInvitation}
