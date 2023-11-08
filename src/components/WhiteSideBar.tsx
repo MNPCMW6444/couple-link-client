@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {
     Drawer,
     List,
@@ -37,6 +37,11 @@ const WhiteSideBar = () => {
     const {contacts, contactsIds} = useContext(ContactsContext);
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
     const navigate = useNavigate();
+
+
+    useEffect(() => {
+        setOpen(!isMobile)
+    }, [isMobile]);
 
 
     const routingItemStyle = {

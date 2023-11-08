@@ -16,6 +16,23 @@ const Column = styled('div')({
 });
 
 
+const Message = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    wordWrap: 'break-word',
+    padding: '8px',
+    minHeight: '50px',  // Adjust based on your desired minimum height
+});
+
+
+const DesktopBalloon = styled('div')({
+    background: '#e0e0e0',   // A light gray, you can adjust the color
+    borderRadius: '15px',
+    padding: '8px 12px',
+    maxWidth: '80%',   // Making sure balloons don't span the entire width
+});
+
 const Balloon = styled.div(({isMe, isAi}: any) => ({
     background: isAi ? '#e0e0e0' : isMe ? '#DCF8C6' : '#FFEEEE',
     borderRadius: '20px',
@@ -91,16 +108,24 @@ const ChatTriplet: React.FC<ChatTripletProps> = ({triplet}) => {
     });
 
     const desktopView = (
-        <div style={{display: 'flex', flexDirection: 'row', width: '100%'}}>
-            <Column style={{width: '33.33%', borderRight: '1px solid black'}}>
-                <Balloon isMe>{triplet.me}</Balloon>
-            </Column>
-            <Column style={{width: '33.33%', borderRight: '1px solid black'}}>
-                <Balloon>{triplet.ai}</Balloon>
-            </Column>
-            <Column style={{width: '33.33%'}}>
-                <Balloon isAI>{triplet.him}</Balloon>
-            </Column>
+        <div style={{display: 'flex', flexDirection: 'column'}}>
+            <div style={{display: 'flex', flexDirection: 'row'}}>
+                <Column>
+                    <Message>
+                        <DesktopBalloon>{triplet.me}</DesktopBalloon>
+                    </Message>
+                </Column>
+                <Column>
+                    <Message>
+                        <DesktopBalloon>{triplet.ai}</DesktopBalloon>
+                    </Message>
+                </Column>
+                <Column>
+                    <Message>
+                        <DesktopBalloon>{triplet.him}</DesktopBalloon>
+                    </Message>
+                </Column>
+            </div>
             <TripletDivider/>
         </div>
     );
