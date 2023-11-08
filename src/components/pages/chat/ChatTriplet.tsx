@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import {useEffect, useState} from "react";
+import {FC, useEffect, useState} from "react";
 
 interface ChatTripletProps {
     triplet: {
@@ -9,48 +9,49 @@ interface ChatTripletProps {
     };
 }
 
-const FlexRow = styled('div')`
+const FlexRow = styled.div`
   display: flex;
-  flexDirection: 'row';
-  justifyContent: 'center';
-  alignItems: 'center';
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 `;
 
-const Column = styled('div')`
-  display: 'flex';
-  flexDirection: 'column';
-  justifyContent: 'center';
-  alignItems: 'center';
+const Column = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   flex: 1;
 `;
 
-const DesktopMessage = styled('div')`
-  display: 'flex';
-  alignItems: 'center';
-  justifyContent: 'center';
-  wordWrap: 'break-word';
-  padding: '8px';
+const DesktopMessage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-wrap: break-word;
+  padding: 8px;
   flex: 1;
 `;
 
-const Balloon = styled('div')(({isMe, isAi}) => ({
-    background: isAi ? '#e0e0e0' : isMe ? '#DCF8C6' : '#FFEEEE',
-    borderRadius: '20px',
-    padding: '10px 16px',
-    maxWidth: '80%',
-    alignSelf: isMe ? 'flex-end' : isAi ? 'center' : 'flex-start',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
-    margin: '5px 10px',
-    flex: '0 0 auto', // Prevent flexbox from stretching the balloons
-}));
-
-const TripletDivider = styled('div')`
-  borderBottom: '0.5px dashed gray';
-  width: '100%';
-  margin: '10px 0';
+const Balloon: any = styled.div`
+  background: ${(props: any) => (props.isAi ? '#e0e0e0' : props.isMe ? '#DCF8C6' : '#FFEEEE')};
+  border-radius: 20px;
+  padding: 10px 16px;
+  max-width: 80%;
+  align-self: ${(props: any) => (props.isMe ? 'flex-end' : props.isAi ? 'center' : 'flex-start')};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  margin: 5px 10px;
+  flex: 0 0 auto;
 `;
 
-const ChatTriplet: React.FC<ChatTripletProps> = ({triplet}) => {
+const TripletDivider = styled.div`
+  border-bottom: 0.5px dashed gray;
+  width: 100%;
+  margin: 10px 0;
+`;
+
+const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
     const [isDesktopView, setIsDesktopView] = useState(window.innerWidth > 1000);
 
     const updateMedia = () => {
@@ -79,20 +80,24 @@ const ChatTriplet: React.FC<ChatTripletProps> = ({triplet}) => {
                     <Balloon>{triplet.him}</Balloon>
                 </DesktopMessage>
             </Column>
-            <TripletDivider/>
         </FlexRow>
     );
 
     const mobileView = (
-        <div style={{display: 'flex', flexDirection: 'column', width: '100%'}}>
+        <FlexRow>
             <Balloon isMe>{triplet.me}</Balloon>
             <Balloon>{triplet.him}</Balloon>
             <Balloon isAi>{triplet.ai}</Balloon>
             <TripletDivider/>
-        </div>
+        </FlexRow>
     );
 
-    return isDesktopView ? desktopView : mobileView;
+    return (
+        <div>
+            {isDesktopView ? desktopView : mobileView}
+            <TripletDivider/>
+        </div>
+    );
 };
 
 export default ChatTriplet;
