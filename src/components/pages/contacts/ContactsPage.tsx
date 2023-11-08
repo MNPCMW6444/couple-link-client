@@ -74,7 +74,17 @@ const ContactsPage = () => {
                 applicationServerKey: urlBase64ToUint8Array('BOX9mgkzgqKdn0j6vi-86nqWXoo24Ir4NAPwLe3M-lHgZpBLT153asOtuX1ocALmL3aRzBWgoRhjDAC80-llb6g')
             })
                 .then((subscription) => {
-                    subscribeToPush({variables: {subscription: JSON.stringify(subscription)}});
+                    // Convert the subscription object to the correct format
+                    const graphqlSubscription = {
+                        endpoint: subscription.endpoint,
+                        keys: {
+                            p256dh: subscription?.toJSON()?.keys?.p256dh,
+                            auth: subscription?.toJSON()?.keys?.auth,
+                        },
+                    };
+
+                    // Send the properly formatted subscription object to your server
+                    subscribeToPush({variables: {subscription: graphqlSubscription}});
                 })
                 .catch((error) => {
                     console.error('Error during getSubscription()', error);
