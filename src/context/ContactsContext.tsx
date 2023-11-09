@@ -1,13 +1,10 @@
 import {Grid} from "@mui/material";
 import {createContext, ReactNode, useContext, useEffect} from "react";
 import {
-    ApolloCache,
-    DefaultContext, FetchResult,
     gql,
-    MutationFunctionOptions,
-    OperationVariables,
+    useQuery,
     useMutation,
-    useQuery
+    useSubscription
 } from "@apollo/client";
 import UserContext, {WhiteTypography} from "./UserContext.tsx";
 
@@ -31,12 +28,38 @@ const INVITATIONS_QUERY = gql`
     }
 `;
 
+const NEW_INVITATION_SUBSCRIPTION = gql`
+    subscription NewInvitation {
+        newInvitation {
+            initiator
+            acceptor
+            active
+            _id
+            createdAt
+            updatedAt
+        }
+    }
+`;
+
+const INVITATION_ACCEPTED_SUBSCRIPTION = gql`
+    subscription InvitationAccepted {
+        invitationAccepted {
+            initiator
+            acceptor
+            active
+            _id
+            createdAt
+            updatedAt
+        }
+    }
+`;
+
 interface ContactsContextType {
     contacts: string[];
     contactsIds: string[];
     invitations: string[];
     sentInvitations: string[];
-    acceptInvitation?: (options?: MutationFunctionOptions<any, OperationVariables, DefaultContext, ApolloCache<any>> | undefined) => Promise<FetchResult<any>>;
+    acceptInvitation?: any
 }
 
 const defaultValue: ContactsContextType = {
@@ -49,8 +72,20 @@ const defaultValue: ContactsContextType = {
 const ContactsContext = createContext<ContactsContextType>(defaultValue);
 
 export const ContactsContextProvider = ({children}: { children: ReactNode }) => {
-
     const {user} = useContext(UserContext);
+
+    const contactsQuery = useQuery(CONTACTS_QUERY);
+    const invitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: false}});
+    const sentInvitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: true}});
+
+    const [acceptInvitation] = useMutation(gql`
+        mutation Mutation($phone: String!) {
+          agreepair(phone: $phone)
+        }
+    `);
+
+    const {data: newInvitationData} = useSubscription(NEW_INVITATION_SUBSCRIPTION);
+    const {data: invitationAcceptedData} = useSubscription(INVITATION_ACCEPTED_SUBSCRIPTION);
 
     useEffect(() => {
         if (user) {
@@ -58,20 +93,7 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
             invitationsQuery.refetch();
             sentInvitationsQuery.refetch();
         }
-    }, [user]);
-
-    const contactsQuery = useQuery(CONTACTS_QUERY);
-    const invitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: false}});
-    const sentInvitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: true}});
-
-
-    const [acceptInvitation] = useMutation(gql`
-        mutation Mutation($phone: String!) {
-          agreepair(phone: $phone)
-        }
-    `
-    )
-
+    }, [user, newInvitationData, invitationAcceptedData]);
 
     const extractData = (query: typeof contactsQuery, key: string) => {
         if (!query.loading && !query.error && query.data?.[key]) {
