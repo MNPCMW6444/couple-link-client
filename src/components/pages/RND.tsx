@@ -8,7 +8,9 @@ import {
     List,
     ListItem,
     ListItemText,
-    CircularProgress
+    CircularProgress,
+    Box,
+    Divider
 } from "@mui/material";
 import useMobile from "../../hooks/responsiveness/useMobile.ts";
 
@@ -85,90 +87,58 @@ const RND = () => {
     if (error) return <p>Error :(</p>;
 
     return (
-        <Grid container direction="column" padding="5%">
-            <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
-                Roles
-            </Typography>
-            <TextField
-                label="New Role"
-                value={newRole}
-                onChange={(e) => setNewRole(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Message One Example"
-                value={messageOneExample}
-                onChange={(e) => setMessageOneExample(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <TextField
-                label="Message Two Example"
-                value={messageTwoExample}
-                onChange={(e) => setMessageTwoExample(e.target.value)}
-                fullWidth
-                margin="normal"
-            />
-            <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}>
-                Add Role
-            </Button>
-            <List>
-                {data.getmyroles.map(({
-                                          _id,
-                                          role,
-                                          category,
-                                          description,
-                                          aiMessage,
-                                          messageOneExample,
-                                          messageTwoExample
-                                      }: any) => (
-                    <>
-
-                        <ListItem key={_id}>
-                            <ListItemText
-                                primary={`${role} (${category})`}
-                                secondary={`Description: ${description}`}
-                            /> </ListItem>
-                        <ListItem key={_id}>
-                            <ListItemText
-
-                                secondary={`Example side 1: ${messageOneExample}`}
-                            /> </ListItem>
-                        <ListItem key={_id}>
-                            <ListItemText
-
-                                secondary={`Example side 2: ${messageTwoExample}`}
-                            /> </ListItem>
-                        <ListItem key={_id}>
-                            <ListItemText
-
-                                secondary={`
-                            Result:
-                            ${aiMessage}`}
-                            /> </ListItem>
-                        <ListItem key={_id}>
+        <Grid container spacing={2} padding={2}>
+            <Grid item xs={12}>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center">
+                    Roles
+                </Typography>
+            </Grid>
+            <Grid item xs={12}>
+                <TextField label="New Role" value={newRole} onChange={(e) => setNewRole(e.target.value)} fullWidth/>
+                <TextField label="Category" value={category} onChange={(e) => setCategory(e.target.value)} fullWidth/>
+                <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)}
+                           fullWidth/>
+                <TextField label="Message One Example" value={messageOneExample}
+                           onChange={(e) => setMessageOneExample(e.target.value)} fullWidth/>
+                <TextField label="Message Two Example" value={messageTwoExample}
+                           onChange={(e) => setMessageTwoExample(e.target.value)} fullWidth/>
+                <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole} fullWidth>
+                    Add Role
+                </Button>
+            </Grid>
+            <Grid item xs={12}>
+                <List>
+                    {data.getmyroles.map(({
+                                              _id,
+                                              role,
+                                              category,
+                                              description,
+                                              aiMessage,
+                                              messageOneExample,
+                                              messageTwoExample
+                                          }: any) => (
+                        <Box key={_id} my={2}>
+                            <ListItem>
+                                <ListItemText primary={`${role} (${category})`}
+                                              secondary={`Description: ${description}`}/>
+                            </ListItem>
+                            <Divider/>
+                            <ListItem>
+                                <ListItemText secondary={`Example Message 1: ${messageOneExample}`}/>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText secondary={`Example Message 2: ${messageTwoExample}`}/>
+                            </ListItem>
+                            <ListItem>
+                                <ListItemText secondary={`AI Message: ${aiMessage}`}/>
+                            </ListItem>
                             <Button onClick={() => handlePublishRole(_id)}>Publish</Button>
-                        </ListItem> </>
-                ))}
-            </List>
+                        </Box>
+                    ))}
+                </List>
+            </Grid>
         </Grid>
-    )
-        ;
+    );
 };
 
 export default RND;
