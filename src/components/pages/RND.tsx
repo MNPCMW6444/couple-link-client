@@ -93,7 +93,7 @@ const RND = () => {
                     Roles
                 </Typography>
             </Grid>
-            <Grid item container xs={12} rowSpacing={4}>
+            <Grid item xs={12} container direction="column" rowSpacing={2}>
                 <Grid item>
                     <TextField label="New Role" value={newRole} onChange={(e) => setNewRole(e.target.value)} fullWidth/>
                 </Grid> <Grid item>
