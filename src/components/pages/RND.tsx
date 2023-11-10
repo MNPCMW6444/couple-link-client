@@ -137,20 +137,38 @@ const RND = () => {
                                           messageOneExample,
                                           messageTwoExample
                                       }: any) => (
-                    <ListItem key={_id}>
-                        <ListItemText
-                            primary={`${role} (${category})`}
-                            secondary={`Description: ${description}, Examples: ${messageOneExample}, ${messageTwoExample}
-                            
+                    <>
+
+                        <ListItem key={_id}>
+                            <ListItemText
+                                primary={`${role} (${category})`}
+                                secondary={`Description: ${description}`}
+                            /> </ListItem>
+                        <ListItem key={_id}>
+                            <ListItemText
+
+                                secondary={`Example side 1: ${messageOneExample}`}
+                            /> </ListItem>
+                        <ListItem key={_id}>
+                            <ListItemText
+
+                                secondary={`Example side 2: ${messageTwoExample}`}
+                            /> </ListItem>
+                        <ListItem key={_id}>
+                            <ListItemText
+
+                                secondary={`
                             Result:
                             ${aiMessage}`}
-                        />
-                        <Button onClick={() => handlePublishRole(_id)}>Publish</Button>
-                    </ListItem>
+                            /> </ListItem>
+                        <ListItem key={_id}>
+                            <Button onClick={() => handlePublishRole(_id)}>Publish</Button>
+                        </ListItem> </>
                 ))}
             </List>
         </Grid>
-    );
+    )
+        ;
 };
 
 export default RND;
