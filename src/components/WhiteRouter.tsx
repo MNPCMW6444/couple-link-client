@@ -9,7 +9,7 @@ import ContactsPage from "./pages/contacts/ContactsPage.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import SessionsPage from "./pages/chat/SessionsPage.tsx";
 import useMobile from "../hooks/responsiveness/useMobile.ts";
-import RND from "./pages/RND.tsx";
+import RND from "./pages/rnd/RND.tsx";
 
 const Router = () => {
 
