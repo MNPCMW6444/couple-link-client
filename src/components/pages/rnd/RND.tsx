@@ -30,8 +30,8 @@ const GET_MY_ROLES = gql`
 `;
 
 const ADD_ROLE = gql`
-  mutation Addrole($role: String!, $category: String!, $description: String!, $messageOneExample: String, $messageTwoExample: String) {
-    addrole(role: $role, category: $category, description: $description, messageOneExample: $messageOneExample, messageTwoExample: $messageTwoExample)
+  mutation Addrole($role: String!, $category: String!, $description: String!, name: String) {
+    addrole(role: $role, category: $category, description: $description, name: $name)
   }
 `;
 
@@ -46,7 +46,6 @@ const RND = () => {
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
     const [messageOneExample, setMessageOneExample] = useState('');
-    const [messageTwoExample, setMessageTwoExample] = useState('');
     const [mutating, setMutating] = useState(false);
 
     const handleAddRole = () => {
@@ -56,8 +55,7 @@ const RND = () => {
                 role: newRole,
                 category,
                 description,
-                messageOneExample,
-                messageTwoExample
+                name: messageOneExample,
             }
         }).then(() => {
             refetch();
@@ -67,7 +65,6 @@ const RND = () => {
         setCategory('');
         setDescription('');
         setMessageOneExample('');
-        setMessageTwoExample('');
     };
 
 
@@ -86,27 +83,29 @@ const RND = () => {
                     </Grid>
                     <Grid item xs={12} container direction="column" rowSpacing={2}>
                         <Grid item>
-                            <TextField label="New Role" value={newRole} onChange={(e) => setNewRole(e.target.value)}
+                            <TextField label="The Role Prompt" value={newRole}
+                                       onChange={(e) => setNewRole(e.target.value)}
                                        fullWidth/>
-                        </Grid> <Grid item>
-                        <TextField label="Category" value={category} onChange={(e) => setCategory(e.target.value)}
-                                   fullWidth/>
-                    </Grid> <Grid item>
-                        <TextField label="Description" value={description}
-                                   onChange={(e) => setDescription(e.target.value)}
-                                   fullWidth/>
-                    </Grid> <Grid item>
-                        <TextField label="Message One Example" value={messageOneExample}
-                                   onChange={(e) => setMessageOneExample(e.target.value)} fullWidth/>
-                    </Grid> <Grid item>
-                        <TextField label="Message Two Example" value={messageTwoExample}
-                                   onChange={(e) => setMessageTwoExample(e.target.value)} fullWidth/>
-                    </Grid> <Grid item>
-                        <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}
-                                fullWidth>
-                            Add Role
-                        </Button>
-                    </Grid>
+                        </Grid>
+                        <Grid item>
+                            <TextField label="Category" value={category} onChange={(e) => setCategory(e.target.value)}
+                                       fullWidth/>
+                        </Grid>
+                        <Grid item>
+                            <TextField label="Description" value={description}
+                                       onChange={(e) => setDescription(e.target.value)}
+                                       fullWidth/>
+                        </Grid>
+                        <Grid item>
+                            <TextField label="Set Name - copy exact name" value={messageOneExample}
+                                       onChange={(e) => setMessageOneExample(e.target.value)} fullWidth/>
+                        </Grid>
+                        <Grid item>
+                            <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}
+                                    fullWidth>
+                                Add Role
+                            </Button>
+                        </Grid>
                     </Grid>
                     <Grid item xs={12} container direction="column" rowSpacing={2}>
                         {data.getmyroles.map((role: any) => <Grid item><Role key={role._id} rolex={role}/></Grid>)}
