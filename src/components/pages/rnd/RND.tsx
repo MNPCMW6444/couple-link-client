@@ -5,15 +5,11 @@ import {
     Typography,
     TextField,
     Button,
-    List,
-    ListItem,
-    ListItemText,
     CircularProgress,
-    Box,
-    Divider
 } from "@mui/material";
 import useMobile from "../../../hooks/responsiveness/useMobile.ts";
-import Set from "./Set.tsx"
+import Role from "./Role.tsx";
+import Set from "./Set.tsx";
 
 const GET_MY_ROLES = gql`
   query Getmyroles {
@@ -39,11 +35,6 @@ const ADD_ROLE = gql`
   }
 `;
 
-const PUBLISH_ROLE = gql`
-  mutation Publishrole($roleId: String!) {
-    publishrole(roleId: $roleId)
-  }
-`;
 
 const RND = () => {
     const {isMobile} = useMobile();
@@ -51,7 +42,6 @@ const RND = () => {
     const [addRole] = useMutation(ADD_ROLE, {
         refetchQueries: [GET_MY_ROLES],
     });
-    const [publishRole] = useMutation(PUBLISH_ROLE);
     const [newRole, setNewRole] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
@@ -80,9 +70,6 @@ const RND = () => {
         setMessageTwoExample('');
     };
 
-    const handlePublishRole = (roleId: string) => {
-        publishRole({variables: {roleId}});
-    };
 
     if (loading) return <CircularProgress/>;
     if (error) return <p>Error :(</p>;
@@ -121,36 +108,8 @@ const RND = () => {
                         </Button>
                     </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <List>
-                            {data.getmyroles.map(({
-                                                      _id,
-                                                      role,
-                                                      category,
-                                                      description,
-                                                      aiMessage,
-                                                      messageOneExample,
-                                                      messageTwoExample
-                                                  }: any) => (
-                                <Box key={_id} my={2}>
-                                    <ListItem>
-                                        <ListItemText primary={`${role} (${category})`}
-                                                      secondary={`Description: ${description}`}/>
-                                    </ListItem>
-                                    <Divider/>
-                                    <ListItem>
-                                        <ListItemText secondary={`Example Message 1: ${messageOneExample}`}/>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemText secondary={`Example Message 2: ${messageTwoExample}`}/>
-                                    </ListItem>
-                                    <ListItem>
-                                        <ListItemText secondary={`AI Message: ${aiMessage}`}/>
-                                    </ListItem>
-                                    <Button onClick={() => handlePublishRole(_id)}>Publish</Button>
-                                </Box>
-                            ))}
-                        </List>
+                    <Grid item xs={12} container direction="column" rowSpacing={2}>
+                        {data.getmyroles.map((role: any) => <Grid item><Role key={role._id} rolex={role}/></Grid>)}
                     </Grid>
                 </Grid>
             </>
