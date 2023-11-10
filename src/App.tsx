@@ -67,7 +67,26 @@ function App() {
 
     const httpLink = new HttpLink({
         uri: "http" + serverURI,
-        credentials: 'include'
+        credentials: 'include',
+        fetch: (uri, options, timeout = 120000) => {
+            return new Promise((resolve, reject) => {
+                // Set the timeout
+                const timer = setTimeout(() => {
+                    reject(new Error("Request timed out"));
+                }, timeout);
+
+                fetch(uri, options).then(
+                    response => {
+                        clearTimeout(timer);
+                        resolve(response);
+                    },
+                    err => {
+                        clearTimeout(timer);
+                        reject(err);
+                    }
+                ).catch(reject);
+            });
+        }
     });
 
     const wsLink = new WebSocketLink({
