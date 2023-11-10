@@ -16,7 +16,7 @@ import {
     Close,
     ContactsOutlined,
     ChatOutlined,
-    Logout, NotificationAdd,
+    Logout, NotificationAdd, DeveloperMode,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext.tsx";
@@ -43,6 +43,8 @@ const WhiteSideBar = () => {
     const {contacts, contactsIds} = useContext(ContactsContext);
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
     const navigate = useNavigate();
+
+    const {user} = useContext(UserContext);
 
     const [subscribeToPush] = useMutation(SUBSCRIBE_TO_PUSH);
 
@@ -106,6 +108,7 @@ const WhiteSideBar = () => {
         margin: '5px 0',
         borderRadius: 2,
     };
+
 
     return (
         <Box>
@@ -221,6 +224,17 @@ const WhiteSideBar = () => {
                         {open && <ListItemText primary="Enable Notifications"/>}
 
                     </ListItem>
+
+
+                    {user.phone === "972527820055" || user.phone === "972528971871" && <ListItem
+                        onClick={() => navigate("/rnd")}
+                        sx={{...routingItemStyle}}
+                    >
+
+                        <ListItemIcon><DeveloperMode/></ListItemIcon>
+                        {open && <ListItemText primary="Prompt R&D"/>}
+
+                    </ListItem>}
 
 
                 </List>

@@ -45,6 +45,7 @@ export const UserContextProvider = ({children}: { children: ReactNode }) => {
     const {data, loading, refetch} = useQuery(gql`query Getme {
   getme {
     _id
+    phone
   }
 }`);
 

@@ -9,6 +9,7 @@ import ContactsPage from "./pages/contacts/ContactsPage.tsx";
 import HomePage from "./pages/home/HomePage.tsx";
 import SessionsPage from "./pages/chat/SessionsPage.tsx";
 import useMobile from "../hooks/responsiveness/useMobile.ts";
+import RND from "./pages/RND.tsx";
 
 const Router = () => {
 
@@ -41,6 +42,7 @@ const Router = () => {
                             <Route path="/sessions"
                                    element={<SessionsPage/>}/>
                             <Route path="/chat" element={<ChatPage/>}/>
+                            <Route path="/rnd" element={<RND/>}/>
                         </Routes>
                     </Box>
                 </Box>
