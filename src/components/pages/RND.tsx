@@ -23,6 +23,7 @@ const GET_MY_ROLES = gql`
       description
       visibility
       _id
+      aiMessage
       createdAt
       updatedAt
     }
@@ -132,13 +133,17 @@ const RND = () => {
                                           role,
                                           category,
                                           description,
+                                          aiMessage,
                                           messageOneExample,
                                           messageTwoExample
                                       }: any) => (
                     <ListItem key={_id}>
                         <ListItemText
                             primary={`${role} (${category})`}
-                            secondary={`Description: ${description}, Examples: ${messageOneExample}, ${messageTwoExample}`}
+                            secondary={`Description: ${description}, Examples: ${messageOneExample}, ${messageTwoExample}
+                            
+                            Result:
+                            ${aiMessage}`}
                         />
                         <Button onClick={() => handlePublishRole(_id)}>Publish</Button>
                     </ListItem>
