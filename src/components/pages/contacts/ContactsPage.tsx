@@ -8,11 +8,6 @@ import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
 import useMobile from "../../../hooks/responsiveness/useMobile.ts";
 
-const SUBSCRIBE_TO_PUSH = gql`
-  mutation SubscribeToPush($subscription: JSON!) {
-    subscribeToPush(subscription: $subscription)
-  }
-`;
 
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
@@ -51,46 +46,8 @@ const ContactsPage = () => {
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
     const [tabValue, setTabValue] = useState(0);
-    const [subscribeToPush] = useMutation(SUBSCRIBE_TO_PUSH);
     const {isMobile} = useMobile();
 
-    const urlBase64ToUint8Array = (base64String: string) => {
-        const padding = '='.repeat((4 - base64String.length % 4) % 4);
-        const base64 = (base64String + padding)
-            .replace(/\-/g, '+')
-            .replace(/_/g, '/');
-        const rawData = window.atob(base64);
-        const outputArray = new Uint8Array(rawData.length);
-        for (let i = 0; i < rawData.length; ++i) {
-            outputArray[i] = rawData.charCodeAt(i);
-        }
-        return outputArray;
-    }
-
-    const handleSubscribeClick = () => {
-        navigator.serviceWorker.ready.then((registration) => {
-            registration.pushManager.subscribe({
-                userVisibleOnly: true,
-                applicationServerKey: urlBase64ToUint8Array('BOX9mgkzgqKdn0j6vi-86nqWXoo24Ir4NAPwLe3M-lHgZpBLT153asOtuX1ocALmL3aRzBWgoRhjDAC80-llb6g')
-            })
-                .then((subscription) => {
-                    // Convert the subscription object to the correct format
-                    const graphqlSubscription = {
-                        endpoint: subscription.endpoint,
-                        keys: {
-                            p256dh: subscription?.toJSON()?.keys?.p256dh,
-                            auth: subscription?.toJSON()?.keys?.auth,
-                        },
-                    };
-
-                    // Send the properly formatted subscription object to your server
-                    subscribeToPush({variables: {subscription: graphqlSubscription}});
-                })
-                .catch((error) => {
-                    console.error('Error during getSubscription()', error);
-                });
-        });
-    };
 
     const handleInvite = async () => {
         try {
@@ -114,7 +71,7 @@ const ContactsPage = () => {
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
-                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom onClick={handleSubscribeClick}>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
                     Contacts and RfP
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
