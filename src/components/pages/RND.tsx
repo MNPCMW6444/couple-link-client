@@ -93,18 +93,25 @@ const RND = () => {
                     Roles
                 </Typography>
             </Grid>
-            <Grid item xs={12}>
-                <TextField label="New Role" value={newRole} onChange={(e) => setNewRole(e.target.value)} fullWidth/>
+            <Grid item container xs={12} rowSpacing={4}>
+                <Grid item>
+                    <TextField label="New Role" value={newRole} onChange={(e) => setNewRole(e.target.value)} fullWidth/>
+                </Grid> <Grid item>
                 <TextField label="Category" value={category} onChange={(e) => setCategory(e.target.value)} fullWidth/>
+            </Grid> <Grid item>
                 <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)}
                            fullWidth/>
+            </Grid> <Grid item>
                 <TextField label="Message One Example" value={messageOneExample}
                            onChange={(e) => setMessageOneExample(e.target.value)} fullWidth/>
+            </Grid> <Grid item>
                 <TextField label="Message Two Example" value={messageTwoExample}
                            onChange={(e) => setMessageTwoExample(e.target.value)} fullWidth/>
+            </Grid> <Grid item>
                 <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole} fullWidth>
                     Add Role
                 </Button>
+            </Grid>
             </Grid>
             <Grid item xs={12}>
                 <List>
