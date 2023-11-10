@@ -44,7 +44,6 @@ const WhiteSideBar = () => {
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
     const navigate = useNavigate();
 
-    const {user} = useContext(UserContext);
 
     const [subscribeToPush] = useMutation(SUBSCRIBE_TO_PUSH);
 
@@ -226,7 +225,7 @@ const WhiteSideBar = () => {
                     </ListItem>
 
 
-                    {user.phone === "972527820055" || user.phone === "972528971871" && <ListItem
+                    <ListItem
                         onClick={() => navigate("/rnd")}
                         sx={{...routingItemStyle}}
                     >
@@ -234,7 +233,7 @@ const WhiteSideBar = () => {
                         <ListItemIcon><DeveloperMode/></ListItemIcon>
                         {open && <ListItemText primary="Prompt R&D"/>}
 
-                    </ListItem>}
+                    </ListItem>
 
 
                 </List>
