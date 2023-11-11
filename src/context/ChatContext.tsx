@@ -1,7 +1,7 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react';
 import {gql, useMutation, useQuery, useSubscription} from '@apollo/client';
-import UserContext from "./UserContext.tsx";
-import ContactsContext from "./ContactsContext.tsx";
+import UserContext from "./UserContext";
+import ContactsContext from "./ContactsContext";
 
 
 const GET_SESSIONS = gql`

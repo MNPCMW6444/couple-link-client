@@ -1,7 +1,7 @@
 import {Paper, Button, TextField} from "@mui/material";
-import ChatTriplet from "./ChatTriplet.tsx";
+import ChatTriplet from "./ChatTriplet";
 import {useContext, useState} from "react";
-import ChatContext from "../../../context/ChatContext.tsx";
+import ChatContext from "../../../context/ChatContext";
 
 const ChatPage = () => {
     const {

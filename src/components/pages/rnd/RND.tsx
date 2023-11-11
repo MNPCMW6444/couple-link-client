@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {useQuery, useMutation, gql} from '@apollo/client';
 import {
     Grid,
@@ -7,9 +7,9 @@ import {
     Button,
     CircularProgress,
 } from "@mui/material";
-import useMobile from "../../../hooks/responsiveness/useMobile.ts";
-import Role from "./Role.tsx";
-import Set from "./Set.tsx";
+import useMobile from "../../../hooks/responsiveness/useMobile";
+import Role from "./Role";
+import Set from "./Set";
 
 const GET_MY_ROLES = gql`
   query Getmyroles {
@@ -34,7 +34,6 @@ const ADD_ROLE = gql`
     }
 `;
 
-
 const RND = () => {
     const {isMobile} = useMobile();
     const {loading, error, data, refetch} = useQuery(GET_MY_ROLES);
@@ -46,6 +45,15 @@ const RND = () => {
     const [description, setDescription] = useState('');
     const [name, setName] = useState('');
     const [mutating, setMutating] = useState(false);
+
+    const roleRef = useRef<any>(null);
+
+    useEffect(() => {
+        if (roleRef.current) {
+            roleRef.current.style.height = 'auto';
+            roleRef.current.style.height = `${roleRef.current.scrollHeight}px`;
+        }
+    }, [newRole]);
 
     const handleAddRole = () => {
         setMutating(true);
@@ -66,51 +74,46 @@ const RND = () => {
         setName('');
     };
 
-
     if (loading) return <CircularProgress/>;
     if (error) return <p>Error :(</p>;
 
     return (
         <>
             <Set/>
-            <>
-                <Grid container spacing={2} padding={2}>
-                    <Grid item xs={12}>
-                        <Typography variant={isMobile ? "h3" : "h1"} align="center">
-                            Roles
-                        </Typography>
+            <Grid container spacing={2} padding={2}>
+                <Grid item xs={12}>
+                    <Typography variant={isMobile ? "h3" : "h1"} align="center">
+                        Roles
+                    </Typography>
+                </Grid>
+                <Grid item xs={12} container direction="column" rowSpacing={2}>
+                    <Grid item>
+                        <TextField inputRef={roleRef} multiline label="The Role Prompt" value={newRole}
+                                   onChange={(e) => setNewRole(e.target.value)} fullWidth/>
                     </Grid>
-                    <Grid item xs={12} container direction="column" rowSpacing={2}>
-                        <Grid item>
-                            <TextField label="The Role Prompt" value={newRole}
-                                       onChange={(e) => setNewRole(e.target.value)}
-                                       fullWidth/>
-                        </Grid>
-                        <Grid item>
-                            <TextField label="Category" value={category} onChange={(e) => setCategory(e.target.value)}
-                                       fullWidth/>
-                        </Grid>
-                        <Grid item>
-                            <TextField label="Description" value={description}
-                                       onChange={(e) => setDescription(e.target.value)}
-                                       fullWidth/>
-                        </Grid>
-                        <Grid item>
-                            <TextField label="Set Name - copy exact name" value={name}
-                                       onChange={(e) => setName(e.target.value)} fullWidth/>
-                        </Grid>
-                        <Grid item>
-                            <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}
-                                    fullWidth>
-                                Add Role
-                            </Button>
-                        </Grid>
+                    <Grid item>
+                        <TextField label="Category" value={category}
+                                   onChange={(e) => setCategory(e.target.value)} fullWidth/>
                     </Grid>
-                    <Grid item xs={12} container direction="column" rowSpacing={2}>
-                        {data.getmyroles.map((role: any) => <Grid item><Role key={role._id} rolex={role}/></Grid>)}
+                    <Grid item>
+                        <TextField label="Description" value={description}
+                                   onChange={(e) => setDescription(e.target.value)} fullWidth/>
+                    </Grid>
+                    <Grid item>
+                        <TextField label="Set Name - copy exact name" value={name}
+                                   onChange={(e) => setName(e.target.value)} fullWidth/>
+                    </Grid>
+                    <Grid item>
+                        <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}
+                                fullWidth>
+                            Add Role
+                        </Button>
                     </Grid>
                 </Grid>
-            </>
+                <Grid item xs={12} container direction="column" rowSpacing={2}>
+                    {data?.getmyroles?.map((role: any) => <Grid item key={role._id}><Role rolex={role}/></Grid>)}
+                </Grid>
+            </Grid>
         </>
     );
 };

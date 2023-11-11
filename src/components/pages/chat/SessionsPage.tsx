@@ -3,7 +3,7 @@ import {Box, Button, TextField, List, ListItem, ListItemText, IconButton, Typogr
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import {gql, useMutation} from "@apollo/client";
-import ChatContext from "../../../context/ChatContext.tsx";
+import ChatContext from "../../../context/ChatContext";
 
 
 const RENAME_SESSION_MUTATION = gql`

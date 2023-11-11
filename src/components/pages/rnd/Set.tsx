@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState, useEffect, useRef} from 'react';
 import {useQuery, useMutation, gql} from '@apollo/client';
 import {
     Grid,
@@ -12,7 +12,7 @@ import {
     Box,
     Divider
 } from "@mui/material";
-import useMobile from "../../../hooks/responsiveness/useMobile.ts";
+import useMobile from "../../../hooks/responsiveness/useMobile";
 
 const GET_MY_SETS = gql`
   query GetMySets {
@@ -43,15 +43,25 @@ const PUBLISH_SET = gql`
 const Set = () => {
     const {isMobile} = useMobile();
     const {loading, error, data, refetch} = useQuery(GET_MY_SETS);
-    const [addSet] = useMutation(ADD_SET, {
-        refetchQueries: [GET_MY_SETS],
-    });
+    const [addSet] = useMutation(ADD_SET, {refetchQueries: [GET_MY_SETS]});
     const [publishSet] = useMutation(PUBLISH_SET);
     const [newSet, setNewSet] = useState('');
     const [side1, setSide1] = useState('');
     const [side2, setSide2] = useState('');
     const [pairs, setPairs] = useState<any>([]);
     const [mutating, setMutating] = useState(false);
+
+    const side1Ref = useRef<any>(null);
+    const side2Ref = useRef<any>(null);
+
+    useEffect(() => {
+        [side1Ref, side2Ref].forEach(ref => {
+            if (ref.current) {
+                ref.current.style.height = 'auto';
+                ref.current.style.height = `${ref.current.scrollHeight}px`;
+            }
+        });
+    }, [side1, side2]);
 
     const handleAddPair = () => {
         setPairs([...pairs, {side1, side2}]);
@@ -93,10 +103,12 @@ const Set = () => {
                     <TextField label="New Set" value={newSet} onChange={(e) => setNewSet(e.target.value)} fullWidth/>
                 </Grid>
                 <Grid item>
-                    <TextField label="Side 1" value={side1} onChange={(e) => setSide1(e.target.value)} fullWidth/>
+                    <TextField inputRef={side1Ref} multiline label="Side 1" value={side1}
+                               onChange={(e) => setSide1(e.target.value)} fullWidth/>
                 </Grid>
                 <Grid item>
-                    <TextField label="Side 2" value={side2} onChange={(e) => setSide2(e.target.value)} fullWidth/>
+                    <TextField inputRef={side2Ref} multiline label="Side 2" value={side2}
+                               onChange={(e) => setSide2(e.target.value)} fullWidth/>
                 </Grid>
                 <Grid item>
                     <Button variant="contained" color="secondary" onClick={handleAddPair} fullWidth>

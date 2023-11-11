@@ -6,7 +6,7 @@ import {
     useMutation,
     useSubscription
 } from "@apollo/client";
-import UserContext, {WhiteTypography} from "./UserContext.tsx";
+import UserContext, {WhiteTypography} from "./UserContext";
 
 const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">

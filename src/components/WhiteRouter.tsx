@@ -1,15 +1,15 @@
 import {useContext} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {Box} from "@mui/material";
-import WhiteSideBar from "./WhiteSideBar.tsx";
-import UserContext from "../context/UserContext.tsx";
-import ChatPage from "./pages/chat/ChatPage.tsx";
-import Login from "./auth/Login.tsx";
-import ContactsPage from "./pages/contacts/ContactsPage.tsx";
-import HomePage from "./pages/home/HomePage.tsx";
-import SessionsPage from "./pages/chat/SessionsPage.tsx";
-import useMobile from "../hooks/responsiveness/useMobile.ts";
-import RND from "./pages/rnd/RND.tsx";
+import WhiteSideBar from "./WhiteSideBar";
+import UserContext from "../context/UserContext";
+import ChatPage from "./pages/chat/ChatPage";
+import Login from "./auth/Login";
+import ContactsPage from "./pages/contacts/ContactsPage";
+import HomePage from "./pages/home/HomePage";
+import SessionsPage from "./pages/chat/SessionsPage";
+import useMobile from "../hooks/responsiveness/useMobile";
+import RND from "./pages/rnd/RND";
 
 const Router = () => {
 

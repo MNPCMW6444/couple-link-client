@@ -19,10 +19,10 @@ import {
     Logout, NotificationAdd, DeveloperMode,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import UserContext from "../context/UserContext.tsx";
-import ContactsContext from "../context/ContactsContext.tsx";
-import ChatContext from "../context/ChatContext.tsx";
-import useMobile from "../hooks/responsiveness/useMobile.ts";
+import UserContext from "../context/UserContext";
+import ContactsContext from "../context/ContactsContext";
+import ChatContext from "../context/ChatContext";
+import useMobile from "../hooks/responsiveness/useMobile";
 import {gql, useMutation} from "@apollo/client";
 
 const DRAWER_WIDTH_OPEN = "255px";

@@ -1,12 +1,12 @@
 import {createTheme, ThemeProvider} from "@mui/material";
 import {Global, css} from "@emotion/react";
 import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split} from '@apollo/client';
-import WhiteRouter from "./components/WhiteRouter.tsx";
-import {UserContextProvider} from "./context/UserContext.tsx";
-import {ContactsContextProvider} from "./context/ContactsContext.tsx";
+import WhiteRouter from "./components/WhiteRouter";
+import {UserContextProvider} from "./context/UserContext";
+import {ContactsContextProvider} from "./context/ContactsContext";
 import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
-import {ChatContextProvider} from "./context/ChatContext.tsx";
+import {ChatContextProvider} from "./context/ChatContext";
 
 import.meta.env.VITE_NODE_ENV
 

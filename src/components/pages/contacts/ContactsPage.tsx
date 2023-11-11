@@ -6,7 +6,7 @@ import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
-import useMobile from "../../../hooks/responsiveness/useMobile.ts";
+import useMobile from "../../../hooks/responsiveness/useMobile";
 
 
 const TabPanel = (props: any) => {
