@@ -10,6 +10,7 @@ import HomePage from "./pages/home/HomePage";
 import SessionsPage from "./pages/chat/SessionsPage";
 import useMobile from "../hooks/responsiveness/useMobile";
 import RND from "./pages/rnd/RND";
+import SettingsPage from "./pages/settings/SettingsPage.tsx";
 
 const Router = () => {
 
@@ -43,6 +44,7 @@ const Router = () => {
                                    element={<SessionsPage/>}/>
                             <Route path="/chat" element={<ChatPage/>}/>
                             <Route path="/rnd" element={<RND/>}/>
+                            <Route path="/settings" element={<SettingsPage/>}/>
                         </Routes>
                     </Box>
                 </Box>
