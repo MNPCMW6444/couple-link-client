@@ -4,8 +4,8 @@ import {Button, Grid, Paper, Typography} from "@mui/material";
 
 const GET_SET_NAME = gql`
   query Query($getsetnameId: String!) {
-    getsetname(id: $getsetnameId)
-}
+      getsetname(id: $getsetnameId)
+  }
 `;
 
 const PUBLISH_ROLE = gql`

@@ -13,26 +13,25 @@ import Set from "./Set.tsx";
 
 const GET_MY_ROLES = gql`
   query Getmyroles {
-    getmyroles {
-      creatorId
-      role
-      messageOneExample
-      messageTwoExample
-      category
-      description
-      visibility
-      _id
-      aiMessage
-      createdAt
-      updatedAt
-    }
-  }
+      getmyroles {
+        creatorId
+        role
+        setId
+        category
+        description
+        aiMessage
+        visibility
+        _id
+        createdAt
+        updatedAt
+      }
+ }
 `;
 
 const ADD_ROLE = gql`
-  mutation Addrole($role: String!, $category: String!, $description: String!, name: String) {
-    addrole(role: $role, category: $category, description: $description, name: $name)
-  }
+    mutation Addrole($role: String!, $category: String!, $description: String!, $name: String) {
+      addrole(role: $role, category: $category, description: $description, name: $name)
+    }
 `;
 
 
@@ -45,7 +44,7 @@ const RND = () => {
     const [newRole, setNewRole] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
-    const [messageOneExample, setMessageOneExample] = useState('');
+    const [name, setName] = useState('');
     const [mutating, setMutating] = useState(false);
 
     const handleAddRole = () => {
@@ -55,7 +54,7 @@ const RND = () => {
                 role: newRole,
                 category,
                 description,
-                name: messageOneExample,
+                name
             }
         }).then(() => {
             refetch();
@@ -64,7 +63,7 @@ const RND = () => {
         setNewRole('');
         setCategory('');
         setDescription('');
-        setMessageOneExample('');
+        setName('');
     };
 
 
@@ -97,8 +96,8 @@ const RND = () => {
                                        fullWidth/>
                         </Grid>
                         <Grid item>
-                            <TextField label="Set Name - copy exact name" value={messageOneExample}
-                                       onChange={(e) => setMessageOneExample(e.target.value)} fullWidth/>
+                            <TextField label="Set Name - copy exact name" value={name}
+                                       onChange={(e) => setName(e.target.value)} fullWidth/>
                         </Grid>
                         <Grid item>
                             <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}
