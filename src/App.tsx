@@ -11,7 +11,7 @@ import {ChatContextProvider} from "./context/ChatContext";
 import.meta.env.VITE_NODE_ENV
 
 
-const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.scailean.com/graphql";
+const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.dualchatgpt.com/graphql";
 
 const globalStyles = css`
   * {
