@@ -15,6 +15,8 @@ import styled from "@emotion/styled";
 import UserContext from "../../../context/UserContext.tsx";
 import {NotificationAdd, Delete} from "@mui/icons-material";
 import {gql, useMutation, useQuery} from "@apollo/client";
+import {UAParser} from 'ua-parser-js';
+
 
 const GET_PUSHES = gql`
   query Getpushes {
@@ -58,15 +60,29 @@ const NotificationsTab: FC = () => {
     const {data: pushesData, refetch} = useQuery(GET_PUSHES);
     const [subscribeToPush] = useMutation(SUBSCRIBE_TO_PUSH);
     const [deletePush] = useMutation(DELETE_PUSH);
-    const [deviceName, setDeviceName] = useState(navigator.userAgent.split(' ')[0]);
+
+    const parser = new UAParser();
+
+    const x = parser.getResult()
+    const xx = `${x.browser.name} on ${x.device.model}`;
+
+    const [deviceName, setDeviceName] = useState(xx);
 
     useEffect(() => {
         refreshUserData();
     }, [refreshUserData]);
 
+    useEffect(() => {
+        if (pushesData?.getpushes?.length && pushesData.getpushes.some(({deviceName}: any) => deviceName === deviceName)) {
+            debugger;
+            setDeviceName(`${deviceName} (2)`)
+        } else {
+            debugger;
+        }
+    }, [pushesData]);
+
     const handleDeleteClick = (pushName: string) => {
         deletePush({variables: {pushName}}).then(() => {
-            debugger;
             refetch()
         });
     };
