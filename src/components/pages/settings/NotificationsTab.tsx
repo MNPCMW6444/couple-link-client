@@ -138,7 +138,7 @@ const NotificationsTab: FC = () => {
                     {pushesData?.getpushes.map((push: any) => (
                         <ListItem key={push._id}>
                             <ListItemText primary={push.deviceName}
-                                          secondary={new Date(push.createdAt).toLocaleString()}/>
+                                          secondary={"created on " + new Date(push.createdAt).toLocaleString()}/>
                             <IconButton edge="end" aria-label="delete"
                                         onClick={() => handleDeleteClick(push.deviceName)}>
                                 <Delete/>
