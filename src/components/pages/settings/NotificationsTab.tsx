@@ -65,7 +65,10 @@ const NotificationsTab: FC = () => {
     }, [refreshUserData]);
 
     const handleDeleteClick = (pushName: string) => {
-        deletePush({variables: {pushName}});
+        deletePush({variables: {pushName}}).then(() => {
+            debugger;
+            refetch()
+        });
     };
 
     const handleSubscribeClick = () => {
