@@ -16,7 +16,7 @@ import {
     Close,
     ContactsOutlined,
     ChatOutlined,
-    DeveloperMode, Settings, Info, Logout,
+    DeveloperMode, Info, Logout, Notifications,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../context/UserContext";
@@ -26,6 +26,41 @@ import useMobile from "../hooks/responsiveness/useMobile";
 
 const DRAWER_WIDTH_OPEN = "255px";
 const DRAWER_WIDTH_CLOSED = "56px";
+
+export const menuData = {
+    sideBarAndNotTabs: false,
+    items: [
+        {
+            name: "Notifications",
+            icon: <Notifications/>,
+            link: "/notifications",
+            disabled: false
+        },
+        {
+            name: "Manage Account",
+            icon: "x",
+            link: "/account",
+            disabled: true
+        },
+        {
+            name: "Prompt R&D",
+            icon: <DeveloperMode/>,
+            link: "/rnd",
+            disabled: false
+        },
+        {
+            name: "About",
+            icon: <Info/>,
+            link: "/about",
+            disabled: true
+        },
+        {
+            name: "Logout",
+            icon: <Logout/>,
+            link: "logout",
+            disabled: false
+        }]
+}
 
 
 const WhiteSideBar = () => {
@@ -105,62 +140,58 @@ const WhiteSideBar = () => {
                                 <MenuIcon/>}</ListItemIcon>
                         </ListItem>
                     )}
+                    {menuData.sideBarAndNotTabs ? <>
+                            <ListItem
+                                onClick={handleMenu}
+                                sx={{...routingItemStyle}}
+                            >
+                                <ListItemIcon><MenuIcon/></ListItemIcon>
+                                {open && <ListItemText primary="Menu"/>}
+                            </ListItem>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+
+                                {menuData.items.map(({name, icon, link, disabled}) => (
+                                    <MenuItem disabled={disabled}
+                                              onClick={() => link === "logout" ? signout() : navigate(link)}>
+                                        <> {icon === "x" ? (<Avatar sx={{width: 24, height: 24, marginRight: "8px"}}>
+                                                {"u".toUpperCase()}
+                                            </Avatar>) :
+                                            (<ListItemIcon>
+                                                {icon}
+                                            </ListItemIcon>)}
+                                            <ListItemText primary={name}/>
+                                        </>
+                                    </MenuItem>
+                                ))}
+                            </Menu>
+                            <br/> <Divider/>
+                            <br/></>
+                        :
+                        <ListItem
+                            onClick={() => {
+                                navigate("/settings")
+                                if (isMobile) setOpen(false);
+                            }}
+                            sx={{...routingItemStyle}}
+                        >
+                            <ListItemIcon><MenuIcon/></ListItemIcon>
+                            {open && <ListItemText primary="Settings"/>}
+                        </ListItem>
+                    }
                     <ListItem
-                        onClick={handleMenu}
+                        onClick={() => {
+                            navigate("/contacts")
+                            if (isMobile) setOpen(false);
+                        }}
                         sx={{...routingItemStyle}}
                     >
-                        <ListItemIcon><MenuIcon/></ListItemIcon>
-                        {open && <ListItemText primary="Menu"/>}
+                        <ListItemIcon><ContactsOutlined/></ListItemIcon>
+                        {open && <ListItemText primary="Manage Contacts"/>}
                     </ListItem>
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        <MenuItem onClick={() => navigate("/settings")}>
-                            <ListItemIcon>
-                                <Settings/>
-                            </ListItemIcon>
-                            <ListItemText primary="Settings"/>
-                        </MenuItem>
-                        <MenuItem disabled onClick={() => navigate("/account")}>
-                            <Avatar sx={{width: 24, height: 24}}>
-                                {"u".toUpperCase()}
-                            </Avatar>
-                            <ListItemText primary="Manage Account"/>
-                        </MenuItem>
-                        <MenuItem onClick={() => navigate("/rnd")}>
-                            <ListItemIcon>
-                                <DeveloperMode/>
-                            </ListItemIcon>
-                            <ListItemText primary="Prompt R&D"/>
-                        </MenuItem>
-                        <MenuItem disabled onClick={() => navigate("/about")}>
-                            <ListItemIcon>
-                                <Info/>
-                            </ListItemIcon>
-                            <ListItemText primary="About"/>
-                        </MenuItem>
-                        <MenuItem onClick={() => signout()}>
-                            <ListItemIcon>
-                                <Logout/>
-                            </ListItemIcon>
-                            <ListItemText primary="Logout"/>
-                        </MenuItem>
-                    </Menu>
-
-
-                    <br/> <Divider/>
-                    <br/><ListItem
-                    onClick={() => {
-                        navigate("/contacts")
-                        if (isMobile) setOpen(false);
-                    }}
-                    sx={{...routingItemStyle}}
-                >
-                    <ListItemIcon><ContactsOutlined/></ListItemIcon>
-                    {open && <ListItemText primary="Manage Contacts"/>}
-                </ListItem>
                     <ListItem sx={headersStyle}>
                         <ListItemIcon><ContactsOutlined/></ListItemIcon>
                         {open && <ListItemText primary="Switch Contact:"/>}

@@ -11,6 +11,7 @@ import SessionsPage from "./pages/chat/SessionsPage";
 import useMobile from "../hooks/responsiveness/useMobile";
 import RND from "./pages/rnd/RND";
 import SettingsPage from "./pages/settings/SettingsPage.tsx";
+import NotificationsTab from "./pages/settings/NotificationsTab.tsx";
 
 const Router = () => {
 
@@ -45,6 +46,7 @@ const Router = () => {
                             <Route path="/chat" element={<ChatPage/>}/>
                             <Route path="/rnd" element={<RND/>}/>
                             <Route path="/settings" element={<SettingsPage/>}/>
+                            <Route path="/notifications" element={<NotificationsTab/>}/>
                         </Routes>
                     </Box>
                 </Box>
