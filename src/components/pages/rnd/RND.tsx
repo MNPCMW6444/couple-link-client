@@ -1,45 +1,20 @@
-import {useState, useEffect, useRef} from 'react';
-import {useQuery, useMutation, gql} from '@apollo/client';
+import {useState, useEffect, useRef, useContext} from 'react';
 import {
     Grid,
     Typography,
     TextField,
     Button,
-    CircularProgress,
+    CircularProgress, MenuItem, Select,
 } from "@mui/material";
 import useMobile from "../../../hooks/responsiveness/useMobile";
 import Role from "./Role";
 import Set from "./Set";
+import RNDContext from "../../../context/RNDContext.tsx";
 
-const GET_MY_ROLES = gql`
-  query Getmyroles {
-      getmyroles {
-        creatorId
-        role
-        setId
-        category
-        description
-        aiMessage
-        visibility
-        _id
-        createdAt
-        updatedAt
-      }
- }
-`;
-
-const ADD_ROLE = gql`
-    mutation Addrole($role: String!, $category: String!, $description: String!, $name: String) {
-      addrole(role: $role, category: $category, description: $description, name: $name)
-    }
-`;
 
 const RND = () => {
     const {isMobile} = useMobile();
-    const {loading, error, data, refetch} = useQuery(GET_MY_ROLES);
-    const [addRole] = useMutation(ADD_ROLE, {
-        refetchQueries: [GET_MY_ROLES],
-    });
+
     const [newRole, setNewRole] = useState('');
     const [category, setCategory] = useState('');
     const [description, setDescription] = useState('');
@@ -54,6 +29,8 @@ const RND = () => {
             roleRef.current.style.height = `${roleRef.current.scrollHeight}px`;
         }
     }, [newRole]);
+
+    const {loading, error, data, datasets, refetch, addRole} = useContext(RNDContext)
 
     const handleAddRole = () => {
         setMutating(true);
@@ -100,8 +77,15 @@ const RND = () => {
                                    onChange={(e) => setDescription(e.target.value)} fullWidth/>
                     </Grid>
                     <Grid item>
-                        <TextField label="Set Name - copy exact name" value={name}
-                                   onChange={(e) => setName(e.target.value)} fullWidth/>
+                        <Select
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            sx={{width: '100%', margin: '1em 0'}}
+                        >
+                            {datasets && datasets.getmysets.map(({name}: any) => (
+                                <MenuItem key={name} value={name}>{name}</MenuItem>
+                            ))}
+                        </Select>
                     </Grid>
                     <Grid item>
                         <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddRole}

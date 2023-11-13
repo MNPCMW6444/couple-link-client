@@ -1,5 +1,4 @@
-import {useState, useEffect, useRef} from 'react';
-import {useQuery, useMutation, gql} from '@apollo/client';
+import {useState, useEffect, useRef, useContext} from 'react';
 import {
     Grid,
     Typography,
@@ -13,38 +12,11 @@ import {
     Divider
 } from "@mui/material";
 import useMobile from "../../../hooks/responsiveness/useMobile";
-
-const GET_MY_SETS = gql`
-  query GetMySets {
-    getmysets {
-      creatorId
-      name
-      stringifiedArray
-      visibility
-      _id
-      createdAt
-      updatedAt
-    }
-  }
-`;
-
-const ADD_SET = gql`
-  mutation AddSet($name: String!, $stringifiedArray: String!) {
-    addset(name: $name, stringifiedArray: $stringifiedArray)
-  }
-`;
-
-const PUBLISH_SET = gql`
-  mutation PublishSet($setId: String!) {
-    publishset(setId: $setId)
-  }
-`;
+import RNDContext from "../../../context/RNDContext.tsx";
 
 const Set = () => {
     const {isMobile} = useMobile();
-    const {loading, error, data, refetch} = useQuery(GET_MY_SETS);
-    const [addSet] = useMutation(ADD_SET, {refetchQueries: [GET_MY_SETS]});
-    const [publishSet] = useMutation(PUBLISH_SET);
+
     const [newSet, setNewSet] = useState('');
     const [side1, setSide1] = useState('');
     const [side2, setSide2] = useState('');
@@ -53,6 +25,8 @@ const Set = () => {
 
     const side1Ref = useRef<any>(null);
     const side2Ref = useRef<any>(null);
+
+    const {loadingsets, errorsets, datasets, refetchsets, addSet, publishSet} = useContext(RNDContext);
 
     useEffect(() => {
         [side1Ref, side2Ref].forEach(ref => {
@@ -77,7 +51,7 @@ const Set = () => {
                 stringifiedArray: JSON.stringify(pairs)
             }
         }).then(() => {
-            refetch();
+            refetchsets();
             setMutating(false);
             setNewSet('');
             setPairs([]);
@@ -88,8 +62,8 @@ const Set = () => {
         publishSet({variables: {setId}});
     };
 
-    if (loading) return <CircularProgress/>;
-    if (error) return <p>Error :(</p>;
+    if (loadingsets) return <CircularProgress/>;
+    if (errorsets) return <p>Error :(</p>;
 
     return (
         <Grid container spacing={2} padding={2}>
@@ -116,14 +90,15 @@ const Set = () => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button disabled={mutating} variant="contained" color="primary" onClick={handleAddSet} fullWidth>
+                    <Button disabled={mutating || !!side1 || !!side2} variant="contained" color="primary"
+                            onClick={handleAddSet} fullWidth>
                         Add Set
                     </Button>
                 </Grid>
             </Grid>
             <Grid item xs={12}>
                 <List>
-                    {data && data.getmysets.map(({_id, name, stringifiedArray}: any) => (
+                    {datasets && datasets.getmysets.map(({_id, name, stringifiedArray}: any) => (
                         <Box key={_id} my={2}>
                             <ListItem>
                                 <ListItemText primary={name}/>
