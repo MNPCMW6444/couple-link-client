@@ -31,6 +31,7 @@ const SettingPage = () => {
 
     const tabs = !menuData.sideBarAndNotTabs && menuData.items;
 
+    // @ts-ignore
     return (
         <Container>
             <Paper elevation={3}>
