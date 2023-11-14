@@ -37,7 +37,11 @@ export const menuData =
         }];
 
 
-const CustomTab = ({label, icon, ...otherProps}: { label: string, icon: JSX.Element | "x" }) => {
+const CustomTab = ({label, icon, disabled, ...otherProps}: {
+    label: string,
+    icon: JSX.Element | "x",
+    disabled: boolean
+}) => {
     return (
         <Tab
             {...otherProps}
