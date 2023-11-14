@@ -74,10 +74,8 @@ const NotificationsTab: FC = () => {
 
     useEffect(() => {
         if (pushesData?.getpushes?.length && pushesData.getpushes.some(({deviceName}: any) => deviceName === deviceName)) {
-            debugger;
             setDeviceName(`${deviceName} (2)`)
         } else {
-            debugger;
         }
     }, [pushesData]);
 

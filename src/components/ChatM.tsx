@@ -45,7 +45,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                         setPlaceHolder(false);
                         setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)]);
                     }}
-                    sx={{width: "100%", margin: '1em 0'}}
+                    sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
                 >
                     {(placeHolder ? contactsX : contacts)?.map((contact, idx) => (
                         <MenuItem key={idx} value={contact}>{contact}</MenuItem>
@@ -62,7 +62,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
             </Grid>
         </Grid>
         {
-            sessions.length > 4 ?
+            sessions.length > 6 ?
                 <Select
                     value={selectedSession}
                     onChange={(e) => setSelectedSession(e.target.value)}

@@ -65,9 +65,8 @@ const WhiteSideBar = () => {
                 <List>
                     {isMobile && (
                         <ListItem onClick={handleDrawerToggle} sx={{display: "flex", justifyContent: "center"}}>
-                            <ListItemIcon>
-                                {open ? <Close sx={{backgroundColor: "#BBBBBB", borderRadius: 20}}/> : <MenuIcon/>}
-                            </ListItemIcon>
+                            {open ? <Close sx={{color: "#009688", backgroundColor: "#DDDDDD", borderRadius: 20}}/> :
+                                <MenuIcon/>}
                         </ListItem>
                     )}
                     <ListItem onClick={() => handleNavigation("/settings")} sx={routingItemStyle}>
