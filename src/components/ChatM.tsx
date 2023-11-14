@@ -1,18 +1,19 @@
-import {Button, Divider, ListItem, ListItemButton, ListItemIcon, ListItemText, MenuItem, Select} from "@mui/material";
-import {ChatOutlined, ContactsOutlined} from "@mui/icons-material";
-import {Dispatch, SetStateAction, useContext} from "react";
+import {
+    Button, Divider,
+    Grid, IconButton,
+    ListItem,
+    ListItemText,
+    MenuItem,
+    Select
+} from "@mui/material";
+import {Settings} from "@mui/icons-material";
+import {Dispatch, SetStateAction, useContext, useState} from "react";
 import ContactsContext from "../context/ContactsContext.tsx";
 import ChatContext from "../context/ChatContext.tsx";
 import {useNavigate} from "react-router-dom";
-import {routingItemStyle} from "./WhiteSideBar.tsx";
+import {DRAWER_WIDTH_OPEN} from "./WhiteSideBar.tsx";
 import useMobile from "../hooks/responsiveness/useMobile.ts";
 
-
-const headersStyle = {
-    backgroundColor: '#e0e0e0',
-    margin: '5px 0',
-    borderRadius: 2,
-};
 
 interface ChatMProps {
     open: boolean,
@@ -31,38 +32,35 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
     const {contacts, contactsIds} = useContext(ContactsContext);
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
 
+    const [placeHolder, setPlaceHolder] = useState<boolean>(true);
+    const contactsX = ["📞 Select a Contact", ...(contacts || [])];
 
     return <>
-        <ListItem onClick={() => handleNavigation("/contacts")} sx={routingItemStyle}>
-            <ListItemIcon><ContactsOutlined/></ListItemIcon>
-            {open && <ListItemText primary="Manage Contacts"/>}
-        </ListItem>
-        <ListItem sx={headersStyle}>
-            <ListItemIcon><ContactsOutlined/></ListItemIcon>
-            {open && <ListItemText primary="Switch Contact:"/>}
-        </ListItem>
-        <Select
-            value={contacts[contactsIds.findIndex(id => id === pairId)] || ''}
-            onChange={(e) => setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)])}
-            sx={{width: '100%', margin: '1em 0'}}
-        >
-            {contacts?.map((contact, idx) => (
-                <MenuItem key={idx} value={contact}>{contact}</MenuItem>
-            ))}
-        </Select>
-        <Divider/>
-        <ListItemButton
-            onClick={() => handleNavigation("/sessions")}
-            sx={routingItemStyle}
-            disabled={!pairId}
-        >
-            <ListItemIcon><ChatOutlined/></ListItemIcon>
-            {open && <ListItemText primary="Manage Chats"/>}
-        </ListItemButton>
-        <ListItem sx={headersStyle} disabled={!pairId}>
-            <ListItemIcon><ChatOutlined/></ListItemIcon>
-            {open && <ListItemText primary="Switch Chat:"/>}
-        </ListItem>
+        <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" width={DRAWER_WIDTH_OPEN - 5}>
+            <Grid item xs>
+                <Select
+                    fullWidth
+                    value={contacts[contactsIds.findIndex(id => id === pairId)] || contactsX[0]}
+                    onChange={(e) => {
+                        setPlaceHolder(false);
+                        setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)]);
+                    }}
+                    sx={{width: "100%", margin: '1em 0'}}
+                >
+                    {(placeHolder ? contactsX : contacts)?.map((contact, idx) => (
+                        <MenuItem key={idx} value={contact}>{contact}</MenuItem>
+                    ))}
+                    <Divider/>
+                    <MenuItem onClick={() => handleNavigation("/contacts")}>
+                        {open && <ListItemText primary="Manage" sx={{color: "#009688"}}/>}
+                    </MenuItem>
+                </Select>
+            </Grid>
+            <Grid item>
+                <IconButton onClick={() => handleNavigation("/contacts")}><Settings
+                    sx={{color: "#009688"}}/></IconButton>
+            </Grid>
+        </Grid>
         {
             sessions.length > 4 ?
                 <Select

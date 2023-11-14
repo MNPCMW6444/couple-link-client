@@ -14,8 +14,8 @@ import {useNavigate} from "react-router-dom";
 import useMobile from "../hooks/responsiveness/useMobile";
 import ChatM from "./ChatM.tsx";
 
-const DRAWER_WIDTH_OPEN = "255px";
-const DRAWER_WIDTH_CLOSED = "56px";
+export const DRAWER_WIDTH_OPEN = 255;
+const DRAWER_WIDTH_CLOSED = 56;
 
 export const routingItemStyle = {
     cursor: 'pointer',
@@ -65,8 +65,9 @@ const WhiteSideBar = () => {
                 <List>
                     {isMobile && (
                         <ListItem onClick={handleDrawerToggle} sx={{display: "flex", justifyContent: "center"}}>
-                            <ListItemIcon>{open ? <Close sx={{backgroundColor: "#BBBBBB", borderRadius: 20}}/> :
-                                <MenuIcon/>}</ListItemIcon>
+                            <ListItemIcon>
+                                {open ? <Close sx={{backgroundColor: "#BBBBBB", borderRadius: 20}}/> : <MenuIcon/>}
+                            </ListItemIcon>
                         </ListItem>
                     )}
                     <ListItem onClick={() => handleNavigation("/settings")} sx={routingItemStyle}>
