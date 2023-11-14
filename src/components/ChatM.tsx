@@ -67,7 +67,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
             </Grid>
         </Grid>
         {
-            sessions.length > 3 ?
+            sessions.length > 6 ?
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap"
                       width={DRAWER_WIDTH_OPEN - 5}>
                     <Grid item xs>
