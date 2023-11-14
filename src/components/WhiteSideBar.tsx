@@ -8,7 +8,7 @@ import {
     MenuItem,
     Divider,
     Select,
-    ListItemButton, Button, ListItemIcon, ListItemText, Menu, Avatar,
+    ListItemButton, Button, ListItemIcon, ListItemText
 } from "@mui/material";
 import {
     Menu as MenuIcon,
@@ -16,10 +16,8 @@ import {
     Close,
     ContactsOutlined,
     ChatOutlined,
-    DeveloperMode, Info, Logout, Notifications,
 } from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
-import UserContext from "../context/UserContext";
 import ContactsContext from "../context/ContactsContext";
 import ChatContext from "../context/ChatContext";
 import useMobile from "../hooks/responsiveness/useMobile";
@@ -27,84 +25,33 @@ import useMobile from "../hooks/responsiveness/useMobile";
 const DRAWER_WIDTH_OPEN = "255px";
 const DRAWER_WIDTH_CLOSED = "56px";
 
-export const menuData = {
-    sideBarAndNotTabs: false,
-    items: [
-        {
-            name: "Notifications",
-            icon: <Notifications/>,
-            link: "/notifications",
-            disabled: false
-        },
-        {
-            name: "Manage Account",
-            icon: "x",
-            link: "/account",
-            disabled: true
-        },
-        {
-            name: "Prompt R&D",
-            icon: <DeveloperMode/>,
-            link: "/rnd",
-            disabled: false
-        },
-        {
-            name: "About",
-            icon: <Info/>,
-            link: "/about",
-            disabled: true
-        },
-        {
-            name: "Logout",
-            icon: <Logout/>,
-            link: "logout",
-            disabled: false
-        }]
-}
 
+const routingItemStyle = {
+    cursor: 'pointer',
+    backgroundColor: '#009688',
+    margin: '5px 0',
+    borderRadius: 2,
+    '&:hover': {
+        backgroundColor: '#00c098',
+    },
+};
+
+const headersStyle = {
+    backgroundColor: '#e0e0e0',
+    margin: '5px 0',
+    borderRadius: 2,
+};
 
 const WhiteSideBar = () => {
     const {isMobile} = useMobile();
     const [open, setOpen] = useState(!isMobile);
-    const {signout} = useContext(UserContext);
     const {contacts, contactsIds} = useContext(ContactsContext);
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
     const navigate = useNavigate();
 
-
     useEffect(() => {
         setOpen(!isMobile)
     }, [isMobile]);
-
-
-    const routingItemStyle = {
-        cursor: 'pointer',
-        backgroundColor: '#009688',
-        margin: '5px 0',
-        borderRadius: 2,
-        '&:hover': {
-            backgroundColor: '#00c098',
-        },
-    };
-
-    const headersStyle = {
-        backgroundColor: '#e0e0e0',
-        margin: '5px 0',
-        borderRadius: 2,
-    };
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-
-    const handleMenu = (event: any) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
 
     return (
         <Box>
@@ -140,48 +87,19 @@ const WhiteSideBar = () => {
                                 <MenuIcon/>}</ListItemIcon>
                         </ListItem>
                     )}
-                    {menuData.sideBarAndNotTabs ? <>
-                            <ListItem
-                                onClick={handleMenu}
-                                sx={{...routingItemStyle}}
-                            >
-                                <ListItemIcon><MenuIcon/></ListItemIcon>
-                                {open && <ListItemText primary="Menu"/>}
-                            </ListItem>
-                            <Menu
-                                anchorEl={anchorEl}
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                            >
-
-                                {menuData.items.map(({name, icon, link, disabled}) => (
-                                    <MenuItem disabled={disabled}
-                                              onClick={() => link === "logout" ? signout() : navigate(link)}>
-                                        <> {icon === "x" ? (<Avatar sx={{width: 24, height: 24, marginRight: "8px"}}>
-                                                {"u".toUpperCase()}
-                                            </Avatar>) :
-                                            (<ListItemIcon>
-                                                {icon}
-                                            </ListItemIcon>)}
-                                            <ListItemText primary={name}/>
-                                        </>
-                                    </MenuItem>
-                                ))}
-                            </Menu>
-                            <br/> <Divider/>
-                            <br/></>
-                        :
-                        <ListItem
-                            onClick={() => {
-                                navigate("/settings")
-                                if (isMobile) setOpen(false);
-                            }}
-                            sx={{...routingItemStyle}}
-                        >
-                            <ListItemIcon><MenuIcon/></ListItemIcon>
-                            {open && <ListItemText primary="Settings"/>}
-                        </ListItem>
-                    }
+                    <ListItem
+                        onClick={() => {
+                            navigate("/settings")
+                            if (isMobile) setOpen(false);
+                        }}
+                        sx={{...routingItemStyle}}
+                    >
+                        <ListItemIcon><MenuIcon/></ListItemIcon>
+                        {open && <ListItemText primary="Settings"/>}
+                    </ListItem>
+                    <br/>
+                    <Divider/>
+                    <br/>
                     <ListItem
                         onClick={() => {
                             navigate("/contacts")
@@ -207,18 +125,20 @@ const WhiteSideBar = () => {
                             ))}
                         </Select>
                     </ListItem>
-                    <br/> <Divider/>
-                    <br/> <ListItemButton
-                    onClick={() => {
-                        navigate("/sessions")
-                        if (isMobile) setOpen(false);
-                    }}
-                    sx={{...routingItemStyle}}
-                    disabled={!pairId}
-                >
-                    <ListItemIcon><ChatOutlined/></ListItemIcon>
-                    {open && <ListItemText primary="Manage Chats"/>}
-                </ListItemButton>
+                    <br/>
+                    <Divider/>
+                    <br/>
+                    <ListItemButton
+                        onClick={() => {
+                            navigate("/sessions")
+                            if (isMobile) setOpen(false);
+                        }}
+                        sx={{...routingItemStyle}}
+                        disabled={!pairId}
+                    >
+                        <ListItemIcon><ChatOutlined/></ListItemIcon>
+                        {open && <ListItemText primary="Manage Chats"/>}
+                    </ListItemButton>
                     <ListItem sx={headersStyle} disabled={!pairId}>
                         <ListItemIcon><ContactsOutlined/></ListItemIcon>
                         {open && <ListItemText primary="Switch Chat:"/>}
@@ -243,10 +163,9 @@ const WhiteSideBar = () => {
                                 if (isMobile) setOpen(false);
                             }}>{name}</Button> </ListItem>
                         ))}
-                    <br/> <Divider/>
                     <br/>
-
-
+                    <Divider/>
+                    <br/>
                 </List>
             </Drawer>
         </Box>
