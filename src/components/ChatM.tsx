@@ -32,8 +32,12 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
     const {contacts, contactsIds} = useContext(ContactsContext);
     const {pairId, setPairId, sessions, selectedSession, setSelectedSession} = useContext(ChatContext);
 
-    const [placeHolder, setPlaceHolder] = useState<boolean>(true);
-    const contactsX = ["📞 Select a Contact", ...(contacts || [])];
+    const [placeHolderContacts, setPlaceHolderContacts] = useState<boolean>(true);
+    const [placeHolderSessions, setPlaceHolderSessions] = useState<boolean>(true);
+    const contactsX = ["📞 Select a Contact", ...((contacts || []))];
+    const sessionsX = [{
+        __typename: "session", name: "💬 Select a Session", _id: "asd"
+    }, ...(sessions || [])];
 
     return <>
         <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" width={DRAWER_WIDTH_OPEN - 5}>
@@ -42,13 +46,14 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                     fullWidth
                     value={contacts[contactsIds.findIndex(id => id === pairId)] || contactsX[0]}
                     onChange={(e) => {
-                        setPlaceHolder(false);
+                        setPlaceHolderContacts(false);
+                        setPlaceHolderSessions(true);
                         setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)]);
                     }}
                     sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
                 >
-                    {(placeHolder ? contactsX : contacts)?.map((contact, idx) => (
-                        <MenuItem key={idx} value={contact}>{contact}</MenuItem>
+                    {(placeHolderContacts ? contactsX : contacts)?.map((contact, index) => (
+                        <MenuItem key={index} value={contact}>{contact}</MenuItem>
                     ))}
                     <Divider/>
                     <MenuItem onClick={() => handleNavigation("/contacts")}>
@@ -62,17 +67,34 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
             </Grid>
         </Grid>
         {
-            sessions.length > 6 ?
-                <Select
-                    value={selectedSession}
-                    onChange={(e) => setSelectedSession(e.target.value)}
-                    sx={{width: '100%', margin: '1em 0'}}
-                >
-                    {sessions?.map(({_id, name}) => (
-                        <MenuItem key={_id} value={_id}>{name}</MenuItem>
-                    ))}
-                </Select>
-                : sessions.map(({_id, name}) => (
+            sessions.length > 3 ?
+                <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap"
+                      width={DRAWER_WIDTH_OPEN - 5}>
+                    <Grid item xs>
+                        <Select
+                            fullWidth
+                            value={placeHolderSessions ? sessionsX[0] : (selectedSession || sessionsX[0])}
+                            onChange={(e: any) => {
+                                setPlaceHolderSessions(false);
+                                setSelectedSession(e.target.value);
+                            }}
+                            sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
+                        >
+                            {(placeHolderSessions ? sessionsX : sessions)?.map(({_id, name}: any) => (
+                                <MenuItem key={_id} value={_id}>{name}</MenuItem>
+                            ))}
+                            <Divider/>
+                            <MenuItem onClick={() => handleNavigation("/contacts")}>
+                                {open && <ListItemText primary="Manage" sx={{color: "#009688"}}/>}
+                            </MenuItem>
+                        </Select>
+                    </Grid>
+                    <Grid item>
+                        <IconButton onClick={() => handleNavigation("/sessions")}><Settings
+                            sx={{color: "#009688"}}/></IconButton>
+                    </Grid>
+                </Grid>
+                : <> {sessions.map(({_id, name}) => (
                     <ListItem key={_id}>
                         <Button
                             variant={_id === selectedSession ? "contained" : "outlined"}
@@ -85,7 +107,18 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                             {name}
                         </Button>
                     </ListItem>
-                ))
+                ))}
+                    <ListItem>
+                        <Button
+                            variant="contained"
+                            sx={{width: "100%"}}
+                            onClick={() => handleNavigation("/sessions")}
+                        >
+                            Manage
+                        </Button>
+                    </ListItem>
+
+                </>
         }
     </>
 }
