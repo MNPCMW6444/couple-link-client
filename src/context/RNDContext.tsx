@@ -11,6 +11,25 @@ const LOADING_MESSAGE = (
     </Grid>
 );
 
+const GET_MY_ROLES = gql`
+    query Query {
+      getmyroles {
+        creatorId
+        name
+        publicName
+        role
+        setId
+        category
+        description
+        aiMessage
+        visibility
+        _id
+        createdAt
+        updatedAt
+      }
+    }
+`
+
 const GET_MY_SETS = gql`
   query Getmysets {
     getmysets {
@@ -78,6 +97,7 @@ const RNDContext = createContext<RNDContextType>(defaultValue);
 
 export const RNDContextProvider = ({children}: { children: ReactNode }) => {
     const {loading, error, data, refetch} = useQuery(GET_MY_SETS);
+    const {loading: loadingR, error: errorR, data: dataR, refetch: refetchR} = useQuery(GET_MY_ROLES);
     const [addRole] = useMutation(ADD_ROLE);
     const [addSet] = useMutation(ADD_SET, {refetchQueries: [GET_MY_SETS]});
     const [publishSet] = useMutation(PUBLISH_SET);
@@ -89,10 +109,10 @@ export const RNDContextProvider = ({children}: { children: ReactNode }) => {
                 errorsets: error,
                 datasets: data,
                 refetchsets: refetch,
-                loading,
-                error,
-                data,
-                refetch,
+                loading: loadingR,
+                error: errorR,
+                data: dataR,
+                refetch: refetchR,
                 addRole,
                 addSet,
                 publishSet

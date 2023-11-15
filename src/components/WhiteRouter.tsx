@@ -43,7 +43,7 @@ const Router = () => {
                             <Route path="/contacts"
                                    element={<ContactsPage/>}/>
                             <Route path="/sessions"
-                                   element={<SessionsPage/>}/>
+                                   element={<RNDContextProvider><SessionsPage/></RNDContextProvider>}/>
                             <Route path="/chat" element={<ChatPage/>}/>
                             <Route path="/rnd" element={<RNDContextProvider><RND/></RNDContextProvider>}/>
                             <Route path="/settings" element={<SettingsPage/>}/>

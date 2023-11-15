@@ -25,16 +25,18 @@ const GET_TRIPLETS = gql`
 `;
 
 const CREATE_SESSION = gql`
-  mutation Createsession($pairId: String!, $sessionName: String!) {
-      createsession(pairId: $pairId, sessionName: $sessionName) {
+  mutation Createsession($pairId: String!, $sessionName: String!, $role: String!) {
+      createsession(pairId: $pairId, sessionName: $sessionName, role: $role) {
         pairId
+        roleId
         name
         _id
         createdAt
         updatedAt
       }
-}
+  }
 `;
+
 
 const SEND_MESSAGE = gql`
   mutation SendMessage($sessionId: String!, $message: String!) {
@@ -83,7 +85,7 @@ type ChatContextType = {
     selectedSession: string;
     setSelectedSession: Dispatch<SetStateAction<string>>;
     triplets: { me: string; him: string; ai: string }[];
-    createSession: (pairId: string, name: string) => void;
+    createSession: (pairId: string, name: string, role: string) => void;
     sendMessage: (sessionId: string, message: string) => void;
     addMessageToTriplets: (message: Message) => void;
 };
@@ -130,12 +132,14 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const [createSessionMutation] = useMutation(CREATE_SESSION);
     const [sendMessageMutation] = useMutation(SEND_MESSAGE);
 
-    const createSession = (pairId: string, name: string) => createSessionMutation({
+    const createSession = (pairId: string, name: string, role: string) => createSessionMutation({
         variables: {
             pairId,
-            sessionName: name
+            sessionName: name,
+            role
         }
     });
+
     const sendMessage = (sessionId: string, message: string) =>
         sendMessageMutation({variables: {sessionId, message}});
 

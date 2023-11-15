@@ -1,9 +1,21 @@
 import {useState, useContext} from 'react';
-import {Box, Button, TextField, List, ListItem, ListItemText, IconButton, Typography} from '@mui/material';
+import {
+    Box,
+    Button,
+    TextField,
+    List,
+    ListItem,
+    ListItemText,
+    IconButton,
+    Typography,
+    Select,
+    MenuItem
+} from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import {gql, useMutation} from "@apollo/client";
 import ChatContext from "../../../context/ChatContext";
+import RNDContext from "../../../context/RNDContext.tsx";
 
 
 const RENAME_SESSION_MUTATION = gql`
@@ -37,9 +49,13 @@ const SessionsManager = () => {
 
     const [renameSession] = useMutation(RENAME_SESSION_MUTATION, {});
 
+    const [selectedRoleId, setSelectedRoleId] = useState('');
+
+
     const handleCreate = async () => {
-        await createSession(pairId, newSessionName);
+        await createSession(pairId, newSessionName, selectedRoleId);
         setNewSessionName('');
+        setSelectedRoleId(''); // Reset selected role ID
     };
 
     const handleRename = async () => {
@@ -53,6 +69,10 @@ const SessionsManager = () => {
         setEditingSession(null);
     };
 
+
+    const {data: rolesData} = useContext(RNDContext);
+
+
     return (
         <Box>
             <Box sx={{display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2}}>
@@ -61,6 +81,13 @@ const SessionsManager = () => {
                     value={newSessionName}
                     onChange={(e) => setNewSessionName(e.target.value)}
                 />
+                <Select value={selectedRoleId} onChange={(e) => setSelectedRoleId(e.target.value)}>
+                    {rolesData.getmyroles.map((role: any) => (
+                        <MenuItem key={role._id} value={role._id}>
+                            {role.name}
+                        </MenuItem>
+                    ))}
+                </Select>
                 <Button
                     startIcon={<AddCircleOutlineIcon/>}
                     onClick={handleCreate}
