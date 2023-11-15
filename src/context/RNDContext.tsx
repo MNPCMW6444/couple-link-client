@@ -1,11 +1,6 @@
-import {Grid} from "@mui/material";
 import {createContext, ReactNode} from "react";
-import {
-    gql,
-    useQuery,
-    useMutation,
-
-} from "@apollo/client";
+import {gql, useQuery, useMutation} from "@apollo/client";
+import {Grid} from "@mui/material";
 import {WhiteTypography} from "./UserContext";
 
 const LOADING_MESSAGE = (
@@ -16,9 +11,8 @@ const LOADING_MESSAGE = (
     </Grid>
 );
 
-
 const GET_MY_SETS = gql`
-  query GetMySets {
+  query Getmysets {
     getmysets {
       creatorId
       name
@@ -32,39 +26,21 @@ const GET_MY_SETS = gql`
 `;
 
 const ADD_SET = gql`
-  mutation AddSet($name: String!, $stringifiedArray: String!) {
+  mutation Addset($name: String!, $stringifiedArray: String!) {
     addset(name: $name, stringifiedArray: $stringifiedArray)
   }
 `;
 
 const PUBLISH_SET = gql`
-  mutation PublishSet($setId: String!) {
+  mutation Publishset($setId: String!) {
     publishset(setId: $setId)
   }
 `;
 
-
-const GET_MY_ROLES = gql`
-  query Getmyroles {
-      getmyroles {
-        creatorId
-        role
-        setId
-        category
-        description
-        aiMessage
-        visibility
-        _id
-        createdAt
-        updatedAt
-      }
- }
-`;
-
 const ADD_ROLE = gql`
-    mutation Addrole($role: String!, $category: String!, $description: String!, $name: String) {
-      addrole(role: $role, category: $category, description: $description, name: $name)
-    }
+  mutation Addrole($role: String!,$setName: String!, $roleName: String!, $category: String!, $description: String!, $publicName: String) {
+    addrole(role: $role, roleName: $roleName, setName:$setName, category: $category, description: $description, publicName: $publicName)
+  }
 `;
 
 interface RNDContextType {
@@ -79,7 +55,6 @@ interface RNDContextType {
     addRole: Function,
     addSet: Function,
     publishSet: Function
-
 }
 
 const defaultValue: RNDContextType = {
@@ -102,24 +77,18 @@ const defaultValue: RNDContextType = {
 const RNDContext = createContext<RNDContextType>(defaultValue);
 
 export const RNDContextProvider = ({children}: { children: ReactNode }) => {
-
-    const {loading, error, data, refetch} = useQuery(GET_MY_ROLES);
-    const [addRole] = useMutation(ADD_ROLE, {
-        refetchQueries: [GET_MY_ROLES],
-    });
-
-    const {loading: loadingsets, error: errorsets, data: datasets, refetch: refetchsets} = useQuery(GET_MY_SETS);
+    const {loading, error, data, refetch} = useQuery(GET_MY_SETS);
+    const [addRole] = useMutation(ADD_ROLE);
     const [addSet] = useMutation(ADD_SET, {refetchQueries: [GET_MY_SETS]});
     const [publishSet] = useMutation(PUBLISH_SET);
-
 
     return (
         <RNDContext.Provider
             value={{
-                loadingsets,
-                errorsets,
-                datasets,
-                refetchsets,
+                loadingsets: loading,
+                errorsets: error,
+                datasets: data,
+                refetchsets: refetch,
                 loading,
                 error,
                 data,

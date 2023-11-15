@@ -103,14 +103,14 @@ const ContactsPage = () => {
                             </Button>
                         </>
                     )}
-                    {contacts.map((contact, index) => (
+                    {contacts?.map((contact, index) => (
                         <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
                             {contact}
                         </Typography>
                     ))}
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
-                    {invitations.map((invitation, index) => (
+                    {invitations?.map((invitation, index) => (
                         <Grid container spacing={2} alignItems="center" key={`invitation-${index}`}>
                             <Grid item xs={8}>
                                 <Typography variant="h6">{invitation}</Typography>
@@ -127,7 +127,7 @@ const ContactsPage = () => {
                     ))}
                 </TabPanel>
                 <TabPanel value={tabValue} index={2}>
-                    {sentInvitations.map((sentInvitation, index) => (
+                    {sentInvitations?.map((sentInvitation, index) => (
                         <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
                             {sentInvitation}
                         </Typography>

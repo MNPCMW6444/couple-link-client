@@ -12,7 +12,7 @@ import {
     Divider
 } from "@mui/material";
 import useMobile from "../../../hooks/responsiveness/useMobile";
-import RNDContext from "../../../context/RNDContext.tsx";
+import RNDContext from "../../../context/RNDContext";
 
 const Set = () => {
     const {isMobile} = useMobile();
@@ -29,7 +29,7 @@ const Set = () => {
     const {loadingsets, errorsets, datasets, refetchsets, addSet, publishSet} = useContext(RNDContext);
 
     useEffect(() => {
-        [side1Ref, side2Ref].forEach(ref => {
+        [side1Ref, side2Ref].forEach((ref) => {
             if (ref.current) {
                 ref.current.style.height = 'auto';
                 ref.current.style.height = `${ref.current.scrollHeight}px`;
@@ -90,7 +90,7 @@ const Set = () => {
                     </Button>
                 </Grid>
                 <Grid item>
-                    <Button disabled={mutating || !!side1 || !!side2} variant="contained" color="primary"
+                    <Button disabled={mutating || !newSet || pairs?.length === 0} variant="contained" color="primary"
                             onClick={handleAddSet} fullWidth>
                         Add Set
                     </Button>
@@ -98,13 +98,13 @@ const Set = () => {
             </Grid>
             <Grid item xs={12}>
                 <List>
-                    {datasets && datasets.getmysets.map(({_id, name, stringifiedArray}: any) => (
+                    {datasets && datasets.getmysets?.map(({_id, name, stringifiedArray}: any) => (
                         <Box key={_id} my={2}>
                             <ListItem>
                                 <ListItemText primary={name}/>
                             </ListItem>
                             <Divider/>
-                            {JSON.parse(stringifiedArray).map((pair: any, index: number) => (
+                            {JSON.parse(stringifiedArray)?.map((pair: any, index: number) => (
                                 <ListItem key={index}>
                                     <ListItemText secondary={`Side 1: ${pair.side1}, Side 2: ${pair.side2}`}/>
                                 </ListItem>

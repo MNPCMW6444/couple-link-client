@@ -73,7 +73,8 @@ const NotificationsTab: FC = () => {
     }, [refreshUserData]);
 
     useEffect(() => {
-        if (pushesData?.getpushes?.length && pushesData.getpushes.some(({deviceName}: any) => deviceName === deviceName)) {
+        if (pushesData?.getpushes?.length && pushesData.getpushes.some(({deviceName}: any) => deviceName === deviceName)
+        ) {
             setDeviceName(`${deviceName} (2)`)
         } else {
         }
@@ -87,11 +88,11 @@ const NotificationsTab: FC = () => {
 
     const handleSubscribeClick = () => {
         const urlBase64ToUint8Array = (base64String: string) => {
-            const padding = '='.repeat((4 - base64String.length % 4) % 4);
+            const padding = '='.repeat((4 - base64String?.length % 4) % 4);
             const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
             const rawData = window.atob(base64);
-            const outputArray = new Uint8Array(rawData.length);
-            for (let i = 0; i < rawData.length; ++i) {
+            const outputArray = new Uint8Array(rawData?.length);
+            for (let i = 0; i < rawData?.length; ++i) {
                 outputArray[i] = rawData.charCodeAt(i);
             }
             return outputArray;
@@ -133,7 +134,7 @@ const NotificationsTab: FC = () => {
             </Typography>
             <StyledPaper elevation={3}>
                 <List>
-                    {pushesData?.getpushes.map((push: any) => (
+                    {pushesData?.getpushes?.map((push: any) => (
                         <ListItem key={push._id}>
                             <ListItemText primary={push.deviceName}
                                           secondary={"created on " + new Date(push.createdAt).toLocaleString()}/>

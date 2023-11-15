@@ -72,7 +72,7 @@ const SettingPage = () => {
         <Container>
             <Paper elevation={3}>
                 <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
-                    {menuData.map(({name, icon, disabled}, index) => (
+                    {menuData?.map(({name, icon, disabled}, index) => (
                         <CustomTab
                             key={index}
                             icon={icon as JSX.Element}

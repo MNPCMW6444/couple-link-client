@@ -23,7 +23,7 @@ self.addEventListener('notificationclick', function (event) {
             const chatUrl = `https://dualchatgpt.com/chat?pairId=${notificationData.pairId}&sessionId=${notificationData.sessionId}`;
 
 
-            for (var i = 0; i < windowClients.length; i++) {
+            for (var i = 0; i < windowClients?.length; i++) {
                 var client = windowClients[i];
                 if (client.url.startsWith(chatUrl) && 'focus' in client) {
                     return client.focus();

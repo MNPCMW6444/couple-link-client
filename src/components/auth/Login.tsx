@@ -97,7 +97,7 @@ const Login = () => {
 
     const validatePhone = (number: string) => {
         const parts = number.split(" ");
-        return !(parts.length === 2 && /^0+/.test(parts[1]));
+        return !(parts?.length === 2 && /^0+/.test(parts[1]));
 
     };
 

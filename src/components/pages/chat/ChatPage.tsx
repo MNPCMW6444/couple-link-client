@@ -10,7 +10,7 @@ const ChatPage = () => {
     } = useContext(ChatContext);
     const [message, setMessage] = useState<string>("");
 
-    const myTurn = !(triplets[triplets.length - 1]?.me !== "" || (triplets[triplets.length - 1]?.me !== "" && triplets[triplets.length - 1]?.him !== "" && triplets[triplets.length - 1]?.ai !== ""));
+    const myTurn = !(triplets[triplets?.length - 1]?.me !== "" || (triplets[triplets?.length - 1]?.me !== "" && triplets[triplets?.length - 1]?.him !== "" && triplets[triplets?.length - 1]?.ai !== ""));
 
     const {sendMessage} = useContext(ChatContext);
 
@@ -24,7 +24,7 @@ const ChatPage = () => {
                 minHeight: "90vh",
                 justifyContent: "space-between"
             }}>
-            {triplets.map((triplet, idx) => <ChatTriplet key={idx} triplet={triplet}/>)}
+            {triplets?.map((triplet, idx) => <ChatTriplet key={idx} triplet={triplet}/>)}
             <div style={{display: 'flex', alignItems: 'center', padding: '1em'}}>
                 <TextField
                     disabled={!myTurn}

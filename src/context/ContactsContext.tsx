@@ -103,8 +103,8 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
     };
 
     const contactsJSON: string[] = extractData(contactsQuery, "getcontacts");
-    const contacts = contactsJSON.map((json) => JSON.parse(json).phone);
-    const contactsIds = contactsJSON.map((json) => JSON.parse(json).pairId);
+    const contacts = contactsJSON?.map((json) => JSON.parse(json).phone);
+    const contactsIds = contactsJSON?.map((json) => JSON.parse(json).pairId);
     const invitations = extractData(invitationsQuery, "getinvitations");
     const sentInvitations = extractData(sentInvitationsQuery, "getinvitations");
 

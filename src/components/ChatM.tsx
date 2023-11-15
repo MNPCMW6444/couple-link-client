@@ -68,7 +68,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
             </Grid>
         </Grid>
         {
-            sessions.length > 6 ?
+            sessions?.length > 6 ?
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap"
                       width={DRAWER_WIDTH_OPEN - 5}>
                     <Grid item xs>
@@ -96,7 +96,8 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                             sx={{color: "#009688"}}/></IconButton>
                     </Grid>
                 </Grid>
-                : <> {sessions.map(({_id, name}) => (
+                :
+                <> {sessions?.map(({_id, name}) => (
                     <ListItem key={_id}>
                         <Button
                             variant={_id === selectedSession ? "contained" : "outlined"}

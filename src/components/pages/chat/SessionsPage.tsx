@@ -85,7 +85,7 @@ const SessionsManager = () => {
                 </Box>
             )}
             <List>
-                {sessions.map((session) => (
+                {sessions?.map((session) => (
                     <ListItem
                         key={session._id}
                         onClick={() => setSelectedSession(session._id)}
