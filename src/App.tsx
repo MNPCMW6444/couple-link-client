@@ -12,6 +12,7 @@ import.meta.env.VITE_NODE_ENV
 
 
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.dualchatgpt.com/graphql";
+export const clientURI = import.meta.env.VITE_NODE_ENV === "development" ? "http://localhost:5173" : "https://dualchatgpt.com";
 
 const globalStyles = css`
   * {

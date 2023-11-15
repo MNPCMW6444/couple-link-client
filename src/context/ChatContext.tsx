@@ -145,6 +145,18 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const {data: sessionSubscriptionData} = useSubscription(NEW_SESSION_SUBSCRIPTION);
 
     useEffect(() => {
+        // Parse URL parameters
+        const queryParams = new URLSearchParams(window.location.search);
+        const urlPairId = queryParams.get('pairId');
+        const urlSessionId = queryParams.get('sessionId');
+
+        // Set context state if parameters are present
+        if (urlPairId) setPairId(urlPairId);
+        if (urlSessionId) setSelectedSession(urlSessionId);
+    }, []);
+
+
+    useEffect(() => {
         if (messageSubscriptionData) {
             const newMessage = messageSubscriptionData.newMessage;
             addMessageToTriplets(newMessage);

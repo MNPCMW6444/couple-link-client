@@ -15,7 +15,24 @@ self.addEventListener('push', function (event) {
 
 
 self.addEventListener('notificationclick', function (event) {
+    const notificationData = event.notification.data;
+
     event.notification.close();
-    debugger;
-    // Handle the notification click
+    event.waitUntil(
+        clients.matchAll({type: 'window'}).then(windowClients => {
+            const chatUrl = `https://dualchatgpt.com/chat?pairId=${notificationData.pairId}&sessionId=${notificationData.sessionId}`;
+
+
+            for (var i = 0; i < windowClients.length; i++) {
+                var client = windowClients[i];
+                if (client.url.startsWith(chatUrl) && 'focus' in client) {
+                    return client.focus();
+                }
+            }
+
+            if (clients.openWindow) {
+                return clients.openWindow(chatUrl);
+            }
+        })
+    );
 });

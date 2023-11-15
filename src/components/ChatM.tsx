@@ -36,8 +36,9 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
     const [placeHolderSessions, setPlaceHolderSessions] = useState<boolean>(true);
     const contactsX = ["📞 Select a Contact", ...((contacts || []))];
     const sessionsX = [{
-        __typename: "session", name: "💬 Select a Session", _id: "asd"
+        __typename: "session", name: "💬 Select a Session", _id: "💬 Select a Session"
     }, ...(sessions || [])];
+
 
     return <>
         <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" width={DRAWER_WIDTH_OPEN - 5}>
@@ -67,13 +68,13 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
             </Grid>
         </Grid>
         {
-            sessions.length > 6 ?
+            sessions.length > 3 ?
                 <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap"
                       width={DRAWER_WIDTH_OPEN - 5}>
                     <Grid item xs>
                         <Select
                             fullWidth
-                            value={placeHolderSessions ? sessionsX[0] : (selectedSession || sessionsX[0])}
+                            value={placeHolderSessions ? sessionsX[0].name : (selectedSession || sessionsX[0])}
                             onChange={(e: any) => {
                                 setPlaceHolderSessions(false);
                                 setSelectedSession(e.target.value);
