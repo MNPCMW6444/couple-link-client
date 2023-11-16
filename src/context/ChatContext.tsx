@@ -143,7 +143,8 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const sendMessage = (sessionId: string, message: string) =>
         sendMessageMutation({variables: {sessionId, message}});
 
-    const {contacts, contactsIds} = useContext(ContactsContext);
+    const {contacts: x, contactsIds} = useContext(ContactsContext);
+    const contacts = x.map((contact: any) => contact.phone);
 
     const {data: messageSubscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION);
     const {data: sessionSubscriptionData} = useSubscription(NEW_SESSION_SUBSCRIPTION);
