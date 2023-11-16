@@ -1,12 +1,8 @@
 import {Grid} from "@mui/material";
 import {createContext, ReactNode, useContext, useEffect} from "react";
-import {
-    gql,
-    useQuery,
-    useMutation,
-    useSubscription
-} from "@apollo/client";
+import {gql, useQuery, useMutation, useSubscription} from "@apollo/client";
 import UserContext, {WhiteTypography} from "./UserContext";
+
 
 const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
@@ -16,11 +12,33 @@ const LOADING_MESSAGE = (
     </Grid>
 );
 
+
 const CONTACTS_QUERY = gql`
     query {
         getcontacts
     }
 `;
+
+interface Contact {
+    phone: string;
+    name: string;
+    pairId: string;
+}
+
+interface ContactsContextType {
+    contacts: Contact[];
+    invitations: string[];
+    sentInvitations: string[];
+    acceptInvitation?: any;
+    giveName?: any;
+}
+
+const defaultValue: any = {
+    contacts: [],
+    invitations: [],
+    sentInvitations: [],
+};
+
 
 const INVITATIONS_QUERY = gql`
     query InvitationsQuery($sent: Boolean!) {
@@ -55,19 +73,14 @@ const INVITATION_ACCEPTED_SUBSCRIPTION = gql`
 `;
 
 interface ContactsContextType {
-    contacts: string[];
+    contacts: Contact[];
     contactsIds: string[];
     invitations: string[];
     sentInvitations: string[];
     acceptInvitation?: any
+    giveName?: any
 }
 
-const defaultValue: ContactsContextType = {
-    contacts: [],
-    contactsIds: [],
-    invitations: [],
-    sentInvitations: [],
-};
 
 const ContactsContext = createContext<ContactsContextType>(defaultValue);
 
@@ -81,6 +94,12 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
     const [acceptInvitation] = useMutation(gql`
         mutation Mutation($phone: String!) {
           agreepair(phone: $phone)
+        }
+    `);
+
+    const [giveName] = useMutation(gql`
+        mutation Setname($pairId: String!, $name: String!) {
+          setname(pairId: $pairId, name: $name)
         }
     `);
 
@@ -103,15 +122,16 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
     };
 
     const contactsJSON: string[] = extractData(contactsQuery, "getcontacts");
-    const contacts = contactsJSON?.map((json) => JSON.parse(json).phone);
-    const contactsIds = contactsJSON?.map((json) => JSON.parse(json).pairId);
+    const contacts: Contact[] = extractData(contactsQuery, "getcontacts");
+    const contactsIds = contactsJSON?.map(({pairId}: any) => pairId);
     const invitations = extractData(invitationsQuery, "getinvitations");
     const sentInvitations = extractData(sentInvitationsQuery, "getinvitations");
 
     const isLoading = contactsQuery.loading || invitationsQuery.loading || sentInvitationsQuery.loading;
 
     return (
-        <ContactsContext.Provider value={{contacts, contactsIds, invitations, sentInvitations, acceptInvitation}}>
+        <ContactsContext.Provider
+            value={{contacts, contactsIds, invitations, sentInvitations, acceptInvitation, giveName}}>
             {isLoading ? LOADING_MESSAGE : children}
         </ContactsContext.Provider>
     );

@@ -38,9 +38,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
     const sessionsX = [{
         __typename: "session", name: "💬 Select a Session", _id: "💬 Select a Session"
     }, ...(sessions || [])];
-
-    console.log(pairId)
-
+    
     return <>
         <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" width={DRAWER_WIDTH_OPEN - 5}>
             <Grid item xs>

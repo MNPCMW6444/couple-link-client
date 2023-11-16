@@ -1,5 +1,5 @@
 import {useContext, useState} from 'react';
-import {Grid, Typography, Button, Tab, Tabs, Box} from '@mui/material';
+import {Grid, Typography, Button, Tab, Tabs, Box, TextField} from '@mui/material';
 import {Add} from '@mui/icons-material';
 import {gql, useMutation} from '@apollo/client';
 import PhoneInput from 'react-phone-input-2';
@@ -7,7 +7,6 @@ import 'react-phone-input-2/lib/style.css';
 import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
 import useMobile from "../../../hooks/responsiveness/useMobile";
-
 
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
@@ -34,24 +33,33 @@ TabPanel.propTypes = {
     value: PropTypes.number.isRequired,
 };
 
-const a11yProps = (index: any) => {
+const a11yProps = (index: number) => {
     return {
         id: `simple-tab-${index}`,
         'aria-controls': `simple-tabpanel-${index}`,
     };
 };
 
+
 const ContactsPage = () => {
-    const {contacts, invitations, sentInvitations, acceptInvitation} = useContext(ContactsContext);
+    const {contacts, invitations, sentInvitations, acceptInvitation, giveName} = useContext(ContactsContext);
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
+    const [contactName, setContactName] = useState("");
     const [tabValue, setTabValue] = useState(0);
     const {isMobile} = useMobile();
-
 
     const handleInvite = async () => {
         try {
             await doInvite({variables: {contactPhone: phone}});
+            if (contactName) {
+                // Assuming the contact is immediately available in the contacts list
+                // Adjust the logic here as per the actual app flow
+                const newContact: any = contacts.find((contact: any) => contact.phone === phone);
+                if (newContact) {
+                    await giveName({variables: {pairId: newContact.pairId, name: contactName}});
+                }
+            }
             setInvite(false);
         } catch (error) {
             console.error("Error sending invitation:", error);
@@ -72,7 +80,7 @@ const ContactsPage = () => {
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
                 <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
-                    Contacts and RfP
+                    Contacts
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
                     <Tab label="Contacts" {...a11yProps(0)} />
@@ -95,6 +103,14 @@ const ContactsPage = () => {
                                 placeholder="Enter phone number"
                                 enableSearch={true}
                             />
+                            <TextField
+                                label="Contact Name"
+                                variant="outlined"
+                                value={contactName}
+                                onChange={(e) => setContactName(e.target.value)}
+                                fullWidth
+                                margin="normal"
+                            />
                             <Button variant="contained" onClick={handleInvite} sx={{mt: 2, mr: 1}}>
                                 Send
                             </Button>
@@ -105,7 +121,7 @@ const ContactsPage = () => {
                     )}
                     {contacts?.map((contact, index) => (
                         <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
-                            {contact}
+                            {contact.name || contact.phone} {/* Display contact name or phone */}
                         </Typography>
                     ))}
                 </TabPanel>
