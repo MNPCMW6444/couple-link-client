@@ -34,11 +34,11 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
 
     const [placeHolderContacts, setPlaceHolderContacts] = useState<boolean>(true);
     const [placeHolderSessions, setPlaceHolderSessions] = useState<boolean>(true);
-    const contactsX = ["📞 Select a Contact", ...((contacts || []))];
+    const contactsX = [{name: "📞 Select a Contact"}, ...((contacts || []))];
     const sessionsX = [{
         __typename: "session", name: "💬 Select a Session", _id: "💬 Select a Session"
     }, ...(sessions || [])];
-    
+
     return <>
         <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" width={DRAWER_WIDTH_OPEN - 5}>
             <Grid item xs>
@@ -52,8 +52,8 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                     }}
                     sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
                 >
-                    {(placeHolderContacts ? contactsX : contacts)?.map((contact, index) => (
-                        <MenuItem key={index} value={contact}>{contact}</MenuItem>
+                    {(placeHolderContacts ? contactsX : contacts)?.map((contact: any, index) => (
+                        <MenuItem key={index} value={contact}>{contact.name || contact.phone}</MenuItem>
                     ))}
                     <Divider/>
                     <MenuItem onClick={() => handleNavigation("/contacts")}>

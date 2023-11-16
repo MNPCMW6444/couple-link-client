@@ -40,26 +40,19 @@ const a11yProps = (index: number) => {
     };
 };
 
-
 const ContactsPage = () => {
-    const {contacts, invitations, sentInvitations, acceptInvitation, giveName} = useContext(ContactsContext);
+    const {contacts, invitations, sentInvitations, acceptInvitation, giveName, contactsQuery} = useContext(ContactsContext);
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
     const [contactName, setContactName] = useState("");
+    const [editingContact, setEditingContact] = useState<any>(null);
+    const [newName, setNewName] = useState("");
     const [tabValue, setTabValue] = useState(0);
     const {isMobile} = useMobile();
 
     const handleInvite = async () => {
         try {
             await doInvite({variables: {contactPhone: phone}});
-            if (contactName) {
-                // Assuming the contact is immediately available in the contacts list
-                // Adjust the logic here as per the actual app flow
-                const newContact: any = contacts.find((contact: any) => contact.phone === phone);
-                if (newContact) {
-                    await giveName({variables: {pairId: newContact.pairId, name: contactName}});
-                }
-            }
             setInvite(false);
         } catch (error) {
             console.error("Error sending invitation:", error);
@@ -75,6 +68,19 @@ const ContactsPage = () => {
       newpair(contactPhone: $contactPhone)
     }
   `);
+
+    const handleEditName = (contact: any) => {
+        setEditingContact(contact);
+        setNewName(contact.name || "");
+    };
+
+    const handleSaveName = async () => {
+        if (editingContact) {
+            await giveName({variables: {pairId: editingContact.pairId, name: newName}});
+            contactsQuery.refetch();
+            setEditingContact(null);
+        }
+    };
 
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
@@ -119,10 +125,22 @@ const ContactsPage = () => {
                             </Button>
                         </>
                     )}
-                    {contacts?.map((contact, index) => (
-                        <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
-                            {contact.name || contact.phone} {/* Display contact name or phone */}
-                        </Typography>
+                    {contacts?.map((contact) => (
+                        <div key={contact.pairId}>
+                            <Typography variant="h6" sx={{mt: 1}}>
+                                {contact.name || contact.phone}
+                            </Typography>
+                            <Button onClick={() => handleEditName(contact)}>Edit Name</Button>
+                            {editingContact?.pairId === contact.pairId && (
+                                <div>
+                                    <TextField
+                                        value={newName}
+                                        onChange={(e) => setNewName(e.target.value)}
+                                    />
+                                    <Button onClick={handleSaveName}>Save</Button>
+                                </div>
+                            )}
+                        </div>
                     ))}
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>

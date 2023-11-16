@@ -31,6 +31,7 @@ interface ContactsContextType {
     sentInvitations: string[];
     acceptInvitation?: any;
     giveName?: any;
+    contactsQuery: any;
 }
 
 const defaultValue: any = {
@@ -101,7 +102,8 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
         mutation Setname($pairId: String!, $name: String!) {
           setname(pairId: $pairId, name: $name)
         }
-    `);
+    `)
+
 
     const {data: newInvitationData} = useSubscription(NEW_INVITATION_SUBSCRIPTION);
     const {data: invitationAcceptedData} = useSubscription(INVITATION_ACCEPTED_SUBSCRIPTION);
@@ -131,7 +133,7 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
 
     return (
         <ContactsContext.Provider
-            value={{contacts, contactsIds, invitations, sentInvitations, acceptInvitation, giveName}}>
+            value={{contacts, contactsIds, invitations, sentInvitations, acceptInvitation, giveName, contactsQuery}}>
             {isLoading ? LOADING_MESSAGE : children}
         </ContactsContext.Provider>
     );
