@@ -8,10 +8,9 @@ import {
 } from "@mui/material";
 import useMobile from "../../../hooks/responsiveness/useMobile";
 import Role from "./Role";
-import Set from "./Set";
 import RNDContext from "../../../context/RNDContext";
 
-const RND = () => {
+const Roles = () => {
     const {isMobile} = useMobile();
     const [newRole, setNewRole] = useState('');
     const [setName, setSetName] = useState('');
@@ -63,7 +62,6 @@ const RND = () => {
 
     return (
         <>
-            <Set/>
             <Grid container spacing={2} padding={2}>
                 <Grid item xs={12}>
                     <Typography variant={isMobile ? "h3" : "h1"} align="center">
@@ -127,4 +125,4 @@ const RND = () => {
         ;
 };
 
-export default RND;
+export default Roles;

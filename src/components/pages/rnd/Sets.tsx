@@ -14,7 +14,7 @@ import {
 import useMobile from "../../../hooks/responsiveness/useMobile";
 import RNDContext from "../../../context/RNDContext";
 
-const Set = () => {
+const Sets = () => {
     const {isMobile} = useMobile();
 
     const [newSet, setNewSet] = useState('');
@@ -74,7 +74,7 @@ const Set = () => {
             </Grid>
             <Grid item xs={12} container direction="column" rowSpacing={2}>
                 <Grid item>
-                    <TextField label="New Set" value={newSet} onChange={(e) => setNewSet(e.target.value)} fullWidth/>
+                    <TextField label="New Sets" value={newSet} onChange={(e) => setNewSet(e.target.value)} fullWidth/>
                 </Grid>
                 <Grid item>
                     <TextField inputRef={side1Ref} multiline label="Side 1" value={side1}
@@ -92,7 +92,7 @@ const Set = () => {
                 <Grid item>
                     <Button disabled={mutating || !newSet || pairs?.length === 0} variant="contained" color="primary"
                             onClick={handleAddSet} fullWidth>
-                        Add Set
+                        Add Sets
                     </Button>
                 </Grid>
             </Grid>
@@ -118,4 +118,4 @@ const Set = () => {
     );
 };
 
-export default Set;
+export default Sets;

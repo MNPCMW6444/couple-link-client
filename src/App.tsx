@@ -71,7 +71,7 @@ function App() {
         credentials: 'include',
         fetch: (uri, options, timeout = 120000) => {
             return new Promise((resolve, reject) => {
-                // Set the timeout
+                // Sets the timeout
                 const timer = setTimeout(() => {
                     reject(new Error("Request timed out"));
                 }, timeout);

@@ -154,7 +154,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
         const urlPairId = queryParams.get('pairId');
         const urlSessionId = queryParams.get('sessionId');
 
-        // Set context state if parameters are present
+        // Sets context state if parameters are present
         if (urlPairId) setPairId(urlPairId);
         if (urlSessionId) setSelectedSession(urlSessionId);
     }, []);

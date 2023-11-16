@@ -1,88 +1,52 @@
-import {cloneElement, useState} from 'react';
-import {Tabs, Tab, Container, Paper, Box, Avatar} from '@mui/material';
-import {useNavigate} from "react-router-dom";
-import {DeveloperMode, Info, Logout, Notifications} from "@mui/icons-material";
-
-export const menuData =
-    [
-        {
-            name: "Notifications",
-            icon: <Notifications/>,
-            link: "/notifications",
-            disabled: false
-        },
-        {
-            name: "Manage Account",
-            icon: "x",
-            link: "/account",
-            disabled: true
-        },
-        {
-            name: "Prompt R&D",
-            icon: <DeveloperMode/>,
-            link: "/rnd",
-            disabled: false
-        },
-        {
-            name: "About",
-            icon: <Info/>,
-            link: "/about",
-            disabled: true
-        },
-        {
-            name: "Logout",
-            icon: <Logout/>,
-            link: "logout",
-            disabled: false
-        }];
-
-
-const CustomTab = ({label, icon, disabled, ...otherProps}: {
-    label: string,
-    icon: JSX.Element | "x",
-    disabled: boolean
-}) => {
-    return (
-        <Tab
-            {...otherProps}
-            label={
-                <Box display="flex" alignItems="center">
-                    {icon === "x" ? <Avatar sx={{width: 24, height: 24, marginRight: '8px'}}>
-                        {"u".toUpperCase()}
-                    </Avatar> : cloneElement(icon, {style: {marginRight: '8px'}})}
-                    {label}
-                </Box>
-            }
-        />
-    );
-};
-
-const Refer = ({toLink}: { toLink: number }) => {
-    const navigate = useNavigate();
-    navigate(menuData[toLink].link);
-    return "loading..."
-}
+import {useContext, useState} from 'react';
+import {Tabs, Tab, Container, Paper, Avatar} from '@mui/material';
+import NotificationsTab from "./NotificationsTab.tsx";
+import AccountTab from "./AccountTab.tsx";
+import {Logout, Notifications} from "@mui/icons-material";
+import UserContext from "../../../context/UserContext.tsx";
 
 
 const SettingPage = () => {
     const [activeTab, setActiveTab] = useState<number>(0);
 
 
+    const {signout} = useContext(UserContext)
+
+    const menuData = [
+        {
+            name: "Notifications",
+            icon: <Notifications/>,
+            disabled: false,
+            content: <NotificationsTab/>
+        },
+        {
+            name: "Manage Account",
+            icon: <Avatar>{'U'}</Avatar>,
+            disabled: false,
+            content: <AccountTab/>
+        },
+        {
+            name: "Logout",
+            icon: <Logout/>,
+            disabled: false,
+            action: () => signout()
+        }
+    ];
+
+
     return (
         <Container>
             <Paper elevation={3}>
-                <Tabs value={activeTab} onChange={(_, newValue) => setActiveTab(newValue)}>
-                    {menuData?.map(({name, icon, disabled}, index) => (
-                        <CustomTab
-                            key={index}
-                            icon={icon as JSX.Element}
-                            label={name}
-                            disabled={disabled}
-                        />
+                <Tabs value={activeTab} onChange={(_, newValue) => {
+                    setActiveTab(newValue);
+                }}>
+                    {menuData.map((item, index) => (
+                        <Tab key={index} label={item.name} icon={item.icon} disabled={item.disabled}
+                             onClick={item.action}/>
                     ))}
                 </Tabs>
                 <br/><br/><br/>
-                {<Refer toLink={activeTab}/>}
+                {menuData[activeTab].content}
             </Paper>
         </Container>
     );

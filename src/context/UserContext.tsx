@@ -46,6 +46,7 @@ export const UserContextProvider = ({children}: { children: ReactNode }) => {
   getme {
     _id
     phone
+    rnd
   }
 }`);
 

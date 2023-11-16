@@ -9,10 +9,11 @@ import ContactsPage from "./pages/contacts/ContactsPage";
 import HomePage from "./pages/home/HomePage";
 import SessionsPage from "./pages/chat/SessionsPage";
 import useMobile from "../hooks/responsiveness/useMobile";
-import RND from "./pages/rnd/RND";
+import Roles from "./pages/rnd/Roles.tsx";
 import SettingsPage from "./pages/settings/SettingsPage.tsx";
 import NotificationsTab from "./pages/settings/NotificationsTab.tsx";
 import {RNDContextProvider} from "../context/RNDContext.tsx";
+import Sets from "./pages/rnd/Sets.tsx";
 
 const Router = () => {
 
@@ -45,7 +46,8 @@ const Router = () => {
                             <Route path="/sessions"
                                    element={<RNDContextProvider><SessionsPage/></RNDContextProvider>}/>
                             <Route path="/chat" element={<ChatPage/>}/>
-                            <Route path="/rnd" element={<RNDContextProvider><RND/></RNDContextProvider>}/>
+                            <Route path="/roles" element={<RNDContextProvider><Roles/></RNDContextProvider>}/>
+                            <Route path="/sets" element={<RNDContextProvider><Sets/></RNDContextProvider>}/>
                             <Route path="/settings" element={<SettingsPage/>}/>
                             <Route path="/notifications" element={<NotificationsTab/>}/>
                         </Routes>

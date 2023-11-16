@@ -7,13 +7,14 @@ import {
     Box,
     Divider,
     ListItemIcon,
-    ListItemText, Switch, Button,
+    ListItemText, Switch,
 } from "@mui/material";
 import {Menu as MenuIcon, MenuOpen, Close, DeveloperMode} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import useMobile from "../hooks/responsiveness/useMobile";
 import ChatM from "./ChatM.tsx";
 import UserContext from "../context/UserContext.tsx";
+import RNDM from "./RNDM.tsx";
 
 export const DRAWER_WIDTH_OPEN = 255;
 const DRAWER_WIDTH_CLOSED = 56;
@@ -49,7 +50,7 @@ const WhiteSideBar = () => {
 
     const handleRndChange = (event: any) => {
         setRndEnabled(event.target.checked);
-        // Add additional logic for RND functionality here if needed
+        // Add additional logic for Roles functionality here if needed
     };
 
 
@@ -99,17 +100,7 @@ const WhiteSideBar = () => {
                     </>}
                     <ChatM open={open} setOpen={setOpen}/>
                     <Divider/>
-                    {rndEnabled && <>
-                        <ListItem>
-                            <Button
-                                variant="contained"
-                                sx={{width: "100%"}}
-                                onClick={() => handleNavigation("/sessions")}
-                            >
-                                Manage
-                            </Button>
-                        </ListItem>
-                    </>}
+                    {rndEnabled && <RNDM open={open} setOpen={setOpen}/>}
                 </List>
             </Drawer>
         </Box>
