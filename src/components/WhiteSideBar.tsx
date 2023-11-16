@@ -98,9 +98,14 @@ const WhiteSideBar = () => {
                         </ListItem>
                         <Divider/>
                     </>}
-                    <ChatM open={open} setOpen={setOpen}/>
-                    <Divider/>
-                    {rndEnabled && <RNDM open={open} setOpen={setOpen}/>}
+                    {rndEnabled ? <>
+                            <RNDM open={open} setOpen={setOpen}/> <Divider/>
+                        </>
+                        :
+
+                        <> <ChatM open={open} setOpen={setOpen}/>
+                            <Divider/>
+                        </>}
                 </List>
             </Drawer>
         </Box>
