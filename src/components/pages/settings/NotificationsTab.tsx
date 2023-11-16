@@ -67,7 +67,7 @@ const NotificationsTab: FC = () => {
     const xx = `${x.browser.name} on ${x.device.model}`;
 
     const [deviceName, setDeviceName] = useState(xx);
-
+    
     useEffect(() => {
         refreshUserData();
     }, [refreshUserData]);

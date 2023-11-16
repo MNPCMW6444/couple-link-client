@@ -16,7 +16,7 @@ const PUBLISH_ROLE = gql`
 
 
 const Role = ({rolex}: any) => {
-    const {_id, role, category, description, setId, aiMessage} = rolex;
+    const {_id, role, category, description, setId, aiMessage, name} = rolex;
     const [publishRole] = useMutation(PUBLISH_ROLE);
 
     const {data} = useQuery(GET_SET_NAME, {variables: {getsetnameId: setId}});
@@ -29,8 +29,14 @@ const Role = ({rolex}: any) => {
     return <Paper elevation={3} sx={{padding: 2}}>
         <Grid container direction="column">
             <Grid item>
-                <Typography sx={{fontWeight: 800}}>Category:</Typography>
+                <Typography sx={{fontWeight: 800}}>Name:</Typography>
             </Grid>
+            <Grid item>
+                <Typography>{name}</Typography>
+            </Grid>
+            <br/><Grid item>
+            <Typography sx={{fontWeight: 800}}>Category:</Typography>
+        </Grid>
             <Grid item>
                 <Typography>{category}</Typography>
             </Grid>
