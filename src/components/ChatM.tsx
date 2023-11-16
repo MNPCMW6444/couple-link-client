@@ -39,6 +39,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
         __typename: "session", name: "💬 Select a Session", _id: "💬 Select a Session"
     }, ...(sessions || [])];
 
+    console.log(pairId)
 
     return <>
         <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap" width={DRAWER_WIDTH_OPEN - 5}>
@@ -67,37 +68,37 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                     sx={{color: "#009688"}}/></IconButton>
             </Grid>
         </Grid>
-        {
-            sessions?.length > 3 ?
-                <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap"
-                      width={DRAWER_WIDTH_OPEN - 5}>
-                    <Grid item xs>
-                        <Select
-                            fullWidth
-                            value={placeHolderSessions ? sessionsX[0].name : (selectedSession || sessionsX[0])}
-                            onChange={(e: any) => {
-                                setPlaceHolderSessions(false);
-                                setSelectedSession(e.target.value);
-                                handleNavigation("/chat")
-                            }}
-                            sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
-                        >
-                            {(placeHolderSessions ? sessionsX : sessions)?.map(({_id, name}: any) => (
-                                <MenuItem key={_id} value={_id}>{name}</MenuItem>
-                            ))}
-                            <Divider/>
-                            <MenuItem onClick={() => handleNavigation("/contacts")}>
-                                {open && <ListItemText primary="Manage" sx={{color: "#009688"}}/>}
-                            </MenuItem>
-                        </Select>
-                    </Grid>
-                    <Grid item>
-                        <IconButton onClick={() => handleNavigation("/sessions")}><Settings
-                            sx={{color: "#009688"}}/></IconButton>
-                    </Grid>
+        {pairId && (sessions?.length > 6 ?
+            <Grid container justifyContent="space-between" alignItems="center" wrap="nowrap"
+                  width={DRAWER_WIDTH_OPEN - 5}>
+                <Grid item xs>
+                    <Select
+                        fullWidth
+                        value={placeHolderSessions ? sessionsX[0].name : (selectedSession || sessionsX[0])}
+                        onChange={(e: any) => {
+                            setPlaceHolderSessions(false);
+                            setSelectedSession(e.target.value);
+                            handleNavigation("/chat")
+                        }}
+                        sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
+                    >
+                        {(placeHolderSessions ? sessionsX : sessions)?.map(({_id, name}: any) => (
+                            <MenuItem key={_id} value={_id}>{name}</MenuItem>
+                        ))}
+                        <Divider/>
+                        <MenuItem onClick={() => handleNavigation("/sessions")}>
+                            {open && <ListItemText primary="Manage" sx={{color: "#009688"}}/>}
+                        </MenuItem>
+                    </Select>
                 </Grid>
-                :
-                <> {sessions?.map(({_id, name}) => (
+                <Grid item>
+                    <IconButton onClick={() => handleNavigation("/sessions")}><Settings
+                        sx={{color: "#009688"}}/></IconButton>
+                </Grid>
+            </Grid>
+            :
+            <>
+                {sessions?.map(({_id, name}) => (
                     <ListItem key={_id}>
                         <Button
                             variant={_id === selectedSession ? "contained" : "outlined"}
@@ -111,18 +112,16 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                         </Button>
                     </ListItem>
                 ))}
-                    <ListItem>
-                        <Button
-                            variant="contained"
-                            sx={{width: "100%"}}
-                            onClick={() => handleNavigation("/sessions")}
-                        >
-                            Manage
-                        </Button>
-                    </ListItem>
-
-                </>
-        }
+                <ListItem>
+                    <Button
+                        variant="contained"
+                        sx={{width: "100%"}}
+                        onClick={() => handleNavigation("/sessions")}
+                    >
+                        Manage
+                    </Button>
+                </ListItem>
+            </>)}
     </>
 }
 
