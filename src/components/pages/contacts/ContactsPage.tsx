@@ -1,157 +1,125 @@
-import {useContext, useState} from 'react';
-import {Grid, Typography, Button, Tab, Tabs, Box, TextField} from '@mui/material';
-import {Add} from '@mui/icons-material';
-import {gql, useMutation} from '@apollo/client';
-import PhoneInput from 'react-phone-input-2';
-import 'react-phone-input-2/lib/style.css';
-import ContactsContext from '../../../context/ContactsContext';
-import PropTypes from 'prop-types';
-import useMobile from "../../../hooks/responsiveness/useMobile";
+import {Grid} from "@mui/material";
+import {createContext, ReactNode, useContext, useEffect} from "react";
+import {gql, useQuery, useMutation, useSubscription} from "@apollo/client";
+import UserContext, {WhiteTypography} from "../../../context/UserContext.tsx";
 
-const TabPanel = (props: any) => {
-    const {children, value, index, ...other} = props;
-    return (
-        <div
-            role="tabpanel"
-            hidden={value !== index}
-            id={`simple-tabpanel-${index}`}
-            aria-labelledby={`simple-tab-${index}`}
-            {...other}
-        >
-            {value === index && (
-                <Box sx={{p: 3}}>
-                    <Typography>{children}</Typography>
-                </Box>
-            )}
-        </div>
-    );
-};
-
-TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-};
-
-const a11yProps = (index: number) => {
-    return {
-        id: `simple-tab-${index}`,
-        'aria-controls': `simple-tabpanel-${index}`,
-    };
-};
-
-
-const ContactsPage = () => {
-    const {contacts, invitations, sentInvitations, acceptInvitation, giveName} = useContext(ContactsContext);
-    const [invite, setInvite] = useState(false);
-    const [phone, setPhone] = useState("");
-    const [contactName, setContactName] = useState("");
-    const [tabValue, setTabValue] = useState(0);
-    const {isMobile} = useMobile();
-
-    const handleInvite = async () => {
-        try {
-            await doInvite({variables: {contactPhone: phone}});
-            if (contactName) {
-                // Assuming the contact is immediately available in the contacts list
-                // Adjust the logic here as per the actual app flow
-                const newContact: any = contacts.find((contact: any) => contact.phone === phone);
-                if (newContact) {
-                    await giveName({variables: {pairId: newContact.pairId, name: contactName}});
-                }
-            }
-            setInvite(false);
-        } catch (error) {
-            console.error("Error sending invitation:", error);
-        }
-    };
-
-    const handleChangeTab = (_: any, newValue: any) => {
-        setTabValue(newValue);
-    };
-
-    const [doInvite] = useMutation(gql`
-    mutation Mutation($contactPhone: String!) {
-      newpair(contactPhone: $contactPhone)
-    }
-  `);
-
-    return (
-        <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
-            <Grid item xs={12} sm={8} md={6} lg={4}>
-                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
-                    Contacts
-                </Typography>
-                <Tabs value={tabValue} onChange={handleChangeTab} centered>
-                    <Tab label="Contacts" {...a11yProps(0)} />
-                    <Tab label="Invitations" {...a11yProps(1)} />
-                    <Tab label="Sent Invitations" {...a11yProps(2)} />
-                </Tabs>
-                <TabPanel value={tabValue} index={0}>
-                    {!invite ? (
-                        <Button variant="contained" onClick={() => setInvite(true)} startIcon={<Add/>}>
-                            Invite New
-                        </Button>
-                    ) : (
-                        <>
-                            <PhoneInput
-                                country={'il'}
-                                value={phone}
-                                onChange={setPhone}
-                                containerStyle={{width: '100%'}}
-                                inputStyle={{width: '100%'}}
-                                placeholder="Enter phone number"
-                                enableSearch={true}
-                            />
-                            <TextField
-                                label="Contact Name"
-                                variant="outlined"
-                                value={contactName}
-                                onChange={(e) => setContactName(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                            />
-                            <Button variant="contained" onClick={handleInvite} sx={{mt: 2, mr: 1}}>
-                                Send
-                            </Button>
-                            <Button variant="outlined" onClick={() => setInvite(false)} sx={{mt: 2}}>
-                                Cancel
-                            </Button>
-                        </>
-                    )}
-                    {contacts?.map((contact, index) => (
-                        <Typography variant="h6" key={`contact-${index}`} sx={{mt: 1}}>
-                            {contact.name || contact.phone} {/* Display contact name or phone */}
-                        </Typography>
-                    ))}
-                </TabPanel>
-                <TabPanel value={tabValue} index={1}>
-                    {invitations?.map((invitation, index) => (
-                        <Grid container spacing={2} alignItems="center" key={`invitation-${index}`}>
-                            <Grid item xs={8}>
-                                <Typography variant="h6">{invitation}</Typography>
-                            </Grid>
-                            <Grid item xs={4}>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => acceptInvitation && acceptInvitation({variables: {phone: invitation}})}
-                                >
-                                    Accept
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    ))}
-                </TabPanel>
-                <TabPanel value={tabValue} index={2}>
-                    {sentInvitations?.map((sentInvitation, index) => (
-                        <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
-                            {sentInvitation}
-                        </Typography>
-                    ))}
-                </TabPanel>
-            </Grid>
+const LOADING_MESSAGE = (
+    <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
+        <Grid item>
+            <WhiteTypography>Loading contacts...</WhiteTypography>
         </Grid>
+    </Grid>
+);
+
+const CONTACTS_QUERY = gql`
+    query {
+        getcontacts
+    }
+`;
+
+interface Contact {
+    phone: string;
+    name: string;
+    pairId: string;
+}
+
+interface ContactsContextType {
+    contacts: Contact[];
+    invitations: string[];
+    sentInvitations: string[];
+    acceptInvitation?: any;
+    giveName?: any;
+}
+
+const defaultValue: ContactsContextType = {
+    contacts: [],
+    invitations: [],
+    sentInvitations: [],
+};
+
+const INVITATIONS_QUERY = gql`
+    query InvitationsQuery($sent: Boolean!) {
+        getinvitations(sent: $sent)
+    }
+`;
+
+const NEW_INVITATION_SUBSCRIPTION = gql`
+    subscription NewInvitation {
+        newInvitation {
+            initiator
+            acceptor
+            active
+            _id
+            createdAt
+            updatedAt
+        }
+    }
+`;
+
+const INVITATION_ACCEPTED_SUBSCRIPTION = gql`
+    subscription InvitationAccepted {
+        invitationAccepted {
+            initiator
+            acceptor
+            active
+            _id
+            createdAt
+            updatedAt
+        }
+    }
+`;
+
+const ContactsContext = createContext<ContactsContextType>(defaultValue);
+
+export const ContactsContextProvider = ({children}: { children: ReactNode }) => {
+    const {user} = useContext(UserContext);
+
+    const contactsQuery = useQuery(CONTACTS_QUERY);
+    const invitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: false}});
+    const sentInvitationsQuery = useQuery(INVITATIONS_QUERY, {variables: {sent: true}});
+
+    const [acceptInvitation] = useMutation(gql`
+        mutation Mutation($phone: String!) {
+          agreepair(phone: $phone)
+        }
+    `);
+
+    const [giveName] = useMutation(gql`
+        mutation Setname($pairId: String!, $name: String!) {
+          setname(pairId: $pairId, name: $name)
+        }
+    `);
+
+    const {data: newInvitationData} = useSubscription(NEW_INVITATION_SUBSCRIPTION);
+    const {data: invitationAcceptedData} = useSubscription(INVITATION_ACCEPTED_SUBSCRIPTION);
+
+    useEffect(() => {
+        if (user) {
+            contactsQuery.refetch();
+            invitationsQuery.refetch();
+            sentInvitationsQuery.refetch();
+        }
+    }, [user, newInvitationData, invitationAcceptedData]);
+
+    const extractData = (query: typeof contactsQuery, key: string) => {
+        if (!query.loading && !query.error && query.data?.[key]) {
+            return query.data[key].map((contact: string) => JSON.parse(contact));
+        }
+        return [];
+    };
+
+    const contacts: Contact[] = extractData(contactsQuery, "getcontacts");
+    const invitations = extractData(invitationsQuery, "getinvitations");
+    const sentInvitations = extractData(sentInvitationsQuery, "getinvitations");
+
+    const isLoading = contactsQuery.loading || invitationsQuery.loading || sentInvitationsQuery.loading;
+
+    return (
+        <ContactsContext.Provider
+            value={{contacts, invitations, sentInvitations, acceptInvitation, giveName}}>
+            {isLoading ? LOADING_MESSAGE : children}
+        </ContactsContext.Provider>
     );
 };
 
-export default ContactsPage;
+export default ContactsContext;
