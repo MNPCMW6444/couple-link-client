@@ -1,6 +1,6 @@
 import {Paper, Button, TextField} from "@mui/material";
 import ChatTriplet from "./ChatTriplet";
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import ChatContext from "../../../context/ChatContext";
 
 const ChatPage = () => {
@@ -10,9 +10,13 @@ const ChatPage = () => {
     } = useContext(ChatContext);
     const [message, setMessage] = useState<string>("");
 
-    const myTurn = !(triplets[triplets?.length - 1]?.me !== "" || (triplets[triplets?.length - 1]?.me !== "" && triplets[triplets?.length - 1]?.him !== "" && triplets[triplets?.length - 1]?.ai !== ""));
+    const [myTurn, setMyTurn] = useState<boolean>(!(triplets[triplets?.length - 1]?.me !== "" || (triplets[triplets?.length - 1]?.me !== "" && triplets[triplets?.length - 1]?.him !== "" && triplets[triplets?.length - 1]?.ai !== "")));
 
     const {sendMessage} = useContext(ChatContext);
+
+    useEffect(() => {
+        setMyTurn(!(triplets[triplets?.length - 1]?.me !== "" || (triplets[triplets?.length - 1]?.me !== "" && triplets[triplets?.length - 1]?.him !== "" && triplets[triplets?.length - 1]?.ai !== "")))
+    }, [triplets])
 
     return (
         <Paper

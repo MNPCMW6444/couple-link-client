@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {
     Drawer,
     List,
@@ -7,12 +7,13 @@ import {
     Box,
     Divider,
     ListItemIcon,
-    ListItemText,
+    ListItemText, Switch, Button,
 } from "@mui/material";
-import {Menu as MenuIcon, MenuOpen, Close} from "@mui/icons-material";
+import {Menu as MenuIcon, MenuOpen, Close, DeveloperMode} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import useMobile from "../hooks/responsiveness/useMobile";
 import ChatM from "./ChatM.tsx";
+import UserContext from "../context/UserContext.tsx";
 
 export const DRAWER_WIDTH_OPEN = 255;
 const DRAWER_WIDTH_CLOSED = 56;
@@ -41,6 +42,16 @@ const WhiteSideBar = () => {
         navigate(path);
         if (isMobile) setOpen(false);
     };
+
+    const [rndEnabled, setRndEnabled] = useState(false);
+
+    const {user} = useContext(UserContext)
+
+    const handleRndChange = (event: any) => {
+        setRndEnabled(event.target.checked);
+        // Add additional logic for RND functionality here if needed
+    };
+
 
     return (
         <Box>
@@ -74,8 +85,31 @@ const WhiteSideBar = () => {
                         {open && <ListItemText primary="Settings"/>}
                     </ListItem>
                     <Divider/>
+                    {user.rnd && <>
+                        <ListItem>
+                            <ListItemIcon><DeveloperMode/></ListItemIcon>
+                            {open && <ListItemText primary="R&D Mode"/>}
+                            <Switch
+                                checked={rndEnabled}
+                                onChange={handleRndChange}
+                                color="primary"
+                            />
+                        </ListItem>
+                        <Divider/>
+                    </>}
                     <ChatM open={open} setOpen={setOpen}/>
                     <Divider/>
+                    {rndEnabled && <>
+                        <ListItem>
+                            <Button
+                                variant="contained"
+                                sx={{width: "100%"}}
+                                onClick={() => handleNavigation("/sessions")}
+                            >
+                                Manage
+                            </Button>
+                        </ListItem>
+                    </>}
                 </List>
             </Drawer>
         </Box>
