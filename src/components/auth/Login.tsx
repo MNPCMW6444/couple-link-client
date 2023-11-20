@@ -83,7 +83,7 @@ const Login = () => {
             .then(response => response.json())
             .then(data => {
                 console.log(data.country.toLowerCase());
-                setCountryCode(data.country);
+                setCountryCode(data.country.toLowerCase());
             })
             .catch(error => {
                 console.error("Error fetching IP info:", error);
