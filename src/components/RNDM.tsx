@@ -10,7 +10,7 @@ interface RNDMProps {
 
 const RNDM = ({setOpen}: RNDMProps) => {
     const navigate = useNavigate();
-    const isMobile = useMobile()
+    const {isMobile} = useMobile()
 
     const handleNavigation = (path: string) => {
         navigate(path);
@@ -34,7 +34,7 @@ const RNDM = ({setOpen}: RNDMProps) => {
                 sx={{width: "100%"}}
                 onClick={() => handleNavigation("/roles")}
             >
-                Manage
+                Roles
             </Button>
         </ListItem>
     </>

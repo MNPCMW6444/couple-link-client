@@ -9,21 +9,24 @@ import UserContext from "../../../context/UserContext.tsx";
 const SettingPage = () => {
     const [activeTab, setActiveTab] = useState<number>(0);
 
+    const {user} = useContext(UserContext)
+
 
     const {signout} = useContext(UserContext)
 
     const menuData = [
+
+        {
+            name: "Manage Account",
+            icon: <Avatar>{(user?.name || "u").toUpperCase()}</Avatar>,
+            disabled: false,
+            content: <AccountTab/>
+        },
         {
             name: "Notifications",
             icon: <Notifications/>,
             disabled: false,
             content: <NotificationsTab/>
-        },
-        {
-            name: "Manage Account",
-            icon: <Avatar>{'U'}</Avatar>,
-            disabled: false,
-            content: <AccountTab/>
         },
         {
             name: "Logout",
@@ -41,8 +44,15 @@ const SettingPage = () => {
                     setActiveTab(newValue);
                 }}>
                     {menuData.map((item, index) => (
-                        <Tab key={index} label={item.name} icon={item.icon} disabled={item.disabled}
-                             onClick={item.action}/>
+                        <Tab
+                            key={index}
+                            label={item.name}
+                            icon={item.icon}
+                            iconPosition="start"
+                            disabled={item.disabled}
+                            onClick={item.action}
+                        />
+
                     ))}
                 </Tabs>
                 <br/><br/><br/>
