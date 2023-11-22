@@ -1,0 +1,26 @@
+{
+  "short_name": "DualChatGPT",
+  "name": "Dual ChatGPT",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "1600x1600",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "x16.png",
+      "type": "image/png",
+      "sizes": "1600x1600"
+    },
+    {
+      "src": "x14.png",
+      "type": "image/png",
+      "sizes": "144x144"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#8a307f",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#ffffff"
+}

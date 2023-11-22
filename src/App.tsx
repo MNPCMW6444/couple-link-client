@@ -7,9 +7,7 @@ import {ContactsContextProvider} from "./context/ContactsContext";
 import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
 import {ChatContextProvider} from "./context/ChatContext";
-
-import.meta.env.VITE_NODE_ENV
-
+import {useEffect, useState} from "react";
 
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.dualchatgpt.com/graphql";
 export const clientURI = import.meta.env.VITE_NODE_ENV === "development" ? "http://localhost:5173" : "https://dualchatgpt.com";
@@ -20,58 +18,70 @@ const globalStyles = css`
   }
 `;
 
-function App() {
-
-
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: '#009688',  // Teal for primary actions
-            },
-            secondary: {
-                main: '#FF6B6B',  // Coral for contrast and secondary actions
-            },
+const theme = createTheme({
+    palette: {
+        primary: {
+            main: '#009688',
         },
-        typography: {
-            fontFamily: "'Poppins', sans-serif",
+        secondary: {
+            main: '#FF6B6B',
         },
-        shape: {
-            borderRadius: 12,  // Rounded corners
-        },
-        components: {
-            MuiButton: {
-                styleOverrides: {
-                    root: {
-                        textTransform: 'none',
-                        padding: '8px 20px',
-                        fontSize: '1rem',
-                        transition: 'all 0.3s',
-                        boxShadow: '2px 2px 12px rgba(0, 0, 0, 0.1)',  // subtle shadow
-                        '&:hover': {
-                            transform: 'translateY(-2px)',  // slight lift on hover
-                            boxShadow: '2px 4px 14px rgba(0, 0, 0, 0.2)',
-                        },
+    },
+    typography: {
+        fontFamily: "'Poppins', sans-serif",
+    },
+    shape: {
+        borderRadius: 12,
+    },
+    components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    textTransform: 'none',
+                    padding: '8px 20px',
+                    fontSize: '1rem',
+                    transition: 'all 0.3s',
+                    boxShadow: '2px 2px 12px rgba(0, 0, 0, 0.1)',
+                    '&:hover': {
+                        transform: 'translateY(-2px)',
+                        boxShadow: '2px 4px 14px rgba(0, 0, 0, 0.2)',
                     },
                 },
             },
-            MuiTextField: {
-                styleOverrides: {
-                    root: {
-                        '& .MuiOutlinedInput-root': {
-                            borderRadius: 12,
-                        }
+        },
+        MuiTextField: {
+            styleOverrides: {
+                root: {
+                    '& .MuiOutlinedInput-root': {
+                        borderRadius: 12,
                     }
                 }
             }
         }
-    });
+    }
+});
+
+function App() {
+    const [installPrompt, setInstallPrompt] = useState<any>(null);
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e: any) => {
+            e.preventDefault();
+            setInstallPrompt(e);
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        };
+    }, []);
 
     const httpLink = new HttpLink({
         uri: "http" + serverURI,
         credentials: 'include',
         fetch: (uri, options, timeout = 120000) => {
             return new Promise((resolve, reject) => {
-                // Sets the timeout
                 const timer = setTimeout(() => {
                     reject(new Error("Request timed out"));
                 }, timeout);
@@ -109,14 +119,16 @@ function App() {
         httpLink,
     );
 
+    const InstallButton = ({onInstallClicked}: any) => (
+        <button onClick={onInstallClicked}>Install App</button>
+    );
 
     const client = new ApolloClient({
         link: splitLink,
         cache: new InMemoryCache(),
     });
 
-
-    return <>
+    return (
         <ThemeProvider theme={theme}>
             <ApolloProvider client={client}>
                 <Global styles={globalStyles}/>
@@ -124,12 +136,25 @@ function App() {
                     <ContactsContextProvider>
                         <ChatContextProvider>
                             <WhiteRouter/>
+                            {installPrompt && (
+                                <InstallButton onInstallClicked={() => {
+                                    installPrompt.prompt();
+                                    installPrompt.userChoice.then((choiceResult: any) => {
+                                        if (choiceResult.outcome === 'accepted') {
+                                            console.log('User accepted the install prompt');
+                                        } else {
+                                            console.log('User dismissed the install prompt');
+                                        }
+                                        setInstallPrompt(null);
+                                    });
+                                }}/>
+                            )}
                         </ChatContextProvider>
                     </ContactsContextProvider>
                 </UserContextProvider>
             </ApolloProvider>
         </ThemeProvider>
-    </>
+    );
 }
 
-export default App
+export default App;
