@@ -14,6 +14,7 @@ import SettingsPage from "./pages/settings/SettingsPage.tsx";
 import NotificationsTab from "./pages/settings/NotificationsTab.tsx";
 import {RNDContextProvider} from "../context/RNDContext.tsx";
 import Sets from "./pages/rnd/Sets.tsx";
+import ShopPage from "./pages/shop/ShopPage.tsx";
 
 const Router = () => {
 
@@ -50,6 +51,7 @@ const Router = () => {
                             <Route path="/sets" element={<RNDContextProvider><Sets/></RNDContextProvider>}/>
                             <Route path="/settings" element={<SettingsPage/>}/>
                             <Route path="/notifications" element={<NotificationsTab/>}/>
+                            <Route path="/shop" element={<ShopPage/>}/>
                         </Routes>
                     </Box>
                 </Box>

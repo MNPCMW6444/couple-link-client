@@ -4,7 +4,7 @@ import {
     ListItem,
     ListItemText,
     MenuItem,
-    Select
+    Select, Theme
 } from "@mui/material";
 import {Settings} from "@mui/icons-material";
 import {Dispatch, SetStateAction, useContext, useState} from "react";
@@ -57,13 +57,15 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                     ))}
                     <Divider/>
                     <MenuItem onClick={() => handleNavigation("/contacts")}>
-                        {open && <ListItemText primary="Manage" sx={{color: "#009688"}}/>}
+                        {open && <ListItemText primary="Manage"
+                                               sx={(theme: Theme): any => ({color: theme.palette.primary.main})}
+                        />}
                     </MenuItem>
                 </Select>
             </Grid>
             <Grid item>
                 <IconButton onClick={() => handleNavigation("/contacts")}><Settings
-                    sx={{color: "#009688"}}/></IconButton>
+                    sx={(theme: Theme): any => ({color: theme.palette.primary.main})}/></IconButton>
             </Grid>
         </Grid>
         {pairId && (sessions?.length > 6 ?
@@ -85,13 +87,14 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
                         ))}
                         <Divider/>
                         <MenuItem onClick={() => handleNavigation("/sessions")}>
-                            {open && <ListItemText primary="Manage" sx={{color: "#009688"}}/>}
+                            {open && <ListItemText primary="Manage"
+                                                   sx={(theme: Theme): any => ({color: theme.palette.primary.main})}/>}
                         </MenuItem>
                     </Select>
                 </Grid>
                 <Grid item>
                     <IconButton onClick={() => handleNavigation("/sessions")}><Settings
-                        sx={{color: "#009688"}}/></IconButton>
+                        sx={(theme: Theme): any => ({color: theme.palette.primary.main})}/></IconButton>
                 </Grid>
             </Grid>
             :

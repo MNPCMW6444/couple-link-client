@@ -8,10 +8,9 @@ import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
 import {ChatContextProvider} from "./context/ChatContext";
 import {useEffect, useState} from "react";
-import { COLORS } from "./colors";
+
 
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.dualchatgpt.com/graphql";
-export const clientURI = import.meta.env.VITE_NODE_ENV === "development" ? "http://localhost:5173" : "https://dualchatgpt.com";
 
 const globalStyles = css`
   * {
@@ -21,46 +20,25 @@ const globalStyles = css`
 
 const theme = createTheme({
     palette: {
-        
+        mode: new Date().getHours() > 20 || new Date().getHours() < 6 ? "dark" : "light",
         primary: {
-            main: COLORS.CTA,
+            main: '#dc1072',
+            contrastText: '#ffffff',
+            light: '#e33f8e',
+            dark: '#9a0b4f',
         },
         secondary: {
-            main: COLORS.SCALE1
+            main: '#b48ccb',
+            light: '#dd1173',
+            dark: '#ab90b7',
+            contrastText: '#ffffff',
         },
     },
     typography: {
-        fontFamily: "'Poppins', sans-serif",
+        fontSize: 14,
+        fontWeightLight: 200,
+        fontFamily: 'Source Sans Pro',
     },
-    shape: {
-        borderRadius: 12,
-    },
-    components: {
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    textTransform: 'none',
-                    padding: '8px 20px',
-                    fontSize: '1rem',
-                    transition: 'all 0.3s',
-                    boxShadow: '2px 2px 12px rgba(0, 0, 0, 0.1)',
-                    '&:hover': {
-                        transform: 'translateY(-2px)',
-                        boxShadow: '2px 4px 14px rgba(0, 0, 0, 0.2)',
-                    },
-                },
-            },
-        },
-        MuiTextField: {
-            styleOverrides: {
-                root: {
-                    '& .MuiOutlinedInput-root': {
-                        borderRadius: 12,
-                    }
-                }
-            }
-        }
-    }
 });
 
 function App() {

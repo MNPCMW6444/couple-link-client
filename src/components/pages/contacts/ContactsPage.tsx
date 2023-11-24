@@ -41,7 +41,14 @@ const a11yProps = (index: number) => {
 };
 
 const ContactsPage = () => {
-    const {contacts, invitations, sentInvitations, acceptInvitation, giveName, contactsQuery} = useContext(ContactsContext);
+    const {
+        contacts,
+        invitations,
+        sentInvitations,
+        acceptInvitation,
+        giveName,
+        contactsQuery
+    } = useContext(ContactsContext);
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
     const [contactName, setContactName] = useState("");
@@ -85,7 +92,8 @@ const ContactsPage = () => {
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
-                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center"
+                            gutterBottom>
                     Contacts
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>

@@ -7,7 +7,7 @@ import {
     Box,
     Divider,
     ListItemIcon,
-    ListItemText, Switch,
+    ListItemText, Switch, Theme
 } from "@mui/material";
 import {Menu as MenuIcon, MenuOpen, Close, DeveloperMode} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
@@ -19,15 +19,16 @@ import RNDM from "./RNDM.tsx";
 export const DRAWER_WIDTH_OPEN = 255;
 const DRAWER_WIDTH_CLOSED = 56;
 
-export const routingItemStyle = {
+export const routingItemStyle = (theme: Theme): any => ({
     cursor: 'pointer',
-    backgroundColor: '#009688',
+    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.primary.main,
     margin: '5px 0',
     borderRadius: 2,
     '&:hover': {
-        backgroundColor: '#00c098',
+        backgroundColor: theme.palette.primary.main,
     },
-};
+});
 
 
 const WhiteSideBar = () => {
@@ -77,12 +78,17 @@ const WhiteSideBar = () => {
                 <List>
                     {isMobile && (
                         <ListItem onClick={handleDrawerToggle} sx={{display: "flex", justifyContent: "center"}}>
-                            {open ? <Close sx={{color: "#009688", backgroundColor: "#DDDDDD", borderRadius: 20}}/> :
+                            {open ? <Close sx={(theme: Theme): any => ({
+                                    color: theme.palette.primary.main,
+                                    backgroundColor: "#DDDDDD",
+                                    borderRadius: 20
+                                })}/> :
                                 <MenuIcon/>}
                         </ListItem>
                     )}
                     <ListItem onClick={() => handleNavigation("/settings")} sx={routingItemStyle}>
-                        <ListItemIcon><MenuIcon/></ListItemIcon>
+                        <ListItemIcon
+                            sx={(theme: Theme): any => ({color: theme.palette.primary.contrastText})}><MenuIcon/></ListItemIcon>
                         {open && <ListItemText primary="Settings"/>}
                     </ListItem>
                     <Divider/>
