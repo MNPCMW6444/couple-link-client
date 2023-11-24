@@ -7,6 +7,7 @@ COPY tsconfig.node.json /app/tsconfig.node.json
 COPY vite.config.ts /app/vite.config.ts
 COPY public /app/public
 COPY index.html /app/index.html
+COPY manifest.json /app/manifest.json
 COPY src /app/src
 COPY server.cjs /app/server.cjs
 #COPY .npmrc /app/.npmrc
