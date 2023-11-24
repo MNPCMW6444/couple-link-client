@@ -26,7 +26,7 @@ const theme = createTheme({
             main: COLORS.CTA,
         },
         secondary: {
-            main: COLORS.SCALE1m
+            main: COLORS.SCALE1
         },
     },
     typography: {
