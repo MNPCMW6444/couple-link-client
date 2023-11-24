@@ -8,6 +8,7 @@ import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
 import {ChatContextProvider} from "./context/ChatContext";
 import {useEffect, useState} from "react";
+import { COLORS } from "./colors";
 
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.dualchatgpt.com/graphql";
 export const clientURI = import.meta.env.VITE_NODE_ENV === "development" ? "http://localhost:5173" : "https://dualchatgpt.com";
@@ -20,11 +21,12 @@ const globalStyles = css`
 
 const theme = createTheme({
     palette: {
+        
         primary: {
-            main: '#009688',
+            main: COLORS.CTA,
         },
         secondary: {
-            main: '#FF6B6B',
+            main: COLORS.SCALE1m
         },
     },
     typography: {
