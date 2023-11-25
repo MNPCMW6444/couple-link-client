@@ -58,9 +58,11 @@ const SessionsManager = () => {
 
 
     const handleCreate = async () => {
-        await createSession(pairId, newSessionName, selectedRoleId);
+        const x: any = await createSession(pairId, newSessionName, selectedRoleId);
         setNewSessionName('');
         setSelectedRoleId('');
+        setSelectedSession(x.data.createsession._id);
+        navigate("/chat")
     };
 
     const handleRename = async () => {

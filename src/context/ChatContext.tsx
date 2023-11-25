@@ -85,9 +85,10 @@ type ChatContextType = {
     selectedSession: string;
     setSelectedSession: Dispatch<SetStateAction<string>>;
     triplets: { me: string; him: string; ai: string }[];
-    createSession: (pairId: string, name: string, role: string) => void;
+    createSession: (pairId: string, name: string, role: string) => Promise<any>;
     sendMessage: (sessionId: string, message: string) => void;
     addMessageToTriplets: (message: Message) => void;
+    refetch?: any;
 };
 
 const defaultValues: ChatContextType = {
@@ -99,7 +100,7 @@ const defaultValues: ChatContextType = {
     setSelectedSession: () => {
     },
     triplets: [],
-    createSession: () => {
+    createSession: async () => {
     },
     sendMessage: () => {
     },
@@ -113,7 +114,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const [pairId, setPairId] = useState<string>('');
     const {data: dataSessions, refetch} = useQuery(GET_SESSIONS, {variables: {pairId}});
     const [selectedSession, setSelectedSession] = useState<string>('');
-    const {data: dataTriplets} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
+    const {data: dataTriplets, refetch: dref} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
     const [triplets, setTriplets] = useState<{ me: string; him: string; ai: string }[]>([]);
     const {user} = useContext(UserContext)
 
@@ -132,7 +133,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const [createSessionMutation] = useMutation(CREATE_SESSION);
     const [sendMessageMutation] = useMutation(SEND_MESSAGE);
 
-    const createSession = (pairId: string, name: string, role: string) => createSessionMutation({
+    const createSession = async (pairId: string, name: string, role: string) => createSessionMutation({
         variables: {
             pairId,
             sessionName: name,
@@ -223,6 +224,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                 createSession,
                 sendMessage,
                 addMessageToTriplets,
+                refetch: dref
             }}
         >
             {children}

@@ -7,15 +7,31 @@ const ChatPage = () => {
     const {
         selectedSession,
         triplets,
+        refetch
     } = useContext(ChatContext);
     const [message, setMessage] = useState<string>("");
 
-    const [myTurn, setMyTurn] = useState<boolean>(!(triplets[triplets?.length - 1]?.me !== "" || (triplets[triplets?.length - 1]?.me !== "" && triplets[triplets?.length - 1]?.him !== "" && triplets[triplets?.length - 1]?.ai !== "")));
+    const [myTurn, setMyTurn] = useState<boolean>(triplets[triplets?.length - 1]?.me === ""
+        &&
+        triplets[triplets?.length - 1]?.ai === "");
 
     const {sendMessage} = useContext(ChatContext);
 
     useEffect(() => {
-        setMyTurn(!(triplets[triplets?.length - 1]?.me !== "" || (triplets[triplets?.length - 1]?.me !== "" && triplets[triplets?.length - 1]?.him !== "" && triplets[triplets?.length - 1]?.ai !== "")))
+        setMyTurn(
+            (
+                triplets[triplets?.length - 1]?.me === ""
+                &&
+                triplets[triplets?.length - 1]?.ai === ""
+
+            ));
+        const xx = triplets[triplets?.length - 1];
+        if (xx) {
+            const {me, him, ai} = xx;
+            debugger
+            me !== "" && him !== "" && ai !== "" && refetch && refetch();
+        }
+
     }, [triplets])
 
     return (
@@ -35,6 +51,7 @@ const ChatPage = () => {
                     value={myTurn ? message : "Wait for your turn...."} onChange={(e) => setMessage(e.target.value)}
                     variant="outlined" fullWidth
                     placeholder="Type a message..."/>
+                <div style={{width: '1em'}}/>
                 <Button
                     disabled={!myTurn}
                     variant="contained" color="primary" onClick={() => {
