@@ -19,7 +19,7 @@ const GET_MY_ROLES = gql`
         publicName
         role
         setId
-        category
+        attributes
         description
         aiMessage
         visibility
@@ -57,8 +57,8 @@ const PUBLISH_SET = gql`
 `;
 
 const ADD_ROLE = gql`
-  mutation Addrole($role: String!,$setName: String!, $roleName: String!, $category: String!, $description: String!, $publicName: String) {
-    addrole(role: $role, roleName: $roleName, setName:$setName, category: $category, description: $description, publicName: $publicName)
+  mutation Addrole($role: String!, $setName: String!, $roleName: String!, $attributes: JSON!, $description: String!, $publicName: String) {
+    addrole(role: $role, roleName: $roleName, setName: $setName, attributes: $attributes, description: $description, publicName: $publicName)
   }
 `;
 
