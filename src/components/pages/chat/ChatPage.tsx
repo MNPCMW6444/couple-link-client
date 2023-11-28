@@ -43,6 +43,7 @@ const ChatPage = () => {
                 height: "100%",
                 minHeight: "90vh",
                 justifyContent: "space-between"
+
             }}>
             {triplets?.map((triplet, idx) => <ChatTriplet key={idx} triplet={triplet}/>)}
             <div style={{display: 'flex', alignItems: 'center', padding: '1em'}}>
