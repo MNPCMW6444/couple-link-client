@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import {FC, useEffect, useState} from "react";
 import {Typography} from "@mui/material";
+import {isNight} from "../../../App.tsx";
 
 interface ChatTripletProps {
     triplet: {
@@ -42,8 +43,8 @@ const DesktopMessage = styled('div')({
 
 
 const Balloon = styled(Typography)(({theme, isAi, isMe}: any) => ({
-    background: isAi ? "#e0e0e0" : !isMe ? theme.palette.primary.main : theme.palette.secondary.main,
-    color: isAi ? 'black' : !isMe ? theme.palette.secondary.main : theme.palette.primary.main,
+    background: isAi ? (!isNight ? "#e0e0e0" : "#707070") : isMe ? (!isNight ? theme.palette.primary.dark : theme.palette.secondary.dark) : (!isNight ? theme.palette.primary.light : theme.palette.secondary.main),
+    color: isNight && theme.palette.primary.contrastText,
     borderRadius: '20px',
     padding: '10px 16px',
     maxWidth: '80%',
@@ -77,7 +78,7 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
         <FlexRow>
             <Column>
                 <DesktopMessage>
-                    <Balloon isMe>{triplet.me}</Balloon>
+                    <Balloon>{triplet.him}</Balloon>
                 </DesktopMessage>
             </Column>
             <Column>
@@ -87,17 +88,17 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
             </Column>
             <Column>
                 <DesktopMessage>
-                    <Balloon>{triplet.him}</Balloon>
+                    <Balloon isMe>{triplet.me}</Balloon>
                 </DesktopMessage>
             </Column>
         </FlexRow>
     );
 
     const mobileView = (
-        <div style={{display: 'flex', flexDirection: 'column'}}>
+        <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
             <Balloon isMe>{triplet.me}</Balloon>
-            <Balloon>{triplet.him}</Balloon>
             <Balloon isAi>{triplet.ai}</Balloon>
+            <Balloon>{triplet.him}</Balloon>
         </div>
     );
 

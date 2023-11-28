@@ -28,7 +28,6 @@ const ChatPage = () => {
         const xx = triplets[triplets?.length - 1];
         if (xx) {
             const {me, him, ai} = xx;
-            debugger
             me !== "" && him !== "" && ai !== "" && refetch && refetch();
         }
 

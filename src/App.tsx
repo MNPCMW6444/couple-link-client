@@ -18,14 +18,16 @@ const globalStyles = css`
   }
 `;
 
+export const isNight = (new Date().getHours() > 19 || new Date().getHours() < 6)
+
 const theme = createTheme({
     palette: {
-        mode: new Date().getHours() > 20 || new Date().getHours() < 6 ? "dark" : "light",
+        mode: isNight ? 'dark' : 'light',
         primary: {
             main: '#d2245d',
             contrastText: '#ffffff',
-            light: '#e25684',
-            dark: '#711431',
+            light: '#ed97b4',
+            dark: '#eda697',
         },
         secondary: {
             main: '#d40e4d',
