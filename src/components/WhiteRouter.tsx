@@ -1,6 +1,6 @@
 import {useContext} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
-import {Box} from "@mui/material";
+import {Box, useTheme} from "@mui/material";
 import WhiteSideBar from "./WhiteSideBar";
 import UserContext from "../context/UserContext";
 import ChatPage from "./pages/chat/ChatPage";
@@ -16,22 +16,28 @@ import {RNDContextProvider} from "../context/RNDContext.tsx";
 import Sets from "./pages/rnd/Sets.tsx";
 import ShopPage from "./pages/shop/ShopPage.tsx";
 
+
 const Router = () => {
 
     const {user} = useContext(UserContext);
 
     const {isMobile} = useMobile()
 
+
+    const backgroundColor = useTheme().palette.background.default; // Get default background color from theme
+
+
     return (
         <BrowserRouter>
             {user ? (
-                <Box overflow="hidden">
+                <Box overflow="hidden" style={{backgroundColor}}> {/* Apply the background color */}
                     <WhiteSideBar/>
                     <Box
                         component="main"
                         sx={{
                             flexGrow: 1,
                             p: 3,
+                            backgroundColor,
                             pt: isMobile
                                 ? (theme) => theme.spacing(9)
                                 : (theme) => theme.spacing(1), // Add top padding to account for the fixed AppBar
