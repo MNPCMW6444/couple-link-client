@@ -22,15 +22,15 @@ const theme = createTheme({
     palette: {
         mode: new Date().getHours() > 20 || new Date().getHours() < 6 ? "dark" : "light",
         primary: {
-            main: '#dc1072',
+            main: '#d2245d',
             contrastText: '#ffffff',
-            light: '#e33f8e',
-            dark: '#9a0b4f',
+            light: '#e25684',
+            dark: '#711431',
         },
         secondary: {
-            main: '#b48ccb',
-            light: '#dd1173',
-            dark: '#ab90b7',
+            main: '#d40e4d',
+            light: '#df4a7b',
+            dark: '#68122e',
             contrastText: '#ffffff',
         },
     },
