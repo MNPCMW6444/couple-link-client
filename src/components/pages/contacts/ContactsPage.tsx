@@ -90,7 +90,7 @@ const ContactsPage = () => {
     };
 
     return (
-        <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1}}>
+        <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1, height: "100vh"}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
                 <Typography variant={isMobile ? "h3" : "h1"} align="center"
                             gutterBottom>

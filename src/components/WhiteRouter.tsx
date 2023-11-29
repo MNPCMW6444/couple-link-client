@@ -39,17 +39,13 @@ const Router = () => {
                                 <WhiteSideBar/>
                                 <Box
                                     component="main"
-                                    sx={{
+                                    sx={!isMobile ? {
                                         flexGrow: 1,
                                         p: 3,
                                         backgroundColor,
-                                        pt: isMobile
-                                            ? (theme) => theme.spacing(9)
-                                            : (theme) => theme.spacing(1), // Add top padding to account for the fixed AppBar
-                                        pl: isMobile
-                                            ? (theme) => theme.spacing(1)
-                                            : (theme) => theme.spacing(32), // Add left padding to account for the sidebar width when not on mobile
-                                    }}
+                                        pt: (theme) => theme.spacing(1),
+                                        pl: (theme) => theme.spacing(32),
+                                    } : {pt: "5vh"}}
                                 >
                                     <Routes>
                                         <Route path="/*" element={<HomePage/>}/>
