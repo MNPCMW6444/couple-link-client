@@ -15,6 +15,8 @@ import NotificationsTab from "./pages/settings/NotificationsTab.tsx";
 import {RNDContextProvider} from "../context/RNDContext.tsx";
 import Sets from "./pages/rnd/Sets.tsx";
 import ShopPage from "./pages/shop/ShopPage.tsx";
+import {ContactsContextProvider} from "../context/ContactsContext.tsx";
+import {ChatContextProvider} from "../context/ChatContext.tsx";
 
 
 const Router = () => {
@@ -30,42 +32,50 @@ const Router = () => {
     return (
         <BrowserRouter>
             {user ? (
-                <Box overflow="hidden" style={{backgroundColor}}> {/* Apply the background color */}
-                    <WhiteSideBar/>
-                    <Box
-                        component="main"
-                        sx={{
-                            flexGrow: 1,
-                            p: 3,
-                            backgroundColor,
-                            pt: isMobile
-                                ? (theme) => theme.spacing(9)
-                                : (theme) => theme.spacing(1), // Add top padding to account for the fixed AppBar
-                            pl: isMobile
-                                ? (theme) => theme.spacing(1)
-                                : (theme) => theme.spacing(32), // Add left padding to account for the sidebar width when not on mobile
-                        }}
-                    >
-                        <Routes>
-                            <Route path="/*" element={<HomePage/>}/>
-                            <Route path="/contacts"
-                                   element={<ContactsPage/>}/>
-                            <Route path="/sessions"
-                                   element={<RNDContextProvider><SessionsPage/></RNDContextProvider>}/>
-                            <Route path="/chat" element={<ChatPage/>}/>
-                            <Route path="/roles" element={<RNDContextProvider><Roles/></RNDContextProvider>}/>
-                            <Route path="/sets" element={<RNDContextProvider><Sets/></RNDContextProvider>}/>
-                            <Route path="/settings" element={<SettingsPage/>}/>
-                            <Route path="/notifications" element={<NotificationsTab/>}/>
-                            <Route path="/shop" element={<ShopPage/>}/>
-                        </Routes>
-                    </Box>
-                </Box>
-            ) : (
-                <Login/>
-            )}
+                    <ContactsContextProvider>
+                        <ChatContextProvider>
+                            <Box overflow="hidden"
+                                 style={{backgroundColor}}> {/* Apply the background color */}
+                                <WhiteSideBar/>
+                                <Box
+                                    component="main"
+                                    sx={{
+                                        flexGrow: 1,
+                                        p: 3,
+                                        backgroundColor,
+                                        pt: isMobile
+                                            ? (theme) => theme.spacing(9)
+                                            : (theme) => theme.spacing(1), // Add top padding to account for the fixed AppBar
+                                        pl: isMobile
+                                            ? (theme) => theme.spacing(1)
+                                            : (theme) => theme.spacing(32), // Add left padding to account for the sidebar width when not on mobile
+                                    }}
+                                >
+                                    <Routes>
+                                        <Route path="/*" element={<HomePage/>}/>
+                                        <Route path="/contacts"
+                                               element={<ContactsPage/>}/>
+                                        <Route path="/sessions"
+                                               element={<RNDContextProvider><SessionsPage/></RNDContextProvider>}/>
+                                        <Route path="/chat" element={<ChatPage/>}/>
+                                        <Route path="/roles" element={<RNDContextProvider><Roles/></RNDContextProvider>}/>
+                                        <Route path="/sets" element={<RNDContextProvider><Sets/></RNDContextProvider>}/>
+                                        <Route path="/settings" element={<SettingsPage/>}/>
+                                        <Route path="/notifications" element={<NotificationsTab/>}/>
+                                        <Route path="/shop" element={<ShopPage/>}/>
+                                    </Routes>
+                                </Box>
+                            </Box>
+                        </ChatContextProvider>
+                    </ContactsContextProvider>
+                ) :
+                (
+                    <Login/>
+                )
+            }
         </BrowserRouter>
-    );
+    )
+        ;
 };
 
 export default Router;

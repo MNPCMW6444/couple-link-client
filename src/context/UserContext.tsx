@@ -20,7 +20,7 @@ const loadingMessage = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
         <Grid item>
             <WhiteTypography>
-                Signing you in...
+                Checkin if you are signed in...
             </WhiteTypography>
         </Grid>
     </Grid>

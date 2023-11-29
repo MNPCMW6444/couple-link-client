@@ -1,7 +1,8 @@
 import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react';
 import {gql, useMutation, useQuery, useSubscription} from '@apollo/client';
-import UserContext from "./UserContext";
+import UserContext, {WhiteTypography} from "./UserContext";
 import ContactsContext from "./ContactsContext";
+import {Grid} from "@mui/material";
 
 
 const GET_SESSIONS = gql`
@@ -112,7 +113,7 @@ export const ChatContext = createContext<ChatContextType>(defaultValues);
 
 export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
     const [pairId, setPairId] = useState<string>('');
-    const {data: dataSessions, refetch} = useQuery(GET_SESSIONS, {variables: {pairId}});
+    const {data: dataSessions, loading, refetch} = useQuery(GET_SESSIONS, {variables: {pairId}});
     const [selectedSession, setSelectedSession] = useState<string>('');
     const {data: dataTriplets, refetch: dref} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
     const [triplets, setTriplets] = useState<{ me: string; him: string; ai: string }[]>([]);
@@ -146,6 +147,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
 
     const {contacts: x, contactsIds} = useContext(ContactsContext);
     const contacts = x.map((contact: any) => contact.phone);
+    const contactsNames = x.map((contact: any) => contact.name);
 
     const {data: messageSubscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION);
     const {data: sessionSubscriptionData} = useSubscription(NEW_SESSION_SUBSCRIPTION);
@@ -212,6 +214,10 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
 
     const sessions: Session [] = dataSessions?.getsessions || [];
 
+
+    const index = contactsIds.findIndex((id) => id === pairId);
+    const contact = contactsNames[index] || contacts[index]
+
     return (
         <ChatContext.Provider
             value={{
@@ -227,7 +233,13 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                 refetch: dref
             }}
         >
-            {children}
+            {loading ? <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
+                <Grid item>
+                    <WhiteTypography>
+                        Loading your Sessions{contact ? (" with " + contact) : ""}...
+                    </WhiteTypography>
+                </Grid>
+            </Grid> : children}
         </ChatContext.Provider>
     );
 };

@@ -59,7 +59,7 @@ const NotificationsTab: FC = () => {
                             disabled={loading}
                         />
                     }
-                    label="RND Setting"
+                    label="I want to develop and sell Roles"
                 />
             </StyledPaper>
         </StyledContainer>

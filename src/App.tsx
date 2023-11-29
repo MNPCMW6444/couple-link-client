@@ -3,10 +3,8 @@ import {Global, css} from "@emotion/react";
 import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, split} from '@apollo/client';
 import WhiteRouter from "./components/WhiteRouter";
 import {UserContextProvider} from "./context/UserContext";
-import {ContactsContextProvider} from "./context/ContactsContext";
 import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
-import {ChatContextProvider} from "./context/ChatContext";
 import {useEffect, useState} from "react";
 
 
@@ -114,26 +112,20 @@ function App() {
         <ThemeProvider theme={theme}>
             <ApolloProvider client={client}>
                 <Global styles={globalStyles}/>
-                <UserContextProvider>
-                    <ContactsContextProvider>
-                        <ChatContextProvider>
-                            <WhiteRouter/>
-                            {installPrompt && (
-                                <InstallButton onInstallClicked={() => {
-                                    installPrompt.prompt();
-                                    installPrompt.userChoice.then((choiceResult: any) => {
-                                        if (choiceResult.outcome === 'accepted') {
-                                            console.log('User accepted the install prompt');
-                                        } else {
-                                            console.log('User dismissed the install prompt');
-                                        }
-                                        setInstallPrompt(null);
-                                    });
-                                }}/>
-                            )}
-                        </ChatContextProvider>
-                    </ContactsContextProvider>
-                </UserContextProvider>
+                <UserContextProvider><WhiteRouter/></UserContextProvider>
+                {installPrompt && (
+                    <InstallButton onInstallClicked={() => {
+                        installPrompt.prompt();
+                        installPrompt.userChoice.then((choiceResult: any) => {
+                            if (choiceResult.outcome === 'accepted') {
+                                console.log('User accepted the install prompt');
+                            } else {
+                                console.log('User dismissed the install prompt');
+                            }
+                            setInstallPrompt(null);
+                        });
+                    }}/>
+                )}
             </ApolloProvider>
         </ThemeProvider>
     );

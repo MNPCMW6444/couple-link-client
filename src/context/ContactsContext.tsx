@@ -7,7 +7,7 @@ import UserContext, {WhiteTypography} from "./UserContext";
 const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
         <Grid item>
-            <WhiteTypography>Loading contacts...</WhiteTypography>
+            <WhiteTypography>Loading your Contacts...</WhiteTypography>
         </Grid>
     </Grid>
 );
