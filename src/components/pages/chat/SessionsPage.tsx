@@ -76,6 +76,8 @@ const SessionsManager = () => {
         setEditingSession(null);
     };
 
+    const {isMobile} = useMobile();
+
 
     const {data: rolesData} = useContext(RNDContext);
 
@@ -111,9 +113,9 @@ const SessionsManager = () => {
                 sx={{
                     display: 'flex',
                     flexDirection: 'column',
-                    height: '100%',
-                    minHeight: '88vh',
-                    justifyContent: 'space-between'
+                    height: isMobile ? '65vh' : "88vh",
+                    justifyContent: 'space-between',
+                    overflow: 'scroll',
                 }}
             >
                 <List
@@ -141,18 +143,28 @@ const SessionsManager = () => {
                     ))}
                 </List>
             </Paper>
-            <Grid container justifyContent={editingSession ? "center" : "space-between"} alignItems="center"
-                  columnSpacing={editingSession ? 8 : 0} height="10vh" paddingTop="2vh">
+            <Grid container
+                  direction={isMobile ? "column" : "row"}
+                  rowSpacing={2}
+                  justifyContent="space-around"
+                  alignItems="center"
+                  columnSpacing={editingSession ? 8 : 0}
+                  paddingTop="2vh"
+                  style={{
+                      width: isMobile ? "100vw" : `calc(100vw - ${DRAWER_WIDTH_OPEN}px)`,
+                      flexWrap: 'wrap', // Ensure items can wrap
+                      overflowX: 'hidden' // Prevent horizontal scrolling
+                  }}>
                 {editingSession ? (
                     <>
-                        <Grid item>
+                        <Grid item> {/* Adjust grid item size based on screen size */}
                             <TextField
                                 label="Rename Session"
                                 value={renameValue}
                                 onChange={(e) => setRenameValue(e.target.value)}
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item> {/* Adjust grid item size based on screen size */}
                             <Button
                                 onClick={handleRename}
                                 disabled={!renameValue.trim()}
@@ -163,14 +175,14 @@ const SessionsManager = () => {
                     </>
                 ) : (
                     <>
-                        <Grid item>
+                        <Grid item> {/* Adjust grid item size based on screen size */}
                             <TextField
                                 label="New Session Name"
                                 value={newSessionName}
                                 onChange={(e) => setNewSessionName(e.target.value)}
                             />
                         </Grid>
-                        <Grid item>
+                        <Grid item> {/* Adjust grid item size based on screen size */}
                             <Select
                                 value={placeHolderRoles ? "655kjbkjbkbkkb8b4d4313503" : (selectedRoleId || rolesX[0])}
                                 onChange={(e) => {
@@ -192,8 +204,9 @@ const SessionsManager = () => {
                                 </MenuItem>
                             </Select>
                         </Grid>
-                        <Grid item>
+                        <Grid item> {/* Adjust grid item size based on screen size */}
                             <Button
+                                variant="contained"
                                 startIcon={<AddCircleOutlineIcon/>}
                                 onClick={handleCreate}
                                 disabled={!newSessionName.trim() || !selectedRoleId || selectedRoleId === "655kjbkjbkbkkb8b4d4313503"}
