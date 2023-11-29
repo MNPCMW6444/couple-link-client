@@ -5,21 +5,21 @@ import ListingCard from './ListingCard'; // Import the ListingCard component
 // Define the GraphQL query
 const GET_PUBLIC_ROLES = gql`
   query GetPublicRoles {
-    getPublicRoles {
-      creatorId
-      name
-      publicName
-      role
-      setId
-      category
-      description
-      aiMessage
-      visibility
-      _id
-      createdAt
-      updatedAt
+      getPublicRoles {
+        creatorId
+        name
+        publicName
+        role
+        setId
+        attributes
+        description
+        aiMessage
+        visibility
+        _id
+        createdAt
+        updatedAt
+      }
     }
-  }
 `;
 
 const ShopPage = () => {
