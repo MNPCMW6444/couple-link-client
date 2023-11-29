@@ -1,21 +1,9 @@
 import {FC} from "react";
 import {Box, Typography, Divider, Paper, Stack} from "@mui/material";
+import {Item} from "./ShopPage.tsx";
 
 interface FullCardProps {
-    item: {
-        creatorId: string;
-        name: string;
-        publicName: string;
-        role: string;
-        setId: string;
-        attributes: any; // Adjust the type as per your data model
-        description: string;
-        aiMessage: string;
-        visibility: boolean;
-        _id: string;
-        createdAt: string;
-        updatedAt: string;
-    }
+    item: Item
 }
 
 const FullCard: FC<FullCardProps> = ({item}) => {

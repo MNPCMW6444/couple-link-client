@@ -1,13 +1,10 @@
 import {Card, CardContent, Typography, Button, Modal} from '@mui/material';
 import {FC, useState} from "react";
 import FullCard from "./FullCard.tsx";
+import {Item} from "./ShopPage.tsx";
 
 interface ListingCardProps {
-    item: {
-        name: string;
-        category: string;
-        description: string;
-    }
+    item: Item
 }
 
 const ListingCard: FC<ListingCardProps> = ({item}) => {
@@ -16,7 +13,6 @@ const ListingCard: FC<ListingCardProps> = ({item}) => {
 
     return (
         <Card>
-
             <CardContent>
                 <Typography variant="h5">{name}</Typography>
                 <Typography color="textSecondary">{category}</Typography>

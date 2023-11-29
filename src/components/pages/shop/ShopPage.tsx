@@ -22,6 +22,22 @@ const GET_PUBLIC_ROLES = gql`
     }
 `;
 
+export interface Item {
+    creatorId: string;
+    name: string;
+    publicName: string;
+    role: string;
+    setId: string;
+    category: string;
+    attributes: any; // Adjust the type as per your data model
+    description: string;
+    aiMessage: string;
+    visibility: boolean;
+    _id: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
 const ShopPage = () => {
     // Execute the query
     const {loading, error, data} = useQuery(GET_PUBLIC_ROLES);
