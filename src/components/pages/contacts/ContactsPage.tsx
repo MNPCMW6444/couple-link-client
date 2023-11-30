@@ -1,5 +1,5 @@
 import {useContext, useState} from 'react';
-import {Grid, Typography, Button, Tab, Tabs, Box, TextField} from '@mui/material';
+import {Grid, Typography, Button, Tab, Tabs, Box, TextField, Divider} from '@mui/material';
 import {Add} from '@mui/icons-material';
 import {gql, useMutation} from '@apollo/client';
 import PhoneInput from 'react-phone-input-2';
@@ -10,6 +10,7 @@ import useMobile from "../../../hooks/responsiveness/useMobile";
 
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
+
     return (
         <div
             role="tabpanel"
@@ -66,15 +67,15 @@ const ContactsPage = () => {
         }
     };
 
-    const handleChangeTab = (_: any, newValue: any) => {
+    const handleChangeTab = (_: any, newValue: number) => {
         setTabValue(newValue);
     };
 
     const [doInvite] = useMutation(gql`
-    mutation Mutation($contactPhone: String!) {
-      newpair(contactPhone: $contactPhone)
-    }
-  `);
+        mutation Mutation($contactPhone: String!) {
+            newpair(contactPhone: $contactPhone)
+        }
+    `);
 
     const handleEditName = (contact: any) => {
         setEditingContact(contact);
@@ -92,8 +93,7 @@ const ContactsPage = () => {
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1, height: "100vh"}}>
             <Grid item xs={12} sm={8} md={6} lg={4}>
-                <Typography variant={isMobile ? "h3" : "h1"} align="center"
-                            gutterBottom>
+                <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
                     Contacts
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
@@ -102,54 +102,81 @@ const ContactsPage = () => {
                     <Tab label="Sent Invitations" {...a11yProps(2)} />
                 </Tabs>
                 <TabPanel value={tabValue} index={0}>
-                    {!invite ? (
-                        <Button variant="contained" onClick={() => setInvite(true)} startIcon={<Add/>}>
-                            Invite New
-                        </Button>
-                    ) : (
-                        <>
-                            <PhoneInput
-                                country={'il'}
-                                value={phone}
-                                onChange={setPhone}
-                                containerStyle={{width: '100%'}}
-                                inputStyle={{width: '100%'}}
-                                placeholder="Enter phone number"
-                                enableSearch={true}
-                            />
-                            <TextField
-                                label="Contact Name"
-                                variant="outlined"
-                                value={contactName}
-                                onChange={(e) => setContactName(e.target.value)}
-                                fullWidth
-                                margin="normal"
-                            />
-                            <Button variant="contained" onClick={handleInvite} sx={{mt: 2, mr: 1}}>
-                                Send
-                            </Button>
-                            <Button variant="outlined" onClick={() => setInvite(false)} sx={{mt: 2}}>
-                                Cancel
-                            </Button>
-                        </>
-                    )}
-                    {contacts?.map((contact) => (
-                        <div key={contact.pairId}>
-                            <Typography variant="h6" sx={{mt: 1}}>
-                                {contact.name || contact.phone}
-                            </Typography>
-                            <Button onClick={() => handleEditName(contact)}>Edit Name</Button>
-                            {editingContact?.pairId === contact.pairId && (
-                                <div>
-                                    <TextField
-                                        value={newName}
-                                        onChange={(e) => setNewName(e.target.value)}
+                    <Grid container direction="column" rowSpacing={2} alignItems="center">
+                        {!invite ? (
+                            <Grid item>
+                                <Button variant="contained" onClick={() => setInvite(true)} startIcon={<Add/>}>
+                                    Invite New
+                                </Button>
+                            </Grid>
+                        ) : (<>
+                                <Grid item>
+                                    <PhoneInput
+                                        country={'il'}
+                                        value={phone}
+                                        onChange={setPhone}
+                                        containerStyle={{width: '100%'}}
+                                        inputStyle={{width: '100%'}}
+                                        placeholder="Enter phone number"
+                                        enableSearch={true}
                                     />
-                                    <Button onClick={handleSaveName}>Save</Button>
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                                </Grid>
+                                <Grid item>
+                                    <TextField
+                                        label="Contact Name"
+                                        variant="outlined"
+                                        value={contactName}
+                                        onChange={(e) => setContactName(e.target.value)}
+                                        fullWidth
+                                        margin="normal"
+                                    />
+                                </Grid>
+                                <Grid item container justifyContent="space-around">
+                                    <Grid item>
+                                        <Button variant="outlined" onClick={() => setInvite(false)} sx={{mt: 2}}>
+                                            Cancel
+                                        </Button>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="contained" onClick={handleInvite} sx={{mt: 2, mr: 1}}>
+                                            Send
+                                        </Button>
+                                    </Grid>
+                                </Grid></>
+                        )}
+                    </Grid>
+                    <br/>
+                    <Divider/>
+                    <br/>
+                    <Grid container direction="column" rowSpacing={2}>
+                        {contacts?.map((contact) => (
+                            <Grid item container alignItems="center" key={contact.pairId} columnSpacing={2}>
+                                <Grid item>
+                                    <Typography variant="h6" sx={{mt: 1}}>
+                                        {contact.name || contact.phone}
+                                    </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="contained" onClick={() => handleEditName(contact)}>Edit
+                                        Name</Button>
+                                </Grid>
+                                {editingContact?.pairId === contact.pairId && (
+                                    <>
+                                        <Grid item>
+                                            <TextField
+                                                value={newName}
+                                                onChange={(e) => setNewName(e.target.value)}
+                                                sx={{width: 120}}
+                                            />
+                                        </Grid>
+                                        <Grid item>
+                                            <Button variant="contained" onClick={handleSaveName}>Save</Button>
+                                        </Grid>
+                                    </>
+                                )}
+                            </Grid>
+                        ))}
+                    </Grid>
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
                     {invitations?.map((invitation, index) => (
@@ -177,7 +204,8 @@ const ContactsPage = () => {
                 </TabPanel>
             </Grid>
         </Grid>
-    );
+    )
+        ;
 };
 
 export default ContactsPage;
