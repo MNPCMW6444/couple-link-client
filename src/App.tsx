@@ -17,7 +17,7 @@ const globalStyles = css`
   }
 `;
 
-export const isNight = (new Date().getHours() > 16 || new Date().getHours() < 7)
+export const isNight = (new Date().getHours() > 19 || new Date().getHours() < 7)
 
 const theme = createTheme({
     palette: {
