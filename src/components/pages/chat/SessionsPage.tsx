@@ -192,7 +192,8 @@ const SessionsManager = () => {
                                     setPlaceHolderRoles(false);
                                     setSelectedRoleId(e.target.value)
                                 }}>
-                                {((placeHolderRoles ? rolesX : [...r, ...rolesData?.getmyroles])?.map((role: any) => (
+                                {((placeHolderRoles ? rolesX : [
+                                    {}, ...r, ...rolesData?.getmyroles])?.map((role: any) => (
                                     <MenuItem key={role._id} value={role._id}>
                                         {role.name}
                                     </MenuItem>
