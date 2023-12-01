@@ -32,38 +32,40 @@ const Router = () => {
     return (
         <BrowserRouter>
             {user ? (
-                    <ContactsContextProvider>
-                        <ChatContextProvider>
-                            <Box overflow="hidden"
-                                 style={{backgroundColor}}> {/* Apply the background color */}
-                                <WhiteSideBar/>
-                                <Box
-                                    component="main"
-                                    sx={!isMobile ? {
-                                        flexGrow: 1,
-                                        p: 3,
-                                        backgroundColor,
-                                        pt: (theme) => theme.spacing(1),
-                                        pl: (theme) => theme.spacing(32),
-                                    } : {pt: "5vh"}}
-                                >
-                                    <Routes>
-                                        <Route path="/*" element={<HomePage/>}/>
-                                        <Route path="/contacts"
-                                               element={<ContactsPage/>}/>
-                                        <Route path="/sessions"
-                                               element={<RNDContextProvider><SessionsPage/></RNDContextProvider>}/>
-                                        <Route path="/chat" element={<ChatPage/>}/>
-                                        <Route path="/roles" element={<RNDContextProvider><Roles/></RNDContextProvider>}/>
-                                        <Route path="/sets" element={<RNDContextProvider><Sets/></RNDContextProvider>}/>
-                                        <Route path="/settings" element={<SettingsPage/>}/>
-                                        <Route path="/notifications" element={<NotificationsTab/>}/>
-                                        <Route path="/shop" element={<ShopPage/>}/>
-                                    </Routes>
+                    <RNDContextProvider>
+                        <ContactsContextProvider>
+                            <ChatContextProvider>
+                                <Box overflow="hidden"
+                                     style={{backgroundColor}}> {/* Apply the background color */}
+                                    <WhiteSideBar/>
+                                    <Box
+                                        component="main"
+                                        sx={!isMobile ? {
+                                            flexGrow: 1,
+                                            p: 3,
+                                            backgroundColor,
+                                            pt: (theme) => theme.spacing(1),
+                                            pl: (theme) => theme.spacing(32),
+                                        } : {pt: "5vh"}}
+                                    >
+                                        <Routes>
+                                            <Route path="/*" element={<HomePage/>}/>
+                                            <Route path="/contacts"
+                                                   element={<ContactsPage/>}/>
+                                            <Route path="/sessions"
+                                                   element={<SessionsPage/>}/>
+                                            <Route path="/chat" element={<ChatPage/>}/>
+                                            <Route path="/roles" element={<Roles/>}/>
+                                            <Route path="/sets" element={<Sets/>}/>
+                                            <Route path="/settings" element={<SettingsPage/>}/>
+                                            <Route path="/notifications" element={<NotificationsTab/>}/>
+                                            <Route path="/shop" element={<ShopPage/>}/>
+                                        </Routes>
+                                    </Box>
                                 </Box>
-                            </Box>
-                        </ChatContextProvider>
-                    </ContactsContextProvider>
+                            </ChatContextProvider>
+                        </ContactsContextProvider>
+                    </RNDContextProvider>
                 ) :
                 (
                     <Login/>
