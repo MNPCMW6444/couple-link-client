@@ -21,6 +21,7 @@ import ContactsContext from "../../../context/ContactsContext.tsx";
 import {DRAWER_WIDTH_OPEN} from "../../WhiteSideBar.tsx";
 import {Shop} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
+import UserContext from "../../../context/UserContext.tsx";
 
 
 const RENAME_SESSION_MUTATION = gql`
@@ -47,6 +48,8 @@ const SessionsManager = () => {
         createSession,
         setSelectedSession
     } = useContext(ChatContext);
+
+    const {myRoles: r} = useContext(UserContext);
 
     const [newSessionName, setNewSessionName] = useState('');
     const [editingSession, setEditingSession] = useState<Session | null>(null);
@@ -98,7 +101,7 @@ const SessionsManager = () => {
         "createdAt": "2023-11-15T21:17:13.292Z",
         "updatedAt": "2023-11-15T21:17:13.292Z"
     }
-    const rolesX = [ex, ...(rolesData?.getmyroles || [])];
+    const rolesX = [ex, ...([...r, ...rolesData?.getmyroles] || [])];
 
     useEffect(() => {
         setPlaceHolderRoles(true)
@@ -189,7 +192,7 @@ const SessionsManager = () => {
                                     setPlaceHolderRoles(false);
                                     setSelectedRoleId(e.target.value)
                                 }}>
-                                {((placeHolderRoles ? rolesX : rolesData?.getmyroles)?.map((role: any) => (
+                                {((placeHolderRoles ? rolesX : [...r, ...rolesData?.getmyroles])?.map((role: any) => (
                                     <MenuItem key={role._id} value={role._id}>
                                         {role.name}
                                     </MenuItem>
