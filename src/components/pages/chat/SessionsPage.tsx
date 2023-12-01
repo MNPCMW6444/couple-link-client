@@ -244,8 +244,7 @@ const SessionsPage = () => {
                     Choose a contact before managing sessions:
                 </Typography>
             </Grid>
-            <Grid item container justifyContent="space-between" alignItems="center" wrap="nowrap"
-                  width={DRAWER_WIDTH_OPEN - 5}>
+            <Grid item container justifyContent="center" alignItems="center">
                 <Grid item>
                     <Select
                         fullWidth
@@ -254,7 +253,7 @@ const SessionsPage = () => {
                             setPlaceHolderContacts(false);
                             setPairId(contactsIds[contacts.findIndex(number => number === e.target.value)]);
                         }}
-                        sx={{width: "90%", margin: '1em 0', marginLeft: "5%"}}
+                        sx={{margin: '1em 0', marginLeft: "5%", width: "50vw", maxWidth: "300px"}}
                     >
                         {(placeHolderContacts ? contactsX : contacts)?.map((contact: any, index) => (
                             <MenuItem key={index} value={contact}>{contact.name || contact.phone}</MenuItem>
