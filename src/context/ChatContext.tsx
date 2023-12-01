@@ -46,17 +46,17 @@ const SEND_MESSAGE = gql`
 `;
 
 const NEW_MESSAGE_SUBSCRIPTION = gql`
-  subscription NewMessage {
-    newMessage {
-      owner
-      ownerid
-      sessionId
-      message
-      _id
-      createdAt
-      updatedAt
-    }
-  }
+  subscription NewMessage($sessionId: String) {
+      newMessage(sessionId: $sessionId) {
+        owner
+        ownerid
+        sessionId
+        message
+        _id
+        createdAt
+        updatedAt
+      }
+}
 `;
 
 
@@ -149,7 +149,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const contacts = x.map((contact: any) => contact.phone);
     const contactsNames = x.map((contact: any) => contact.name);
 
-    const {data: messageSubscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION);
+    const {data: messageSubscriptionData} = useSubscription(NEW_MESSAGE_SUBSCRIPTION, {variables: {sessionId: selectedSession}});
     const {data: sessionSubscriptionData} = useSubscription(NEW_SESSION_SUBSCRIPTION);
 
     useEffect(() => {
