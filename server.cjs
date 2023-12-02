@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const app = express();
 
-app.use('/', express.static(path.join(__dirname, 'website')));
+app.use('/lp', express.static(path.join(__dirname, 'website')));
 /*app.get('/manifest.json', (_, res) => {
     res.json(manifestJSONData);
 });*/

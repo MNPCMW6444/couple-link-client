@@ -9,6 +9,7 @@ COPY public /app/public
 COPY index.html /app/index.html
 COPY manifest.json /app/public/manifest.json
 COPY src /app/src
+COPY website /app/website
 COPY server.cjs /app/server.cjs
 #COPY .npmrc /app/.npmrc
 RUN npm run prod
@@ -20,6 +21,7 @@ FROM node:lts-slim
 WORKDIR /app
 COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
+COPY --from=builder /app/website /app/website
 #COPY --from=builder /app/src/manifestJSONData.js /app/src/manifestJSONData.js
 COPY server.cjs /app/server.cjs
 CMD ["node", "./server.cjs"]
