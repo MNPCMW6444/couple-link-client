@@ -9,7 +9,7 @@ import {useEffect, useState} from "react";
 import InstallModal from "./InstallModal.tsx";
 
 
-const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.dualchatgpt.com/graphql";
+const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.couple-link.com/graphql";
 
 const globalStyles = css`
   * {

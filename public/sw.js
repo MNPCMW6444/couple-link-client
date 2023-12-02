@@ -20,7 +20,7 @@ self.addEventListener('notificationclick', function (event) {
     event.notification.close();
     event.waitUntil(
         clients.matchAll({type: 'window'}).then(windowClients => {
-            const chatUrl = `https://dualchatgpt.com/chat?pairId=${notificationData.pairId}&sessionId=${notificationData.sessionId}`;
+            const chatUrl = `https://couple-link.com/chat?pairId=${notificationData.pairId}&sessionId=${notificationData.sessionId}`;
 
 
             for (var i = 0; i < windowClients?.length; i++) {
