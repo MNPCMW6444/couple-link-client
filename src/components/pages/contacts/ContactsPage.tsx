@@ -58,24 +58,26 @@ const ContactsPage = () => {
     const [tabValue, setTabValue] = useState(0);
     const {isMobile} = useMobile();
 
+    const handleChangeTab = (_: any, newValue: number) => {
+        setTabValue(newValue);
+    };
+
+    const [doInvite] = useMutation(gql`
+        mutation Newpair($contactPhone: String!, $name: String) {
+          newpair(contactPhone: $contactPhone, name: $name)
+        }
+    `);
+
+
     const handleInvite = async () => {
         try {
-            await doInvite({variables: {contactPhone: phone}});
+            await doInvite({variables: {contactPhone: phone, name: contactName}});
             setInvite(false);
         } catch (error) {
             console.error("Error sending invitation:", error);
         }
     };
 
-    const handleChangeTab = (_: any, newValue: number) => {
-        setTabValue(newValue);
-    };
-
-    const [doInvite] = useMutation(gql`
-        mutation Mutation($contactPhone: String!) {
-            newpair(contactPhone: $contactPhone)
-        }
-    `);
 
     const handleEditName = (contact: any) => {
         setEditingContact(contact);
