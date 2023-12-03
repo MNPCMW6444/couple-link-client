@@ -9,7 +9,7 @@ import {gql, useMutation, useQuery} from "@apollo/client";
 
 export const WhiteTypography = styled(Typography)(({theme}) => ({
     fontWeight: "bold",
-    fontSize: 32,
+    fontSize: 22,
     letterSpacing: 2,
     color: theme.palette.primary,
     marginBottom: theme.spacing(1),

@@ -1,11 +1,11 @@
 {
   "name": "dualchatgpt-client",
   "private": true,
-  "version": "0.0.14",
+  "version": "0.0.15",
   "type": "module",
   "scripts": {
     "prebuild": "npm version patch --no-git-tag-version",
-    "build": "tsc && vite build",
+    "build": "tsc && vite build && esbuild server.ts --bundle --platform=node --minify --format=cjs --outfile=server.cjs",
     "dev": "vite",
     "update": "npx npm-check-updates -u && npm i",
     "start": "npm i && npm run dev",

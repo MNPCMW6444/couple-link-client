@@ -10,7 +10,7 @@ COPY index.html /app/index.html
 COPY manifest.json /app/public/manifest.json
 COPY src /app/src
 COPY website /app/website
-COPY server.cjs /app/server.cjs
+COPY server.ts /app/server.ts
 #COPY .npmrc /app/.npmrc
 RUN npm run prod
 RUN rm -rf node_modules package-lock.json
@@ -23,6 +23,6 @@ COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/website /app/website
 #COPY --from=builder /app/src/manifestJSONData.js /app/src/manifestJSONData.js
-COPY server.cjs /app/server.cjs
+COPY --from=builder /app/server.cjs /app/server.cjs
 CMD ["node", "./server.cjs"]
 EXPOSE 5100
