@@ -23,6 +23,6 @@ COPY --from=builder /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
 COPY --from=builder /app/website /app/website
 #COPY --from=builder /app/src/manifestJSONData.js /app/src/manifestJSONData.js
-COPY --from=builder /app/server.cjs /app/server.cjs
-CMD ["node", "./server.cjs"]
+COPY --from=builder /app/server.cjs /app/server.ts
+CMD ["node", "./server.ts"]
 EXPOSE 5100
