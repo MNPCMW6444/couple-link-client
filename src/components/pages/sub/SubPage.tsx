@@ -12,11 +12,29 @@ const TRY_TO_ACTIVATE = gql`
 
 const SubPage = () => {
 
-    const {user} = useContext(UserContext)
+    const {user, refreshUserData} = useContext(UserContext)
 
     const [email, setEmail] = useState("")
+    const [res, setRes] = useState("")
 
     const [tryToActivate] = useMutation(TRY_TO_ACTIVATE, {})
+
+    const handleButton = () => {
+        tryToActivate({variables: {email}}).then((x) => {
+            console.log(x)
+            debugger;
+        }).then(
+            () => {
+                setRes("Success, you can how create a Session")
+                refreshUserData()
+            }
+        )
+            .catch(
+                (resError) => {
+                    setRes(resError?.message)
+                }
+            )
+    }
 
 
     return (
@@ -49,9 +67,11 @@ const SubPage = () => {
                                    onChange={(e) => setEmail(e.target.value)}></TextField>
                     </Grid>
                     <Grid item>
-                        <Button variant="contained" onChange={() => tryToActivate({variables: {email}})}>Activate
-                            Subscription</Button>
+                        <Button variant="contained" onClick={handleButton}>Activate Subscription</Button>
                     </Grid>
+                    {res && <Grid item>
+                        <Typography variant="h6">{res}</Typography>
+                    </Grid>}
                 </>
             }
         </Grid>
