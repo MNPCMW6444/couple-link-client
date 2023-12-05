@@ -17,6 +17,7 @@ import Sets from "./pages/rnd/Sets.tsx";
 import ShopPage from "./pages/shop/ShopPage.tsx";
 import {ContactsContextProvider} from "../context/ContactsContext.tsx";
 import {ChatContextProvider} from "../context/ChatContext.tsx";
+import SubPage from "./pages/sub/SubPage.tsx";
 
 
 const Router = () => {
@@ -60,6 +61,7 @@ const Router = () => {
                                             <Route path="/settings" element={<SettingsPage/>}/>
                                             <Route path="/notifications" element={<NotificationsTab/>}/>
                                             <Route path="/shop" element={<ShopPage/>}/>
+                                            <Route path="/sub" element={<SubPage/>}/>
                                         </Routes>
                                     </Box>
                                 </Box>
