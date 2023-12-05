@@ -49,7 +49,7 @@ const SessionsManager = () => {
         setSelectedSession
     } = useContext(ChatContext);
 
-    const {myRoles: r} = useContext(UserContext);
+    const {myRoles: r, user} = useContext(UserContext);
 
     const [newSessionName, setNewSessionName] = useState('');
     const [editingSession, setEditingSession] = useState<Session | null>(null);
@@ -58,8 +58,7 @@ const SessionsManager = () => {
     const [renameSession] = useMutation(RENAME_SESSION_MUTATION, {});
 
     const [selectedRoleId, setSelectedRoleId] = useState('654ec6a80e5eb4fc793dc5c9');
-
-
+    
     const handleCreate = async () => {
         const x: any = await createSession(pairId, newSessionName, selectedRoleId);
         setNewSessionName('');
@@ -227,12 +226,16 @@ const SessionsManager = () => {
                                 </MenuItem>
                             </Select>
                         </Grid>
+                        {
+                            user?.subscription === "free" && <Grid item><Typography>Please subscribe to start a session:
+                                https://buy.stripe.com/14k3dI0NogAYdGg8ww</Typography></Grid>
+                        }
                         <Grid item> {/* Adjust grid item size based on screen size */}
                             <Button
                                 variant="contained"
                                 startIcon={<AddCircleOutlineIcon/>}
                                 onClick={handleCreate}
-                                disabled={!newSessionName.trim() || !selectedRoleId || selectedRoleId === "655kjbkjbkbkkb8b4d4313503"}
+                                disabled={user?.subscription === "free" || (!newSessionName.trim() || !selectedRoleId || selectedRoleId === "655kjbkjbkbkkb8b4d4313503")}
                             >
                                 Add Session
                             </Button>

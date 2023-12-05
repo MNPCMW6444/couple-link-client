@@ -21,6 +21,7 @@ const GET_ME = gql`
         _id
         phone
         rnd
+        subscription
     }
 }`
 
