@@ -176,17 +176,22 @@ const ContactsPage = () => {
                                         {contact.name || contact.phone}
                                     </Typography>
                                 </Grid>
-                                <Grid item>
-                                    <Button variant="contained" onClick={() => handleEditName(contact)}> <Edit
-                                        sx={{marginRight: 2}}/>
-                                        {!isMobileOrTabl && "Edit Name"}
-                                    </Button>
-                                </Grid> <Grid item>
-                                <Button variant="contained" onClick={() => handleEditName(contact)}> <DeleteForever
-                                    sx={{marginRight: 2}}/>
-                                    {!isMobileOrTabl && "Remove"}
-                                </Button>
-                            </Grid>
+                                {!(editingContact?.pairId === contact.pairId) &&
+                                    (<>
+                                        <Grid item>
+                                            <Button variant="contained" onClick={() => handleEditName(contact)}> <Edit
+                                                sx={{marginRight: 2}}/>
+                                                {!isMobileOrTabl && "Edit Name"}
+                                            </Button>
+                                        </Grid>
+                                        <Grid item>
+                                            <Button variant="contained" onClick={() => handleEditName(contact)}>
+                                                <DeleteForever
+                                                    sx={{marginRight: 2}}/>
+                                                {!isMobileOrTabl && "Remove"}
+                                            </Button>
+                                        </Grid>
+                                    </>)}
                                 {editingContact?.pairId === contact.pairId && (
                                     <>
                                         <Grid item>
