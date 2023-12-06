@@ -1,5 +1,5 @@
 import {useContext, useState} from 'react';
-import {Grid, Typography, Button, Tab, Tabs, Box, TextField, Divider} from '@mui/material';
+import {Grid, Typography, Button, Tab, Tabs, Box, TextField, Divider, Badge} from '@mui/material';
 import {Add} from '@mui/icons-material';
 import {gql, useMutation} from '@apollo/client';
 import PhoneInput from 'react-phone-input-2';
@@ -100,7 +100,23 @@ const ContactsPage = () => {
                 </Typography>
                 <Tabs value={tabValue} onChange={handleChangeTab} centered>
                     <Tab label="Contacts" {...a11yProps(0)} />
-                    <Tab label="Invitations" {...a11yProps(1)} />
+                    <Tab label={
+                        <Badge badgeContent={invitations.length} color="secondary"
+                               anchorOrigin={{
+                                   vertical: 'top',
+                                   horizontal: 'right',
+                               }}
+                               sx={{
+                                   '& .MuiBadge-badge': {
+                                       right: -3,
+                                       top: 0,
+                                       border: `2px solid white`,
+                                   },
+                               }}
+                        >
+                            <span style={{paddingRight: '5px'}}>Invitations</span>
+                        </Badge>
+                    }  {...a11yProps(1)} />
                     <Tab label="Sent Invitations" {...a11yProps(2)} />
                 </Tabs>
                 <TabPanel value={tabValue} index={0}>
