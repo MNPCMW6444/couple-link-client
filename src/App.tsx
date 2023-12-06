@@ -135,7 +135,10 @@ function App() {
         cache: new InMemoryCache(),
     });
 
-    return (<Box height="100%" width="100%" bgcolor={isNight ? "#121212" : "white"}>
+    const envVis = import.meta.env.VITE_WHITE_ENV === "local" ? {border: "10px solid blue"} : import.meta.env.VITE_WHITE_ENV !== "preprod" ? {border: "10px solid orange"} : {};
+
+
+    return (<Box height="100%" width="100%" bgcolor={isNight ? "#121212" : "white"} sx={{...envVis}}>
             <ThemeProvider theme={theme}>
                 <ApolloProvider client={client}>
                     <Global styles={globalStyles}/>

@@ -37,7 +37,7 @@ const Router = () => {
                         <ContactsContextProvider>
                             <ChatContextProvider>
                                 <Box overflow="hidden"
-                                     style={{backgroundColor}}> {/* Apply the background color */}
+                                     style={{backgroundColor}}>
                                     <WhiteSideBar/>
                                     <Box
                                         component="main"
@@ -46,7 +46,7 @@ const Router = () => {
                                             p: 3,
                                             backgroundColor,
                                             pt: (theme) => theme.spacing(1),
-                                            pl: (theme) => theme.spacing(32),
+                                            pl: (theme) => theme.spacing(32)
                                         } : {pt: "5vh"}}
                                     >
                                         <Routes>
