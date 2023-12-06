@@ -47,7 +47,6 @@ const StyledContainer = styled(Container)`
   flex-direction: column;
   align-items: center;
   padding-top: 32px;
-  min-height: 100vh;
 `;
 
 const StyledPaper = styled(Paper)`
@@ -67,7 +66,7 @@ const NotificationsTab: FC = () => {
     const xx = `${x.browser.name} on ${x.device.model}`;
 
     const [deviceName, setDeviceName] = useState(xx);
-    
+
     useEffect(() => {
         refreshUserData();
     }, [refreshUserData]);

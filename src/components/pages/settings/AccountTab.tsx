@@ -10,7 +10,6 @@ const StyledContainer = styled(Container)`
   flex-direction: column;
   align-items: center;
   padding-top: 32px;
-  min-height: 100vh;
 `;
 
 const StyledPaper = styled(Paper)`
