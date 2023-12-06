@@ -129,7 +129,7 @@ const Login = () => {
 
     const loginForm = (
         <Grid item container justifyContent="center" alignItems="center" width={isMobileOrTabl ? "100vw" : "30vw"}
-              height="100vh">
+              height="100vh" position="fixed" right={0}>
             <Grid item> <Paper style={{padding: 20, maxWidth: 400, margin: '0 auto'}}>
                 <Typography variant="h6" textAlign="center">Login</Typography>
                 <PhoneInput
