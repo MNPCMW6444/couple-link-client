@@ -9,7 +9,7 @@ import UserContext from "../../context/UserContext";
 import {gql, useMutation} from "@apollo/client";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
-import {useLocation} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import toast, {Toaster} from 'react-hot-toast';
 import {Grid} from "@mui/material";
 
@@ -42,6 +42,7 @@ const Login = () => {
     const [countryCode, setCountryCode] = useState<string>('il');
     const {refreshUserData} = useContext(UserContext);
     const [asked, setAsked] = useState<boolean>(false);
+    const [r, setR] = useState<string>("");
     const [signin, {data, loading, error}] = useMutation(gql`
         mutation Mutation($code: Int!, $phone: String!) {
             signin(code: $code, phone: $phone)
@@ -60,6 +61,7 @@ const Login = () => {
     useEffect(() => {
         if (query.get("code")) setPassword(query.get("code") || "");
         if (query.get("phone")) setPhoneNumber(query.get("phone") || "");
+        if (query.get("r")) setR(query.get("/contacts") || "");
     }, [query]);
 
     useEffect(() => {
@@ -100,6 +102,8 @@ const Login = () => {
         }
     };
 
+    const navigate = useNavigate();
+
     const validatePhone = (number: string) => {
         const parts = number.split(" ");
         return !(parts?.length === 2 && /^0+/.test(parts[1]));
@@ -109,6 +113,7 @@ const Login = () => {
         e.preventDefault();
         if (asked && password) {
             signin({variables: {phone: email, code: parseInt(password, 10)}});
+            r && navigate(r);
         } else {
             if (validatePhone(email)) {
                 signreq({variables: {phone: email}})
