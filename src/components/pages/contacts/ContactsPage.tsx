@@ -1,6 +1,6 @@
 import {useContext, useState} from 'react';
 import {Grid, Typography, Button, Tab, Tabs, Box, TextField, Divider, Badge} from '@mui/material';
-import {Add} from '@mui/icons-material';
+import {Add, DeleteForever, Edit} from '@mui/icons-material';
 import {gql, useMutation} from '@apollo/client';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -56,7 +56,7 @@ const ContactsPage = () => {
     const [editingContact, setEditingContact] = useState<any>(null);
     const [newName, setNewName] = useState("");
     const [tabValue, setTabValue] = useState(0);
-    const {isMobile} = useMobile();
+    const {isMobile, isMobileOrTabl} = useMobile();
 
     const handleChangeTab = (_: any, newValue: number) => {
         setTabValue(newValue);
@@ -92,9 +92,10 @@ const ContactsPage = () => {
         }
     };
 
+
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1, height: "100vh"}}>
-            <Grid item xs={12} sm={8} md={6} lg={4}>
+            <Grid item xs={12} sm={12} md={12} lg={12}>
                 <Typography variant={isMobile ? "h3" : "h1"} align="center" gutterBottom>
                     Contacts
                 </Typography>
@@ -168,16 +169,24 @@ const ContactsPage = () => {
                     <br/>
                     <Grid container direction="column" rowSpacing={2}>
                         {contacts?.map((contact) => (
-                            <Grid item container alignItems="center" key={contact.pairId} columnSpacing={2}>
-                                <Grid item>
+                            <Grid item container justifyContent="space-between" alignItems="center" key={contact.pairId}
+                                  columnSpacing={2}>
+                                <Grid item width="30%">
                                     <Typography variant="h6" sx={{mt: 1}}>
                                         {contact.name || contact.phone}
                                     </Typography>
                                 </Grid>
                                 <Grid item>
-                                    <Button variant="contained" onClick={() => handleEditName(contact)}>Edit
-                                        Name</Button>
-                                </Grid>
+                                    <Button variant="contained" onClick={() => handleEditName(contact)}> <Edit
+                                        sx={{marginRight: 2}}/>
+                                        {!isMobileOrTabl && "Edit Name"}
+                                    </Button>
+                                </Grid> <Grid item>
+                                <Button variant="contained" onClick={() => handleEditName(contact)}> <DeleteForever
+                                    sx={{marginRight: 2}}/>
+                                    {!isMobileOrTabl && "Remove"}
+                                </Button>
+                            </Grid>
                                 {editingContact?.pairId === contact.pairId && (
                                     <>
                                         <Grid item>
