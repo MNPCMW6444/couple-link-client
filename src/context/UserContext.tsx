@@ -18,12 +18,17 @@ export const WhiteTypography = styled(Typography)(({theme}) => ({
 const GET_ME = gql`
     query Getme {
       getme {
-        _id
         phone
+        email
+        passwordHash
         rnd
+        name
         subscription
-    }
-}`
+        _id
+        createdAt
+        updatedAt
+      }
+    }`
 
 const GET_INVENTORY = gql`
     query GeyMyInventory {

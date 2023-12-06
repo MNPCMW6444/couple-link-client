@@ -1,8 +1,9 @@
 import {FC, useContext, useState} from "react";
-import {Container, Typography, Paper, Switch, FormControlLabel} from "@mui/material";
+import {Container, Typography, Paper, Switch, FormControlLabel, Button, Grid} from "@mui/material";
 import styled from "@emotion/styled";
 import {gql, useMutation} from "@apollo/client";
 import UserContext from "../../../context/UserContext.tsx";
+import {useNavigate} from "react-router-dom";
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -45,22 +46,52 @@ const NotificationsTab: FC = () => {
         updateRND();
     };
 
+    const navigate = useNavigate();
+
     return (
         <StyledContainer maxWidth="xs">
             <Typography variant="h4" gutterBottom>
                 Account Settings
             </Typography>
             <StyledPaper>
-                <FormControlLabel
-                    control={
-                        <Switch
-                            checked={rnd}
-                            onChange={handleSwitchChange}
-                            disabled={loading}
+                <Grid container direction="column" rowSpacing={2}>
+                    <Grid item>
+                        <Typography variant="h6" gutterBottom>
+                            Phone Number: +{user.phone}
+                        </Typography>
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h6" gutterBottom>
+                            Email Address: {user.email}
+                        </Typography>
+                    </Grid>
+                    <Grid item container alignItems="center" columnSpacing={2}>
+                        <Grid item>
+                            <Typography variant="h6" gutterBottom>
+                                Subscription Status: {user.subscription === "free" ? "Inactive" : "Active"}
+                            </Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button
+                                variant="contained" onClick={() => navigate("/sub")}>
+                                Subscribe
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    <Grid item>
+
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={rnd}
+                                    onChange={handleSwitchChange}
+                                    disabled={loading}
+                                />
+                            }
+                            label="I want to develop and sell Roles"
                         />
-                    }
-                    label="I want to develop and sell Roles"
-                />
+                    </Grid>
+                </Grid>
             </StyledPaper>
         </StyledContainer>
     );
