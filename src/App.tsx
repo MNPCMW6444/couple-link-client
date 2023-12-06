@@ -7,6 +7,7 @@ import {getMainDefinition} from "@apollo/client/utilities";
 import {WebSocketLink} from "@apollo/client/link/ws";
 import {useEffect, useState} from "react";
 import InstallModal from "./InstallModal.tsx";
+import {Toaster} from "react-hot-toast";
 
 
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : "s://server.couple-link.com/graphql";
@@ -138,6 +139,7 @@ function App() {
             <ThemeProvider theme={theme}>
                 <ApolloProvider client={client}>
                     <Global styles={globalStyles}/>
+                    <Toaster/>
                     <UserContextProvider><WhiteRouter/></UserContextProvider>
                     {installPrompt && !isAppInstalled && (
                         <InstallModal onInstallClicked={showInstallPrompt}/>

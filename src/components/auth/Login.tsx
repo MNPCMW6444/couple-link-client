@@ -1,8 +1,5 @@
 import {ChangeEvent, FormEvent, KeyboardEvent, useContext, useEffect, useState} from "react";
 import Box from "@mui/material/Box";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import UserContext from "../../context/UserContext";
@@ -10,8 +7,10 @@ import {gql, useMutation} from "@apollo/client";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css'
 import {useLocation, useNavigate} from "react-router-dom";
-import toast, {Toaster} from 'react-hot-toast';
-import {Grid} from "@mui/material";
+import toast from 'react-hot-toast';
+import {Grid, Paper, Typography} from "@mui/material";
+import img from "../../assets/x.png"
+import useMobile from "../../hooks/responsiveness/useMobile.ts";
 
 export interface LabelsConstants {
     IDLE: {
@@ -84,12 +83,8 @@ const Login = () => {
         fetch('https://ipinfo.io/?token=e58d29926832f8')
             .then(response => response.json())
             .then(data => {
-                console.log(data.country.toLowerCase());
                 setCountryCode(data.country.toLowerCase());
             })
-            .catch(error => {
-                console.error("Error fetching IP info:", error);
-            });
     }, []);
 
     const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,59 +107,69 @@ const Login = () => {
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (asked && password) {
-            signin({variables: {phone: email, code: parseInt(password, 10)}});
+            signin({variables: {phone: email, code: parseInt(password, 10)}}).then(() => {
+
+            }).catch(() => {
+
+            })
             r && navigate(r);
         } else {
             if (validatePhone(email)) {
-                signreq({variables: {phone: email}})
+                signreq({variables: {phone: email}}).then(() => {
+
+                }).catch(() => {
+
+                })
                 setAsked(true)
             }
         }
     };
 
-    return (
-        <Box width="100%" height="100%" bgcolor="black">
-            <Toaster/>
-            <Dialog open={true}>
-                <DialogTitle>Login</DialogTitle>
-                <DialogContent>
-                    <PhoneInput
-                        country={countryCode}
-                        value={email}
-                        onChange={setPhoneNumber}
-                        containerStyle={{width: '100%'}}
-                        inputStyle={{width: '100%'}}
-                        placeholder="Enter phone number"
-                        enableSearch={true}
-                    />
+    const {isMobileOrTabl} = useMobile();
 
-                    {!validatePhone(email) && (
-                        <span style={{color: 'red', fontSize: '0.8em'}}>
-                            Invalid phone number
-                        </span>
-                    )}
-                    {asked && <TextField
-                        margin="dense"
-                        data-testid="password"
-                        label="6 digit OTP sent by SMS"
-                        type="password"
-                        fullWidth
-                        variant="outlined"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        onKeyPress={handleKeyPress}
-                    />}
-                    <Box mt={2}>
-                        <Grid container direction="column" alignItems="center" rowSpacing={2}>
-                            {<Grid item><Button
+    const loginForm = (
+        <Grid item container justifyContent="center" alignItems="center" width={isMobileOrTabl ? "100vw" : "30vw"}
+              height="100vh">
+            <Grid item> <Paper style={{padding: 20, maxWidth: 400, margin: '0 auto'}}>
+                <Typography variant="h6" textAlign="center">Login</Typography>
+                <PhoneInput
+                    country={countryCode}
+                    value={email}
+                    onChange={setPhoneNumber}
+                    containerStyle={{width: '100%'}}
+                    inputStyle={{width: '100%'}}
+                    placeholder="Enter phone number"
+                    enableSearch={true}
+                />
+                {!validatePhone(email) && (
+                    <Typography color="error" style={{fontSize: '0.8em'}}>
+                        Invalid phone number
+                    </Typography>
+                )}
+                {asked && <TextField
+                    margin="dense"
+                    data-testid="password"
+                    label="6 digit OTP sent by SMS"
+                    type="password"
+                    fullWidth
+                    variant="outlined"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    onKeyPress={handleKeyPress}
+                />}
+                <Box mt={2}>
+                    <Grid container direction="column" alignItems="center" rowSpacing={2}>
+                        <Grid item>
+                            <Button
                                 color="primary"
                                 variant="outlined"
                                 onClick={() => asked ? setAsked(false) : setAsked(true)}
                             >
                                 {asked ? "I didn't receive a code" : "I already have a code"}
                             </Button>
-                            </Grid>}
-                            <Grid item> <Button
+                        </Grid>
+                        <Grid item>
+                            <Button
                                 color={asked ? "secondary" : "primary"}
                                 type="submit"
                                 data-testid="login-button"
@@ -172,12 +177,41 @@ const Login = () => {
                                 onClick={handleSubmit}
                             >
                                 {asked ? LABELS[buttonLabel].LOGIN : "Send me a code"}
-                            </Button></Grid>
+                            </Button>
                         </Grid>
-                    </Box>
-                </DialogContent>
-            </Dialog>
-        </Box>
+                    </Grid>
+                </Box>
+            </Paper>
+            </Grid>
+        </Grid>
+    );
+
+    return (
+        <Grid container>
+            {!isMobileOrTabl && <Grid item width="70vw" height="100vh">
+                <Box sx={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'black',
+                    minWidth: '600px',
+                    overflow: 'hidden'
+                }}>
+                    <img
+                        src={img}
+                        alt="Descriptive Alt Text"
+                        style={{
+                            width: '100%',
+                            height: 'auto',
+                            objectFit: 'contain'
+                        }}
+                    />
+                </Box>
+            </Grid>}
+            {loginForm}
+        </Grid>
     );
 };
 
