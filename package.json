@@ -1,7 +1,7 @@
 {
   "name": "dualchatgpt-client",
   "private": true,
-  "version": "0.0.15",
+  "version": "0.0.17",
   "type": "module",
   "scripts": {
     "prebuild": "npm version patch --no-git-tag-version",
