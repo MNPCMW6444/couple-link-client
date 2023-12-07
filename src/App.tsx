@@ -135,7 +135,7 @@ function App() {
         cache: new InMemoryCache(),
     });
 
-    const envVis = import.meta.env.VITE_WHITE_ENV === "local" ? {border: "10px solid blue"} : import.meta.env.VITE_WHITE_ENV !== "preprod" ? {border: "10px solid orange"} : {};
+    const envVis = import.meta.env.VITE_WHITE_ENV === "local" ? {border: "10px solid blue"} : import.meta.env.VITE_WHITE_ENV === "preprod" ? {border: "10px solid orange"} : {};
 
 
     return (<Box height="100%" width="100%" bgcolor={isNight ? "#121212" : "white"} sx={{...envVis}}>
