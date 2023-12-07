@@ -13,6 +13,7 @@ import {Toaster} from "react-hot-toast";
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : `s://${import.meta.env.VITE_WHITE_ENV === "preprod" ? "pre" : ""}server.couple-link.com/graphql`;
 
 console.log(import.meta.env.VITE_WHITE_ENV);
+console.log(import.meta.env.VITE_NODE_ENV);
 
 const globalStyles = css`
   * {
