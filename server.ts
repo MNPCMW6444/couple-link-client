@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 
-require('dotenv').config();
+// require('dotenv').config();
 
 const app = express();
 
