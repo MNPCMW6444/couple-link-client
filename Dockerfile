@@ -6,6 +6,7 @@ COPY tsconfig.json /app/tsconfig.json
 COPY tsconfig.node.json /app/tsconfig.node.json
 COPY vite.config.ts /app/vite.config.ts
 COPY public /app/public
+COPY dep.env /app/.env
 COPY index.html /app/index.html
 COPY manifest.json /app/public/manifest.json
 COPY src /app/src
