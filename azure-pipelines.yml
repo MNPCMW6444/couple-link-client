@@ -4,6 +4,7 @@
 
 trigger:
   - main
+  - preprod
 
 resources:
   - repo: self
