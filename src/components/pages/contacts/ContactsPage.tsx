@@ -1,6 +1,6 @@
 import {useContext, useState} from 'react';
 import {Grid, Typography, Button, Tab, Tabs, Box, TextField, Divider, Badge} from '@mui/material';
-import {Add, DeleteForever, Edit} from '@mui/icons-material';
+import {Add, Cancel, DeleteForever, Edit} from '@mui/icons-material';
 import {gql, useMutation} from '@apollo/client';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
@@ -96,7 +96,7 @@ const ContactsPage = () => {
 
     const handleDeleteContact = (pairId: string) => deleteSomeone && deleteSomeone(pairId, false)
     const handleDeleteInvitataion = (pairId: string) => deleteSomeone && deleteSomeone(pairId, true)
-
+    const withdraw = (number: string) => deleteSomeone && deleteSomeone(number, true)
 
     return (
         <Grid container justifyContent="center" sx={{width: '100%', flexGrow: 1, height: "100vh"}}>
@@ -244,11 +244,21 @@ const ContactsPage = () => {
                     </Grid>
                 </TabPanel>
                 <TabPanel value={tabValue} index={2}>
-                    {sentInvitations?.map((sentInvitation, index) => (
-                        <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
-                            {sentInvitation}
-                        </Typography>
-                    ))}
+                    <Grid container rowSpacing={2}>
+                        {sentInvitations?.map((sentInvitation, index) => (
+                            <Grid item container justifyContent="space-around">
+                                <Grid item>
+                                    <Typography variant="h6" key={`sentInvitation-${index}`} sx={{mt: 1}}>
+                                        {sentInvitation}
+                                    </Typography>
+                                </Grid>
+                                <Grid item>
+                                    <Button onClick={() => withdraw(sentInvitation)} variant="contained"> <Cancel
+                                        sx={{paddingRight: 1}}/>Withdraw</Button>
+                                </Grid>
+                            </Grid>
+                        ))}
+                    </Grid>
                 </TabPanel>
             </Grid>
         </Grid>
