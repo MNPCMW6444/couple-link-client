@@ -8,6 +8,7 @@ import ContactsContext from '../../../context/ContactsContext';
 import PropTypes from 'prop-types';
 import useMobile from "../../../hooks/responsiveness/useMobile";
 
+
 const TabPanel = (props: any) => {
     const {children, value, index, ...other} = props;
 
@@ -48,7 +49,8 @@ const ContactsPage = () => {
         sentInvitations,
         acceptInvitation,
         giveName,
-        contactsQuery
+        contactsQuery,
+        deleteSomeone
     } = useContext(ContactsContext);
     const [invite, setInvite] = useState(false);
     const [phone, setPhone] = useState("");
@@ -91,6 +93,9 @@ const ContactsPage = () => {
             setEditingContact(null);
         }
     };
+
+    const handleDeleteContact = (pairId: string) => deleteSomeone && deleteSomeone(pairId, false)
+    const handleDeleteInvitataion = (pairId: string) => deleteSomeone && deleteSomeone(pairId, true)
 
 
     return (
@@ -185,7 +190,8 @@ const ContactsPage = () => {
                                             </Button>
                                         </Grid>
                                         <Grid item>
-                                            <Button variant="contained" onClick={() => handleEditName(contact)}>
+                                            <Button variant="contained"
+                                                    onClick={() => handleDeleteContact(contact.pairId)}>
                                                 <DeleteForever
                                                     sx={{marginRight: 2}}/>
                                                 {!isMobileOrTabl && "Remove"}
@@ -211,21 +217,31 @@ const ContactsPage = () => {
                     </Grid>
                 </TabPanel>
                 <TabPanel value={tabValue} index={1}>
-                    {invitations?.map((invitation, index) => (
-                        <Grid container spacing={2} alignItems="center" key={`invitation-${index}`}>
-                            <Grid item xs={8}>
-                                <Typography variant="h6">{invitation}</Typography>
+                    <Grid container rowSpacing={2}>
+                        {invitations?.map((invitation, index) => (
+                            <Grid item container spacing={2} alignItems="center" key={`invitation-${index}`}>
+                                <Grid item xs={6}>
+                                    <Typography variant="h6">{invitation}</Typography>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Button
+                                        variant="contained"
+                                        onClick={() => acceptInvitation && acceptInvitation({variables: {phone: invitation}})}
+                                    >
+                                        Accept
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={3}>
+                                    <Button variant="contained"
+                                            onClick={() => handleDeleteInvitataion(invitation)}>
+                                        <DeleteForever
+                                            sx={{marginRight: 2}}/>
+                                        {!isMobileOrTabl && "Remove"}
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={4}>
-                                <Button
-                                    variant="contained"
-                                    onClick={() => acceptInvitation && acceptInvitation({variables: {phone: invitation}})}
-                                >
-                                    Accept
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    ))}
+                        ))}
+                    </Grid>
                 </TabPanel>
                 <TabPanel value={tabValue} index={2}>
                     {sentInvitations?.map((sentInvitation, index) => (

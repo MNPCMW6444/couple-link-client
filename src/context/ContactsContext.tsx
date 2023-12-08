@@ -3,6 +3,29 @@ import {createContext, ReactNode, useContext, useEffect} from "react";
 import {gql, useQuery, useMutation, useSubscription} from "@apollo/client";
 import UserContext, {WhiteTypography} from "./UserContext";
 
+interface Contact {
+    phone: string;
+    name: string;
+    pairId: string;
+}
+
+interface ContactsContextType {
+    contacts: Contact[];
+    invitations: string[];
+    sentInvitations: string[];
+    acceptInvitation?: any;
+    giveName?: any;
+    contactsQuery: any;
+    contactsIds: any
+    deleteSomeone?: (pairId: string, permanently: boolean) => any;
+}
+
+const defaultValue: any = {
+    contacts: [],
+    invitations: [],
+    sentInvitations: [],
+};
+
 
 const LOADING_MESSAGE = (
     <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">
@@ -19,26 +42,11 @@ const CONTACTS_QUERY = gql`
     }
 `;
 
-interface Contact {
-    phone: string;
-    name: string;
-    pairId: string;
-}
-
-interface ContactsContextType {
-    contacts: Contact[];
-    invitations: string[];
-    sentInvitations: string[];
-    acceptInvitation?: any;
-    giveName?: any;
-    contactsQuery: any;
-}
-
-const defaultValue: any = {
-    contacts: [],
-    invitations: [],
-    sentInvitations: [],
-};
+const DELETE_CONTACT = gql`
+    mutation DeletePair($pairId: String!, $permanently: Boolean!) {
+      deletePair(pairId: $pairId, permanently: $permanently)
+    }
+`;
 
 
 const INVITATIONS_QUERY = gql`
@@ -73,15 +81,6 @@ const INVITATION_ACCEPTED_SUBSCRIPTION = gql`
     }
 `;
 
-interface ContactsContextType {
-    contacts: Contact[];
-    contactsIds: string[];
-    invitations: string[];
-    sentInvitations: string[];
-    acceptInvitation?: any
-    giveName?: any
-}
-
 
 const ContactsContext = createContext<ContactsContextType>(defaultValue);
 
@@ -104,15 +103,27 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
         }
     `)
 
+    const [doDeleteSomeone] = useMutation(DELETE_CONTACT, {})
+
+    const deleteSomeone = (pairId: string, permanently: boolean) => doDeleteSomeone({
+        variables: {
+            pairId,
+            permanently
+        }
+    }).then(() => refetch())
 
     const {data: newInvitationData} = useSubscription(NEW_INVITATION_SUBSCRIPTION);
     const {data: invitationAcceptedData} = useSubscription(INVITATION_ACCEPTED_SUBSCRIPTION);
 
+    const refetch = () => {
+        contactsQuery.refetch();
+        invitationsQuery.refetch();
+        sentInvitationsQuery.refetch();
+    }
+
     useEffect(() => {
         if (user) {
-            contactsQuery.refetch();
-            invitationsQuery.refetch();
-            sentInvitationsQuery.refetch();
+            refetch()
         }
     }, [user, newInvitationData, invitationAcceptedData]);
 
@@ -133,7 +144,16 @@ export const ContactsContextProvider = ({children}: { children: ReactNode }) => 
 
     return (
         <ContactsContext.Provider
-            value={{contacts, contactsIds, invitations, sentInvitations, acceptInvitation, giveName, contactsQuery}}>
+            value={{
+                contacts,
+                contactsIds,
+                invitations,
+                sentInvitations,
+                acceptInvitation,
+                giveName,
+                contactsQuery,
+                deleteSomeone
+            }}>
             {isLoading ? LOADING_MESSAGE : children}
         </ContactsContext.Provider>
     );
