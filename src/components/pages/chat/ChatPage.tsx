@@ -67,7 +67,7 @@ const ChatPage = () => {
 
     return selectedSession ? (
             <Box sx={{
-                height: isMobile ? "95vh" : "100vh",
+                height: isMobile ? "90vh" : "95vh",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between"
@@ -115,7 +115,7 @@ const ChatPage = () => {
                         <Grid item xs>
                             <Select
                                 fullWidth
-                                value={contacts[contactsIds.findIndex(id => id === pairId)] || contactsX[0]}
+                                value={contacts[contactsIds.findIndex((id: any) => id === pairId)] || contactsX[0]}
                                 onChange={(e) => {
                                     setPlaceHolderContacts(false);
                                     setPlaceHolderSessions(true);
