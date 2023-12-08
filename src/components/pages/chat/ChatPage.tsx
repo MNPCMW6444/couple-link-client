@@ -19,6 +19,7 @@ import {DRAWER_WIDTH_OPEN} from "../../WhiteSideBar.tsx";
 import {Settings} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import ContactsContext from "../../../context/ContactsContext.tsx";
+import {envVis} from "../../../App.tsx";
 
 const ChatPage = () => {
     const [message, setMessage] = useState("");
@@ -67,12 +68,16 @@ const ChatPage = () => {
 
     return selectedSession ? (
             <Box sx={{
-                height: isMobile ? "90vh" : "95vh",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between"
             }}>
-                <Box sx={{overflow: "auto", flexGrow: 1, px: 2}}>
+                <Box sx={{
+                    overflow: "auto",
+                    flexGrow: 1,
+                    px: 2,
+                    height: isMobile ? envVis.height.mobile : envVis.height.desktop
+                }}>
                     {triplets?.map((triplet, idx) => (
                         <ChatTriplet key={idx} triplet={triplet}/>
                     ))}

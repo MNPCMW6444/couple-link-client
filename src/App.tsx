@@ -13,9 +13,9 @@ import {Toaster} from "react-hot-toast";
 const serverURI = import.meta.env.VITE_NODE_ENV === "development" ? "://localhost:6005/graphql" : `s://${import.meta.env.VITE_WHITE_ENV === "preprod" ? "pre" : ""}server.couple-link.com/graphql`;
 
 const globalStyles = css`
-  * {
-    box-sizing: border-box;
-  }
+    * {
+        box-sizing: border-box;
+    }
 `;
 
 export const isNight = (new Date().getHours() > 19 || new Date().getHours() < 7)
@@ -45,6 +45,20 @@ const theme = createTheme({
         },
     },
 });
+
+const BORDER_SIZE = 10;
+
+
+export const envVis = import.meta.env.VITE_WHITE_ENV === "local" ? {
+    sx: {border: BORDER_SIZE + "px solid blue"},
+    height: {desktop: "calc(90vh - " + 2 * BORDER_SIZE + "px)", mobile: "calc(85vh - " + 2 * BORDER_SIZE + "px)"}
+} : import.meta.env.VITE_WHITE_ENV === "preprod" ? {
+    sx: {border: BORDER_SIZE + "px solid orange"},
+    height: {desktop: "calc(90vh - " + 2 * BORDER_SIZE + "px)", mobile: "calc(85vh - " + 2 * BORDER_SIZE + "px)"}
+} : {
+    sx: {},
+    height: {desktop: "90vh", mobile: "85vh"}
+};
 
 function App() {
     const [installPrompt, setInstallPrompt] = useState<any>(null);
@@ -135,11 +149,10 @@ function App() {
         cache: new InMemoryCache(),
     });
 
-    const envVis = import.meta.env.VITE_WHITE_ENV === "local" ? {border: "10px solid blue"} : import.meta.env.VITE_WHITE_ENV === "preprod" ? {border: "10px solid orange"} : {};
 
-
-    return (<Box height="100%" width="100%" bgcolor={isNight ? "#121212" : "white"} sx={{...envVis}}>
-            <ThemeProvider theme={theme}>
+    return (
+        <ThemeProvider theme={theme}>
+            <Box height="100%" width="100%" bgcolor={isNight ? "#121212" : "white"} sx={{...envVis.sx}}>
                 <ApolloProvider client={client}>
                     <Global styles={globalStyles}/>
                     <Toaster/>
@@ -148,8 +161,9 @@ function App() {
                         <InstallModal onInstallClicked={showInstallPrompt}/>
                     )}
                 </ApolloProvider>
-            </ThemeProvider>
-        </Box>
+            </Box>
+        </ThemeProvider>
+
     );
 }
 
