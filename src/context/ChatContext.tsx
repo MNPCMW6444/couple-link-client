@@ -180,7 +180,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
             if (prevTriplets.length === 0 || Object.values(prevTriplets[prevTriplets.length - 1]).every(m => m !== '')) {
                 const newTriplet = {
                     me: message.ownerid === user.phone ? message.message : '',
-                    him: message.owner === contacts[contactsIds.findIndex((id) => id === pairId)] ? message.message : '',
+                    him: message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] ? message.message : '',
                     ai: message.ownerid === 'ai' ? message.message : '',
                 };
                 return [...prevTriplets, newTriplet];
@@ -192,7 +192,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                         const updatedTriplet = {...triplet};
                         if (message.ownerid === user._id && triplet.me === '') {
                             updatedTriplet.me = message.message;
-                        } else if (message.owner === contacts[contactsIds.findIndex((id) => id === pairId)] && triplet.him === '') {
+                        } else if (message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] && triplet.him === '') {
                             updatedTriplet.him = message.message;
                         } else if (message.ownerid === 'ai' && triplet.ai === '') {
                             updatedTriplet.ai = message.message;
@@ -215,7 +215,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const sessions: Session [] = dataSessions?.getsessions || [];
 
 
-    const index = contactsIds.findIndex((id) => id === pairId);
+    const index = contactsIds.findIndex((id: any) => id === pairId);
     const contact = contactsNames[index] || contacts[index]
 
     return (
