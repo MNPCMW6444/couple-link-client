@@ -69,6 +69,13 @@ const NEW_SESSION_SUBSCRIPTION = gql`
 `;
 
 
+const DELETE_SESSION = gql`
+    mutation DeleteSession($sessionId: String!) {
+      deleteSession(sessionId: $sessionId)
+    }
+`;
+
+
 type Message = {
     owner: string;
     ownerid: string;
@@ -90,6 +97,7 @@ type ChatContextType = {
     sendMessage: (sessionId: string, message: string) => void;
     addMessageToTriplets: (message: Message) => void;
     refetch?: any;
+    deleteSessionById?: Function;
 };
 
 const defaultValues: ChatContextType = {
@@ -133,6 +141,9 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
 
     const [createSessionMutation] = useMutation(CREATE_SESSION);
     const [sendMessageMutation] = useMutation(SEND_MESSAGE);
+    const [deleteSession] = useMutation(DELETE_SESSION);
+
+    const deleteSessionById = async (sessionId: string) => deleteSession({variables: {sessionId}}).then(() => refetch());
 
     const createSession = async (pairId: string, name: string, role: string) => createSessionMutation({
         variables: {
@@ -230,7 +241,8 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                 createSession,
                 sendMessage,
                 addMessageToTriplets,
-                refetch: dref
+                refetch: dref,
+                deleteSessionById
             }}
         >
             {loading ? <Grid height="100vh" width="100vw" container justifyContent="center" alignItems="center">

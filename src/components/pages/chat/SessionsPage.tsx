@@ -19,7 +19,7 @@ import RNDContext from "../../../context/RNDContext";
 import useMobile from "../../../hooks/responsiveness/useMobile.ts";
 import ContactsContext from "../../../context/ContactsContext.tsx";
 import {DRAWER_WIDTH_OPEN} from "../../WhiteSideBar.tsx";
-import {Shop} from "@mui/icons-material";
+import {DeleteForever, Shop} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import UserContext from "../../../context/UserContext.tsx";
 
@@ -46,7 +46,7 @@ const SessionsManager = () => {
         pairId,
         sessions,
         createSession,
-        setSelectedSession
+        setSelectedSession, deleteSessionById
     } = useContext(ChatContext);
 
     const {myRoles: r, user} = useContext(UserContext);
@@ -135,12 +135,18 @@ const SessionsManager = () => {
                             key={session._id}
                             onClick={() => setSelectedSession(session._id)}
                             secondaryAction={
-                                <IconButton edge="end" aria-label="edit" onClick={() => {
-                                    setEditingSession(session);
-                                    setRenameValue(session.name);
-                                }}>
-                                    <EditIcon/>
-                                </IconButton>
+                                <>
+                                    <IconButton onClick={() => {
+                                        setEditingSession(session);
+                                        setRenameValue(session.name);
+                                    }}>
+                                        <EditIcon/>
+                                    </IconButton>
+                                    <IconButton onClick={() => deleteSessionById && deleteSessionById(session._id)}>
+                                        <DeleteForever/>
+                                    </IconButton>
+                                </>
+
                             }
                         >
                             <ListItemText primary={session.name}/>
