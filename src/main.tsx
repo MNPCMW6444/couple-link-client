@@ -16,7 +16,7 @@ if ('serviceWorker' in navigator) {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <Box width="100vw" height="100vh">
+        <Box height="100vh" width="100vw" overflow="hidden">
             <App/>
         </Box>
     </React.StrictMode>,
