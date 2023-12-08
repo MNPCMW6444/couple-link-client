@@ -44,7 +44,7 @@ const ChatM = ({open, setOpen}: ChatMProps) => {
             <Grid item xs>
                 <Select
                     fullWidth
-                    value={contacts[contactsIds.findIndex(id => id === pairId)] || contactsX[0]}
+                    value={contacts[contactsIds.findIndex((id: any) => id === pairId)] || contactsX[0]}
                     onChange={(e) => {
                         setPlaceHolderContacts(false);
                         setPlaceHolderSessions(true);
