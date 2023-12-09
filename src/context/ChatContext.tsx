@@ -84,7 +84,15 @@ type Message = {
     _id: string;
     createdAt: string;
     updatedAt: string;
+    whenQueried: number;
 };
+
+export interface Triplet {
+    me: string;
+    him: string;
+    ai: string,
+    v2: string
+}
 
 type ChatContextType = {
     pairId: string;
@@ -92,7 +100,7 @@ type ChatContextType = {
     sessions: Session[];
     selectedSession: string;
     setSelectedSession: Dispatch<SetStateAction<string>>;
-    triplets: { me: string; him: string; ai: string }[];
+    triplets: Triplet [];
     createSession: (pairId: string, name: string, role: string) => Promise<any>;
     sendMessage: (sessionId: string, message: string) => void;
     addMessageToTriplets: (message: Message) => void;
@@ -124,16 +132,17 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
     const {data: dataSessions, loading, refetch} = useQuery(GET_SESSIONS, {variables: {pairId}});
     const [selectedSession, setSelectedSession] = useState<string>('');
     const {data: dataTriplets, refetch: dref} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
-    const [triplets, setTriplets] = useState<{ me: string; him: string; ai: string }[]>([]);
+    const [triplets, setTriplets] = useState<Triplet[]>([]);
     const {user} = useContext(UserContext)
 
     useEffect(() => {
         if (dataTriplets) {
             setTriplets(
-                dataTriplets.gettriplets.map((array: string[]) => ({
+                dataTriplets.gettriplets?.map((array: string[]) => ({
                     me: array[0],
                     him: array[1],
                     ai: array[2],
+                    v2: array[3]
                 }))
             );
         }
@@ -193,6 +202,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                     me: message.ownerid === user.phone ? message.message : '',
                     him: message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] ? message.message : '',
                     ai: message.ownerid === 'ai' ? message.message : '',
+                    v2: message.ownerid === user.phone && message.whenQueried ? message.whenQueried.toString() : "-1"
                 };
                 return [...prevTriplets, newTriplet];
             } else {
@@ -203,6 +213,7 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                         const updatedTriplet = {...triplet};
                         if (message.ownerid === user._id && triplet.me === '') {
                             updatedTriplet.me = message.message;
+                            updatedTriplet.v2 = message.whenQueried.toString();
                         } else if (message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] && triplet.him === '') {
                             updatedTriplet.him = message.message;
                         } else if (message.ownerid === 'ai' && triplet.ai === '') {

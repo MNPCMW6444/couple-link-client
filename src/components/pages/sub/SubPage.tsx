@@ -20,10 +20,7 @@ const SubPage = () => {
     const [tryToActivate] = useMutation(TRY_TO_ACTIVATE, {})
 
     const handleButton = () => {
-        tryToActivate({variables: {email}}).then((x) => {
-            console.log(x)
-            debugger;
-        }).then(
+        tryToActivate({variables: {email}}).then(
             () => {
                 setRes("Success, you can how create a Session")
                 refreshUserData()
