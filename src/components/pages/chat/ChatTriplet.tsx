@@ -51,10 +51,11 @@ const Balloon = styled(Typography)(({theme, isAi, isMe, read}: any) => ({
     flex: '0 0 auto',
     '&:after': {
         content: read ? '"\\2713\\2713"' : '""', // Unicode for double checkmarks
-        display: read ? 'inline-block' : 'none',
+        display: read ? 'block' : 'none', // Display as block to ensure it's on a new line
         fontSize: '12px',
-        marginLeft: '8px',
-        color: read ? '#4FC3F7' : 'transparent', // Change color based on read status
+        marginTop: '4px', // Add margin at the top for spacing
+        color: read ? '' : "transparent", // Change color based on read status
+        textAlign: 'right', // Align to the right
     },
 }));
 
@@ -82,17 +83,17 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
         <FlexRow>
             <Column>
                 <DesktopMessage>
-                    <Balloon>{triplet.him}</Balloon>
+                    {triplet.him && <Balloon>{triplet.him}</Balloon>}
                 </DesktopMessage>
             </Column>
             <Column>
                 <DesktopMessage>
-                    <Balloon isAi>{triplet.ai}</Balloon>
+                    {triplet.ai && <Balloon isAi>{triplet.ai}</Balloon>}
                 </DesktopMessage>
             </Column>
             <Column>
                 <DesktopMessage>
-                    <Balloon isMe read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.me}</Balloon>
+                    {triplet.me && <Balloon isMe read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.me}</Balloon>}
                 </DesktopMessage>
             </Column>
         </FlexRow>
@@ -100,9 +101,9 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
 
     const mobileView = (
         <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
-            <Balloon isMe>{triplet.me}</Balloon>
-            <Balloon isAi>{triplet.ai}</Balloon>
-            <Balloon read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.him}</Balloon>
+            {triplet.me && <Balloon isMe>{triplet.me}</Balloon>}
+            {triplet.ai && <Balloon isAi>{triplet.ai}</Balloon>}
+            {triplet.him && <Balloon read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.him}</Balloon>}
         </div>
     );
 

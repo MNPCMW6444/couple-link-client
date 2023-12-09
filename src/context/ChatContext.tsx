@@ -1,6 +1,6 @@
-import {createContext, Dispatch, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react';
+import {createContext, Dispatch, FC, ReactNode, SetStateAction, useContext, useEffect, useState} from 'react';
 import {gql, useMutation, useQuery, useSubscription} from '@apollo/client';
-import UserContext, {WhiteTypography} from "./UserContext";
+import /*UserContext,*/ {WhiteTypography} from "./UserContext";
 import ContactsContext from "./ContactsContext";
 import {Grid} from "@mui/material";
 
@@ -46,17 +46,9 @@ const SEND_MESSAGE = gql`
 `;
 
 const NEW_MESSAGE_SUBSCRIPTION = gql`
-  subscription NewMessage($sessionId: String) {
-      newMessage(sessionId: $sessionId) {
-        owner
-        ownerid
-        sessionId
-        message
-        _id
-        createdAt
-        updatedAt
-      }
-}
+  subscription Subscription($sessionId: String) {
+      newMessage(sessionId: $sessionId)
+   }
 `;
 
 
@@ -75,7 +67,7 @@ const DELETE_SESSION = gql`
     }
 `;
 
-
+/*
 type Message = {
     owner: string;
     ownerid: string;
@@ -84,8 +76,8 @@ type Message = {
     _id: string;
     createdAt: string;
     updatedAt: string;
-    whenQueried: number;
-};
+    whenQueried: string;
+};*/
 
 export interface Triplet {
     me: string;
@@ -103,7 +95,9 @@ type ChatContextType = {
     triplets: Triplet [];
     createSession: (pairId: string, name: string, role: string) => Promise<any>;
     sendMessage: (sessionId: string, message: string) => void;
-    addMessageToTriplets: (message: Message) => void;
+    /*
+        addMessageToTriplets: (message: Message) => void;
+    */
     refetch?: any;
     deleteSessionById?: Function;
 };
@@ -121,19 +115,21 @@ const defaultValues: ChatContextType = {
     },
     sendMessage: () => {
     },
-    addMessageToTriplets: () => {
-    },
+    /* addMessageToTriplets: () => {
+     },*/
 };
 
 export const ChatContext = createContext<ChatContextType>(defaultValues);
 
-export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
+export const ChatContextProvider: FC<{ children: ReactNode }> = ({children}) => {
     const [pairId, setPairId] = useState<string>('');
     const {data: dataSessions, loading, refetch} = useQuery(GET_SESSIONS, {variables: {pairId}});
     const [selectedSession, setSelectedSession] = useState<string>('');
     const {data: dataTriplets, refetch: dref} = useQuery(GET_TRIPLETS, {variables: {sessionId: selectedSession}});
     const [triplets, setTriplets] = useState<Triplet[]>([]);
-    const {user} = useContext(UserContext)
+    /*
+        const {user} = useContext(UserContext)
+    */
 
     useEffect(() => {
         if (dataTriplets) {
@@ -193,38 +189,37 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
         }
     }, [messageSubscriptionData, sessionSubscriptionData]);
 
-    const addMessageToTriplets = (message: Message) => {
-        setTriplets(prevTriplets => {
-            // If there are no triplets or the last triplet is complete, add a new triplet
-            if (prevTriplets.length === 0 || Object.values(prevTriplets[prevTriplets.length - 1]).every(m => m !== '')) {
-                const newTriplet = {
-                    me: message.ownerid === user.phone ? message.message : '',
-                    him: message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] ? message.message : '',
-                    ai: message.ownerid === 'ai' ? message.message : '',
-                    v2: message.ownerid === user.phone && message.whenQueried ? message.whenQueried.toString() : "-1"
-                };
-                return [...prevTriplets, newTriplet];
-            } else {
-                // Otherwise, add the message to the incomplete triplet
-                return prevTriplets.map((triplet, index) => {
-                    if (index === prevTriplets.length - 1) {
-                        // Assuming the message owner can be 'me', 'him', or 'ai'
-                        const updatedTriplet = {...triplet};
-                        if (message.ownerid === user._id && triplet.me === '') {
-                            updatedTriplet.me = message.message;
-                            updatedTriplet.v2 = message.whenQueried.toString();
-                        } else if (message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] && triplet.him === '') {
-                            updatedTriplet.him = message.message;
-                        } else if (message.ownerid === 'ai' && triplet.ai === '') {
-                            updatedTriplet.ai = message.message;
-                        }
-                        return updatedTriplet;
-                    }
-                    return triplet;
-                });
-            }
-        });
-    };
+    /*  const addMessageToTriplets = (message: Message) => {
+          setTriplets(prevTriplets => {
+              // If there are no triplets or the last triplet is complete, add a new triplet
+              if (prevTriplets.length === 0 || Object.values(prevTriplets[prevTriplets.length - 1]).every(m => m !== '')) {
+                  const newTriplet = {
+                      me: message.ownerid === user.phone ? message.message : '',
+                      him: message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] ? message.message : '',
+                      ai: message.ownerid === 'ai' ? message.message : '',
+                      v2: message.ownerid === user.phone && message.whenQueried ? message.whenQueried : "-1"
+                  };
+                  return [...prevTriplets, newTriplet];
+              } else {
+                  // Otherwise, add the message to the incomplete triplet
+                  return prevTriplets.map((triplet, index) => {
+                      if (index === prevTriplets.length - 1) {
+                          // Assuming the message owner can be 'me', 'him', or 'ai'
+                          const updatedTriplet = {...triplet};
+                          if (message.ownerid === user._id && triplet.me === '') {
+                              updatedTriplet.me = message.message;
+                          } else if (message.owner === contacts[contactsIds.findIndex((id: any) => id === pairId)] && triplet.him === '') {
+                              updatedTriplet.him = message.message;
+                          } else if (message.ownerid === 'ai' && triplet.ai === '') {
+                              updatedTriplet.ai = message.message;
+                          }
+                          return updatedTriplet;
+                      }
+                      return triplet;
+                  });
+              }
+          });
+      };*/
 
 
     const addSession = () => {
@@ -250,7 +245,9 @@ export const ChatContextProvider: React.FC<{ children: ReactNode }> = ({children
                 triplets,
                 createSession,
                 sendMessage,
-                addMessageToTriplets,
+                /*
+                                addMessageToTriplets,
+                */
                 refetch: dref,
                 deleteSessionById
             }}
