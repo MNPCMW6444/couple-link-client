@@ -2,13 +2,10 @@ import styled from "@emotion/styled";
 import {FC, useEffect, useState} from "react";
 import {Typography} from "@mui/material";
 import {isNight} from "../../../App.tsx";
+import {Triplet} from "../../../context/ChatContext.tsx";
 
 interface ChatTripletProps {
-    triplet: {
-        me: string;
-        him: string;
-        ai: string;
-    };
+    triplet: Triplet;
 }
 
 const Container = styled('div')({
@@ -42,7 +39,7 @@ const DesktopMessage = styled('div')({
 });
 
 
-const Balloon = styled(Typography)(({theme, isAi, isMe}: any) => ({
+const Balloon = styled(Typography)(({theme, isAi, isMe, read}: any) => ({
     background: isAi ? (!isNight ? "#e0e0e0" : "#707070") : isMe ? (!isNight ? theme.palette.primary.dark : theme.palette.secondary.dark) : (!isNight ? theme.palette.primary.light : theme.palette.secondary.main),
     color: isNight && theme.palette.primary.contrastText,
     borderRadius: '20px',
@@ -52,6 +49,13 @@ const Balloon = styled(Typography)(({theme, isAi, isMe}: any) => ({
     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
     margin: '5px 0',
     flex: '0 0 auto',
+    '&:after': {
+        content: read ? '"\\2713\\2713"' : '""', // Unicode for double checkmarks
+        display: read ? 'inline-block' : 'none',
+        fontSize: '12px',
+        marginLeft: '8px',
+        color: read ? '#4FC3F7' : 'transparent', // Change color based on read status
+    },
 }));
 
 
@@ -88,7 +92,7 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
             </Column>
             <Column>
                 <DesktopMessage>
-                    <Balloon isMe>{triplet.me}</Balloon>
+                    <Balloon isMe read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.me}</Balloon>
                 </DesktopMessage>
             </Column>
         </FlexRow>
@@ -98,7 +102,7 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
         <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
             <Balloon isMe>{triplet.me}</Balloon>
             <Balloon isAi>{triplet.ai}</Balloon>
-            <Balloon>{triplet.him}</Balloon>
+            <Balloon read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.him}</Balloon>
         </div>
     );
 

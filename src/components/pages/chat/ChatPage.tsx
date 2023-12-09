@@ -33,7 +33,8 @@ const ChatPage = () => {
         setSelectedSession
     } = useContext(ChatContext);
 
-    const isMyTurn = triplets[triplets.length - 1]?.me === "" && triplets[triplets.length - 1]?.ai === "";
+    
+    const isMyTurn = triplets && triplets[triplets.length - 1]?.me === "" && triplets[triplets.length - 1]?.ai === "";
     const [myTurn, setMyTurn] = useState(isMyTurn);
 
     const {isMobile} = useMobile()
@@ -42,7 +43,7 @@ const ChatPage = () => {
 
     useEffect(() => {
         setMyTurn(isMyTurn);
-        const lastTriplet = triplets[triplets.length - 1];
+        const lastTriplet = triplets && triplets[triplets.length - 1];
         if (lastTriplet) {
             const {me, him, ai} = lastTriplet;
             me !== "" && him !== "" && ai !== "" && refetch && refetch();
