@@ -33,7 +33,7 @@ const ChatPage = () => {
         setSelectedSession
     } = useContext(ChatContext);
 
-    
+
     const isMyTurn = triplets && triplets[triplets.length - 1]?.me === "" && triplets[triplets.length - 1]?.ai === "";
     const [myTurn, setMyTurn] = useState(isMyTurn);
 

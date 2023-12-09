@@ -45,34 +45,46 @@ const SubPage = () => {
                 </Typography>
             </Grid>
             {
-                user.subscription === "free" &&
-                <>
-                    <Grid item>
-                        <Typography variant="h6">To subscribe, visit this Link:</Typography>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="contained">
-                            <Link sx={{color: "unset"}}
-                                  href="https://buy.stripe.com/14k3dI0NogAYdGg8ww">Subscribe</Link>
-                        </Button>
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h6">and tham enter your email used to subscribe here:</Typography>
-                    </Grid>
-                    <Grid item>
-                        <TextField sx={{width: 300}} value={email}
-                                   onChange={(e) => setEmail(e.target.value)}></TextField>
-                    </Grid>
-                    <Grid item>
-                        <Button variant="contained" onClick={handleButton}>Activate Subscription</Button>
-                    </Grid>
-                    {res && <Grid item>
-                        <Typography variant="h6">{res}</Typography>
-                    </Grid>}
-                </>
+                user.subscription === "free" ?
+                    <>
+                        <Grid item>
+                            <Typography variant="h6">To subscribe, visit this Link:</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained">
+                                <Link sx={{color: "unset"}}
+                                      href="https://buy.stripe.com/14k3dI0NogAYdGg8ww">Subscribe</Link>
+                            </Button>
+                        </Grid>
+                        <Grid item>
+                            <Typography variant="h6">and tham enter your email used to subscribe here:</Typography>
+                        </Grid>
+                        <Grid item>
+                            <TextField sx={{width: 300}} value={email}
+                                       onChange={(e) => setEmail(e.target.value)}></TextField>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained" onClick={handleButton}>Activate Subscription</Button>
+                        </Grid>
+                        {res && <Grid item>
+                            <Typography variant="h6">{res}</Typography>
+                        </Grid>}
+                    </>
+                    : <>
+                        <Grid item>
+                            <Typography variant="h6">Manage subscription on Stripe portal:</Typography>
+                        </Grid>
+                        <Grid item>
+                            <Button variant="contained">
+                                <Link sx={{color: "unset"}}
+                                      href="https://billing.stripe.com/p/login/7sIdTW3Za38c6nC9AA">Stripe Portal</Link>
+                            </Button>
+                        </Grid>
+                    </>
             }
         </Grid>
-    );
+    )
+        ;
 }
 
 export default SubPage;
