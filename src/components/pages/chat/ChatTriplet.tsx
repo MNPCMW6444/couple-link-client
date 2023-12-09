@@ -101,9 +101,9 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
 
     const mobileView = (
         <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
-            {triplet.me && <Balloon isMe>{triplet.me}</Balloon>}
+            {triplet.me && <Balloon read={triplet.v2 && triplet.v2 !== "-1"} isMe>{triplet.me}</Balloon>}
             {triplet.ai && <Balloon isAi>{triplet.ai}</Balloon>}
-            {triplet.him && <Balloon read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.him}</Balloon>}
+            {triplet.him && <Balloon>{triplet.him}</Balloon>}
         </div>
     );
 
