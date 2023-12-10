@@ -40,21 +40,21 @@ const DesktopMessage = styled('div')({
 
 
 const Balloon = styled(Typography)(({theme, isAi, isMe, read}: any) => ({
-    background: isAi ? (!isNight ? "#e0e0e0" : "#707070") : isMe ? (!isNight ? theme.palette.primary.dark : theme.palette.secondary.dark) : (!isNight ? theme.palette.primary.light : theme.palette.secondary.main),
+    background: isAi === "yes" ? (!isNight ? "#e0e0e0" : "#707070") : isMe ? (!isNight ? theme.palette.primary.dark : theme.palette.secondary.dark) : (!isNight ? theme.palette.primary.light : theme.palette.secondary.main),
     color: isNight && theme.palette.primary.contrastText,
     borderRadius: '20px',
     padding: '10px 16px',
     maxWidth: '80%',
-    alignSelf: isMe ? 'flex-end' : isAi ? 'center' : 'flex-start',
+    alignSelf: isMe === "yes" ? 'flex-end' : isAi === "yes" ? 'center' : 'flex-start',
     boxShadow: '0 1px 3px rgba(0, 0, 0, 0.2)',
     margin: '5px 0',
     flex: '0 0 auto',
     '&:after': {
-        content: read ? '"\\2713\\2713"' : '""', // Unicode for double checkmarks
-        display: read ? 'block' : 'none', // Display as block to ensure it's on a new line
+        content: read == "yes" ? '"\\2713\\2713"' : '""', // Unicode for double checkmarks
+        display: read == "yes" ? 'block' : 'none', // Display as block to ensure it's on a new line
         fontSize: '12px',
         marginTop: '4px', // Add margin at the top for spacing
-        color: read ? '' : "transparent", // Change color based on read status
+        color: read == "yes" ? '' : "transparent", // Change color based on read status
         textAlign: 'right', // Align to the right
     },
 }));
@@ -88,12 +88,14 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
             </Column>
             <Column>
                 <DesktopMessage>
-                    {triplet.ai && <Balloon isAi>{triplet.ai}</Balloon>}
+                    {triplet.ai && <Balloon isAi="yes">{triplet.ai}</Balloon>}
                 </DesktopMessage>
             </Column>
             <Column>
                 <DesktopMessage>
-                    {triplet.me && <Balloon isMe read={triplet.v2 && triplet.v2 !== "-1"}>{triplet.me}</Balloon>}
+                    {triplet.me &&
+                        <Balloon isMe="yes"
+                                 read={triplet.v2 && triplet.v2 !== "-1" ? "yes" : "no"}>{triplet.me}</Balloon>}
                 </DesktopMessage>
             </Column>
         </FlexRow>
@@ -101,8 +103,9 @@ const ChatTriplet: FC<ChatTripletProps> = ({triplet}) => {
 
     const mobileView = (
         <div style={{display: 'flex', flexDirection: 'column-reverse'}}>
-            {triplet.me && <Balloon read={triplet.v2 && triplet.v2 !== "-1"} isMe>{triplet.me}</Balloon>}
-            {triplet.ai && <Balloon isAi>{triplet.ai}</Balloon>}
+            {triplet.me &&
+                <Balloon read={triplet.v2 && triplet.v2 !== "-1" ? "yes" : "no"} isMe="yes">{triplet.me}</Balloon>}
+            {triplet.ai && <Balloon isAi="yes">{triplet.ai}</Balloon>}
             {triplet.him && <Balloon>{triplet.him}</Balloon>}
         </div>
     );
